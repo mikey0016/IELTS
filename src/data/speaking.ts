@@ -1,0 +1,119 @@
+import type { SpeakingPrompt } from "@/types";
+
+/**
+ * Real IELTS Speaking timings:
+ * Part 1 = 30 sec per answer, 0 prep
+ * Part 2 = 2 min (120s) + 60s prep (1 min to prepare cue card)
+ * Part 3 = 45 sec per answer, 0 prep
+ */
+export const SPEAKING_PROMPTS: SpeakingPrompt[] = [
+  {
+    id: "s1",
+    part: 1,
+    difficulty: "easy",
+    prepTimeSec: 0,
+    speakingTimeSec: 30,
+    cueCardTitle: "Free time",
+    prompt:
+      "Let's talk about your free time. What do you usually do in your free time?",
+    followUps: [
+      "Why do you enjoy that activity?",
+      "How has your free time changed since childhood?",
+    ],
+  },
+  {
+    id: "s2",
+    part: 1,
+    difficulty: "easy",
+    prepTimeSec: 0,
+    speakingTimeSec: 30,
+    cueCardTitle: "Home town",
+    prompt:
+      "Let's move on to the topic of your home town. Where is your home town and what is it famous for?",
+    followUps: ["Would you recommend visiting it? Why?"],
+  },
+  {
+    id: "s3",
+    part: 2,
+    difficulty: "medium",
+    prepTimeSec: 60,
+    speakingTimeSec: 120,
+    cueCardTitle: "A memorable journey",
+    prompt:
+      "Describe a journey you remember well. You should say: where you went, how you travelled there, who you were with, and explain why you remember this journey so well.",
+    followUps: [
+      "Is travelling easier now than in the past?",
+      "Why do some people dislike long journeys?",
+    ],
+  },
+  {
+    id: "s4",
+    part: 2,
+    difficulty: "medium",
+    prepTimeSec: 60,
+    speakingTimeSec: 120,
+    cueCardTitle: "A person who inspires you",
+    prompt:
+      "Describe a person who inspires you. You should say: who this person is, how you know them, what they have done, and explain why they inspire you.",
+    followUps: [
+      "Do people need role models?",
+      "How can teachers inspire students?",
+    ],
+  },
+  {
+    id: "s5",
+    part: 3,
+    difficulty: "hard",
+    prepTimeSec: 0,
+    speakingTimeSec: 45,
+    cueCardTitle: "Education & technology",
+    prompt:
+      "Let's discuss education. How has technology changed the way people learn compared to the past?",
+    followUps: [
+      "Do you think online learning will replace traditional classrooms?",
+      "What makes a good teacher in the digital age?",
+      "Should schools limit screen time?",
+    ],
+  },
+  {
+    id: "s6",
+    part: 3,
+    difficulty: "hard",
+    prepTimeSec: 0,
+    speakingTimeSec: 45,
+    cueCardTitle: "Cities & living",
+    prompt:
+      "Let's talk about city life. What problems do large cities face today?",
+    followUps: [
+      "How can governments solve housing problems?",
+      "Is urban life healthier than rural life?",
+    ],
+  },
+];
+
+export const SPEAKING_CRITERIA = [
+  {
+    key: "fluency",
+    label: "Fluency & Coherence",
+    max: 9,
+    description: "Flow of speech, hesitation and logical linking of ideas.",
+  },
+  {
+    key: "lexical",
+    label: "Lexical Resource",
+    max: 9,
+    description: "Range and precision of vocabulary.",
+  },
+  {
+    key: "pronunciation",
+    label: "Pronunciation",
+    max: 9,
+    description: "Clarity, intonation and rhythm.",
+  },
+  {
+    key: "grammar",
+    label: "Grammar",
+    max: 9,
+    description: "Range and accuracy of structures used.",
+  },
+] as const;

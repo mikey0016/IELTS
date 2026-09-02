@@ -1,0 +1,112 @@
+import type { WritingPrompt } from "@/types";
+
+export const WRITING_PROMPTS: WritingPrompt[] = [
+  {
+    id: "w1",
+    task: "Academic Task 1",
+    type: "academic-task1",
+    difficulty: "medium",
+    timeLimitMin: 20,
+    minWords: 150,
+    prompt:
+      "The chart below shows the percentage of households in the UK owning a pet in 2005 and 2020. Write a report summarising the main features and making comparisons where relevant.",
+    instructions: [
+      "Paraphrase the question in your overview",
+      "Group the data logically (highest / lowest / biggest change)",
+      "Use accurate data with comparative language",
+      "Do not give your opinion",
+    ],
+  },
+  {
+    id: "w2",
+    task: "Academic Task 2",
+    type: "academic-task2",
+    difficulty: "hard",
+    timeLimitMin: 40,
+    minWords: 250,
+    prompt:
+      "Some people believe that unpaid community service should be a compulsory part of high school programmes. To what extent do you agree or disagree?",
+    instructions: [
+      "Take a clear position in the introduction",
+      "Develop each idea with reasons and examples",
+      "Use linking devices to connect paragraphs",
+      "Write a strong conclusion that restates your view",
+    ],
+  },
+  {
+    id: "w3",
+    task: "General Training Task 1",
+    type: "gt-task1",
+    difficulty: "easy",
+    timeLimitMin: 20,
+    minWords: 150,
+    prompt:
+      "You have lost your library book and need to write to the librarian. In your letter, explain how you lost the book, why you are writing to the library now, and what you would like the librarian to do.",
+    instructions: [
+      "Use a formal but friendly tone",
+      "Cover all three bullet points fully",
+      "Keep paragraphs short and logical",
+      "Use appropriate opening and closing phrases",
+    ],
+  },
+  {
+    id: "w4",
+    task: "General Training Task 2",
+    type: "gt-task2",
+    difficulty: "medium",
+    timeLimitMin: 40,
+    minWords: 250,
+    prompt:
+      "Many people nowadays communicate less with their neighbours than in the past. What are the causes of this situation, and what solutions can you suggest?",
+    instructions: [
+      "Address both cause and solution",
+      "Use clear topic sentences",
+      "Support ideas with everyday examples",
+      "Keep the tone balanced and impersonal",
+    ],
+  },
+  {
+    id: "w5",
+    task: "Academic Task 2",
+    type: "academic-task2",
+    difficulty: "medium",
+    timeLimitMin: 40,
+    minWords: 250,
+    prompt:
+      "In many countries, more and more people are choosing to work from home. Do the advantages of this trend outweigh the disadvantages?",
+    instructions: [
+      "Clearly compare advantages and disadvantages",
+      "Make your overall judgement explicit",
+      "Use a range of sentence structures",
+      "Aim for 4–5 well-organised paragraphs",
+    ],
+  },
+];
+
+export const WRITING_CRITERIA = [
+  {
+    key: "task",
+    label: "Task Achievement",
+    max: 9,
+    description:
+      "How fully and appropriately you address all parts of the task.",
+  },
+  {
+    key: "coherence",
+    label: "Coherence & Cohesion",
+    max: 9,
+    description: "Logical organisation, paragraphing and linking of ideas.",
+  },
+  {
+    key: "lexical",
+    label: "Lexical Resource",
+    max: 9,
+    description: "Range and accuracy of vocabulary, including collocations.",
+  },
+  {
+    key: "grammar",
+    label: "Grammatical Range & Accuracy",
+    max: 9,
+    description: "Variety and correctness of sentence structures.",
+  },
+] as const;

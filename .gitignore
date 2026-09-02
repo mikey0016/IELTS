@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+.pnp
+
+# Build output
+dist
+dist-ssr
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+instance/
+.env
+
+# OS
+.DS_Store
+Thumbs.db

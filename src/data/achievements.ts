@@ -1,0 +1,136 @@
+import type { AchievementDef } from "@/types";
+
+export const ACHIEVEMENTS: AchievementDef[] = [
+  {
+    id: "first_login",
+    title: "Welcome!",
+    description: "Create your account and start your IELTS journey.",
+    icon: "🚀",
+    progress: 1,
+    max: 1,
+  },
+  {
+    id: "day_7_streak",
+    title: "7 Day Streak",
+    description: "Practise on 7 consecutive days.",
+    icon: "🔥",
+    progress: 7,
+    max: 7,
+  },
+  {
+    id: "day_30_streak",
+    title: "One Month Strong",
+    description: "Practise on 30 consecutive days.",
+    icon: "⚡",
+    progress: 0,
+    max: 30,
+  },
+  {
+    id: "10_words",
+    title: "Word Collector",
+    description: "Learn 10 new vocabulary words.",
+    icon: "📖",
+    progress: 0,
+    max: 10,
+  },
+  {
+    id: "50_words",
+    title: "Half-Century",
+    description: "Learn 50 new vocabulary words.",
+    icon: "🗂️",
+    progress: 0,
+    max: 50,
+  },
+  {
+    id: "100_words",
+    title: "100 Words Learned",
+    description: "Master 100 words in your deck.",
+    icon: "💯",
+    progress: 0,
+    max: 100,
+  },
+  {
+    id: "20_questions",
+    title: "Twenty Strengths",
+    description: "Answer 20 practice questions.",
+    icon: "✏️",
+    progress: 0,
+    max: 20,
+  },
+  {
+    id: "100_questions",
+    title: "Century Maker",
+    description: "Answer 100 practice questions.",
+    icon: "🧠",
+    progress: 0,
+    max: 100,
+  },
+  {
+    id: "listening_20",
+    title: "Audiophile",
+    description: "Complete 20 Listening exercises.",
+    icon: "🎧",
+    progress: 0,
+    max: 20,
+  },
+  {
+    id: "reading_20",
+    title: "Reading Master",
+    description: "Complete 20 Reading exercises.",
+    icon: "📚",
+    progress: 0,
+    max: 20,
+  },
+  {
+    id: "first_mock",
+    title: "First Mock Test",
+    description: "Complete your first full mock test.",
+    icon: "🎯",
+    progress: 0,
+    max: 1,
+  },
+  {
+    id: "mock_master",
+    title: "Mock Master",
+    description: "Complete 5 full mock tests.",
+    icon: "🏆",
+    progress: 0,
+    max: 5,
+  },
+  {
+    id: "hour_today",
+    title: "Power Hour",
+    description: "Practise for 60 minutes in one day.",
+    icon: "⏰",
+    progress: 0,
+    max: 1,
+  },
+  {
+    id: "study_plan",
+    title: "Planner",
+    description: "Generate a personalized study plan.",
+    icon: "📅",
+    progress: 0,
+    max: 1,
+  },
+  {
+    id: "plan_week",
+    title: "Plan Follower",
+    description: "Complete 7 tasks from your study plan.",
+    icon: "✅",
+    progress: 0,
+    max: 7,
+  },
+];
+
+export function achievementProgress(
+  id: string,
+  unlocked: string[],
+  extra: Record<string, number>,
+): number {
+  if (unlocked.includes(id)) return 1;
+  const def = ACHIEVEMENTS.find((a) => a.id === id);
+  if (!def) return 0;
+  const value = extra[id] ?? 0;
+  return Math.min(1, value / def.max);
+}
