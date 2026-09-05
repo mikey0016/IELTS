@@ -85,7 +85,7 @@ const generateCDIFiles = (): Record<string, CDIFile[]> => {
       name: `CDI Writing ${i + 1}`,
       skill: "writing" as const,
       number: i + 1,
-      path: `/cdi/full-cdi-writing-${i + 1}.html`,
+      path: `/cdi/writing-test-${i + 1}.html`,
       preview: {
         title: `Writing Test ${i + 1}`,
         sections: ["Task 1", "Task 2"],
@@ -97,7 +97,7 @@ const generateCDIFiles = (): Record<string, CDIFile[]> => {
       name: `CDI Speaking ${i + 1}`,
       skill: "speaking" as const,
       number: i + 1,
-      path: `/cdi/full-cdi-speaking-${i + 1}.html`,
+      path: `/cdi/speaking-test-${i + 1}.html`,
       preview: {
         title: `Speaking Test ${i + 1}`,
         sections: ["Part 1", "Part 2", "Part 3"],
