@@ -148,7 +148,7 @@ export function Courses() {
                     </p>
                   )}
                   <Link
-                    to={`/app/practice?skill=${course.key}`}
+                    to={`/app/cdi-practice`}
                     className="mt-4 block"
                   >
                     <Button variant="outline" className="w-full">

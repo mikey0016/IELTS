@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Task 1 Sample: Social Centre Activities</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
+                    animation: { 
+                        'twinkle': 'twinkle 4s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        twinkle: { '0%, 100%': { opacity: '0.8' }, '50%': { opacity: '0.3' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: #090a0f;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: var(--opacity);
+        }
+        .nebula {
+            position: absolute; width: 60vw; height: 60vw; border-radius: 50%;
+            filter: blur(80px); opacity: 0.3;
+            animation: float 10s ease-in-out infinite;
+        }
+        html:not(.dark) .stars { display: none; }
+
+        .day-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+        html.dark .day-bg { display: none; }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-panel {
+            background: rgba(17, 25, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .vocab-word {
+            border-bottom: 2px dashed #6366f1;
+            cursor: help; position: relative; font-weight: 600; color: #4f46e5;
+            transition: all 0.2s;
+        }
+        .dark .vocab-word { border-color: #818cf8; color: #a5b4fc; }
+        .vocab-word:hover { background: rgba(99, 102, 241, 0.2); border-radius: 4px; color: #4338ca; }
+        .dark .vocab-word:hover { color: #e0e7ff; }
+        
+        .vocab-word::after {
+            content: attr(data-def);
+            position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: #0f172a; color: #fff; border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 12px; font-size: 12px; border-radius: 6px;
+            white-space: nowrap; opacity: 0; pointer-events: none;
+            transition: all 0.2s; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            font-family: 'Inter', sans-serif; z-index: 50;
+        }
+        .vocab-word:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .gap-fill {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 3px solid #94a3b8;
+            color: #334155;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            padding: 0 4px 3px 4px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+            cursor: text;
+            white-space: pre-wrap; 
+            overflow-wrap: anywhere; 
+            vertical-align: baseline; 
+            line-height: 1.4;
+        }
+        .dark .gap-fill {
+            border-bottom-color: #475569;
+            color: #e2e8f0;
+        }
+        .gap-fill:empty::before {
+            content: attr(data-hint);
+            color: #cbd5e1;
+            font-weight: 400;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        .dark .gap-fill:empty::before { color: #475569; }
+        .gap-fill:focus {
+            border-bottom: 3px solid #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .gap-fill.correct {
+            border-bottom: 3px solid #10b981;
+            color: #059669;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .gap-fill.wrong {
+            border-bottom: 3px solid #ef4444;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        html { scroll-padding-top: 120px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+    </style>
+<script>
+// Blok: Ctrl+U, F12, Ctrl+Shift+I/J/C, Ctrl+S va o'ng klik
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' ||
+        (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+        (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.key.toLowerCase() === 's')) {
+        e.preventDefault();
+        return false;
+    }
+});
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat kod ko'rishni bloklaymiz */ });
+</script>
+<script>
+// Offline Writing Analysis v2 - tries real server, fallback to improved local heuristic
+(function(){
+    const _origFetch = window.fetch;
+    function _countWords(t){ return (t||'').trim().split(/\s+/).filter(Boolean).length; }
+    function _uniqueRatio(t){
+        const w=(t||'').toLowerCase().match(/\b[a-z]+\b/g)||[];
+        if(!w.length) return 0;
+        return (new Set(w)).size / w.length;
+    }
+    function _avgSentenceLen(t){
+        const s=(t||'').split(/[.!?]+/).filter(x=>x.trim().length>5);
+        if(!s.length) return 0;
+        const words=_countWords(t);
+        return words / s.length;
+    }
+    function _hasComplex(t){
+        return /although|however|moreover|therefore|whereas|because|since|while|despite|in contrast/i.test(t);
+    }
+    function _genBandDetailed(text, minWords){
+        const wc=_countWords(text);
+        const ur=_uniqueRatio(text);
+        const asl=_avgSentenceLen(text);
+        const complex=_hasComplex(text);
+        let band=5.5;
+        if(wc>=minWords) band+=0.5; else if(wc>=minWords-10) band+=0;
+        else band-=0.5;
+        if(wc>=minWords+30) band+=0.5;
+        if(ur>0.55) band+=0.5;
+        if(ur>0.65) band+=0.5;
+        if(asl>=12 && asl<=22) band+=0.5;
+        if(complex) band+=0.5;
+        if(wc<minWords-20) band=Math.min(band,5.0);
+        if(wc<30) band=4.5;
+        band=Math.round(band*2)/2;
+        if(band>8) band=8;
+        if(band<4) band=4;
+        return band;
+    }
+    function _fb(band, label){
+        if(band>=7) return `${label}: Very good. Clear position, well-developed ideas, wide vocabulary, few errors.`;
+        if(band>=6.5) return `${label}: Good. Covers task well, logical structure, some less common words, occasional inaccuracies remain.`;
+        if(band>=6) return `${label}: Satisfactory. Addresses task, coherent organisation, adequate vocabulary/grammar but some repetition and errors.`;
+        if(band>=5.5) return `${label}: Modest. Partially addresses task, limited cohesion, vocabulary adequate for task, frequent grammar errors.`;
+        return `${label}: Needs work. Incomplete response, weak organisation, limited vocabulary, many grammar errors.`;
+    }
+    function _makeTask(text, minWords, topic){
+        const band=_genBandDetailed(text, minWords);
+        const wc=_countWords(text);
+        const wcComment = wc < minWords ? `Word count low: ${wc}/${minWords} - Task Achievement penalised.` : `Word count OK: ${wc} words.`;
+        // create one sample correction from first sentence if any
+        const firstSent=(text||'').split(/[.!?]+/).filter(s=>s.trim().length>10)[0]||'';
+        let corrections=[];
+        if(firstSent){
+            corrections=[{original: firstSent.trim().slice(0,120), corrected: firstSent.trim().slice(0,120)+" (improved cohesion & article use)", explanation: "Offline demo: check articles, verb forms and linking words. Online AI gives full sentence-by-sentence corrections."}];
+        }
+        return {
+            band: band,
+            ta_band: band, ta_feedback: _fb(band, "Task Achievement"),
+            cc_band: Math.max(5, Math.round((band-0.3)*2)/2), cc_feedback: _fb(Math.max(5, Math.round((band-0.3)*2)/2), "Coherence"),
+            lr_band: band, lr_feedback: _fb(band, "Lexical Resource"),
+            gra_band: Math.max(5, Math.round((band-0.2)*2)/2), gra_feedback: _fb(Math.max(5, Math.round((band-0.2)*2)/2), "Grammar"),
+            overall_comment: wc<minWords ? "Increase word count to meet minimum - otherwise band is capped." : "Offline analysis: based on word count, lexical diversity, sentence variety and linking words. For AI sentence corrections, use online.",
+            word_count_comment: wcComment,
+            sentence_corrections: corrections,
+            model_paragraph: "Offline model not available - online provides Band 9 sample."
+        };
+    }
+    window.fetch = async function(input, init){
+        const url = typeof input==='string' ? input : (input.url||'');
+        if(url.includes('check_writing_test.php')){
+            // try real server first
+            try{
+                const res = await _origFetch.apply(this, arguments);
+                if(res.ok){
+                    const clone=res.clone();
+                    const txt=await clone.text();
+                    try{
+                        const data=JSON.parse(txt);
+                        if(data && data.success) {
+                            console.log('[Online] Real evaluation used');
+                            return new Response(txt, {status:res.status, headers:{'Content-Type':'application/json'}});
+                        }
+                    }catch{}
+                    // if not success, fall through to mock
+                }
+            }catch(e){
+                console.log('[Offline] Real fetch failed, using mock', e.message);
+            }
+            try{
+                const body = init && init.body ? JSON.parse(init.body) : {};
+                const t1text=body.task1||'';
+                const t2text=body.task2||'';
+                const t1w=body.task1_words||_countWords(t1text);
+                const t2w=body.task2_words||_countWords(t2text);
+                // generate tasks
+                const t1=_makeTask(t1text, 150, body.task1_topic||'');
+                const t2=_makeTask(t2text, 250, body.task2_topic||'');
+                const overall=Math.round(((t1.band/3)+(t2.band*2/3))*2)/2;
+                const evaluation={
+                    overall_band: overall,
+                    overall_summary: "Offline evaluation (improved heuristic) - word count, lexical diversity, sentence length, linking words. Online AI is more accurate.",
+                    strategic_advice: "• Task 1: Overview + 2 detail paragraphs, compare data.\n• Task 2: Clear 2-3 ideas, examples.\n• Avoid memorised phrases, check 150/250 words.",
+                    task1: t1,
+                    task2: t2
+                };
+                return new Response(JSON.stringify({success:true, evaluation}), {status:200, headers:{'Content-Type':'application/json'}});
+            }catch(e){
+                return new Response(JSON.stringify({success:false, error:e.message}), {status:500, headers:{'Content-Type':'application/json'}});
+            }
+        }
+        if(url.includes('save_writing_result.php') || url.includes('award_xp.php')){
+            try{ return await _origFetch.apply(this, arguments); }catch{ return new Response(JSON.stringify({success:true}), {status:200, headers:{'Content-Type':'application/json'}}); }
+        }
+        return _origFetch.apply(this, arguments);
+    };
+    console.log('Offline writing analysis v2 installed (online first, offline fallback)');
+})();
+</script>
+</head>
+<body class="antialiased text-slate-800 dark:text-slate-200 selection:bg-indigo-500 selection:text-white" oncontextmenu="return false">
+<div class="day-bg"></div>
+<div class="stars">
+<div class="nebula bg-blue-600 top-[-10%] left-[-10%]"></div>
+<div class="nebula bg-cyan-600 bottom-[-10%] right-[-10%] animation-delay-2000"></div>
+</div>
+<!-- NAVBAR -->
+<div class="fixed z-50 transition-all duration-300 top-0 left-0 right-0 w-full md:top-6 md:left-0 md:right-0 md:flex md:justify-center md:pointer-events-none">
+<nav class="pointer-events-auto bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-slate-200/50 dark:border-white/10 shadow-2xl shadow-indigo-500/10 transition-all duration-300 w-full border-b p-4 md:w-auto md:max-w-7xl md:rounded-full md:border md:p-2 md:pr-3" id="mainNav">
+<div class="flex items-center justify-between">
+<a class="group flex items-center gap-3 pr-4 pl-1 py-1 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-all shrink-0" href="writing.php">
+<div class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-[-10deg] transition-all duration-300">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-none mb-0.5">Back to</span>
+<span class="text-sm font-black text-slate-800 dark:text-white leading-none group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Library</span>
+</div>
+</a>
+<div class="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-black/20 rounded-full p-1 border border-slate-200/50 dark:border-white/5 shadow-inner">
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#sample">Sample</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#vocab">Vocab</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#exercise">Exercise</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#listening">Listen</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#reading">Read</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#speaking">Speak</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-md transition-all shadow-lg shadow-indigo-500/30" href="#writing">Write</a>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all active:scale-90 border border-slate-200 dark:border-white/5" id="themeToggle">
+<svg class="sun w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<svg class="moon hidden w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="md:hidden w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-white border border-slate-200 dark:border-white/5 active:scale-90 transition-all" onclick="toggleMobileMenu()">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<div class="hidden md:hidden pt-4 pb-2 border-t border-slate-200 dark:border-white/10 mt-4 space-y-1" id="mobileMenu">
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#sample" onclick="toggleMobileMenu()">📄 Sample Answer</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#vocab" onclick="toggleMobileMenu()">📚 Vocabulary</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#exercise" onclick="toggleMobileMenu()">✎ Gap Fill</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#listening" onclick="toggleMobileMenu()">🎧 Listening</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#reading" onclick="toggleMobileMenu()">📖 Reading</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#speaking" onclick="toggleMobileMenu()">🎙️ Speaking</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 transition-colors" href="#writing" onclick="toggleMobileMenu()">✍️ Writing</a>
+</div>
+</nav>
+</div>
+<script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+<!-- HEADER -->
+<header class="relative w-full max-w-[95%] mx-auto pt-28 pb-10 z-10">
+<div class="glass-panel rounded-[2.5rem] p-10 md:p-16 overflow-hidden relative border border-white/20 shadow-2xl group">
+<div class="absolute inset-0 z-0 pointer-events-none">
+<img alt="Social Centre Activities Line Chart" class="w-full h-full object-cover opacity-20 dark:opacity-30 mix-blend-overlay dark:mix-blend-soft-light filter blur-[1px] scale-105 transform transition-transform duration-[2000ms] group-hover:scale-110" src="../../../images/task1-sample1.webp"/>
+<div class="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white/60 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-slate-900/80"></div>
+</div>
+<div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none z-0"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px] -ml-32 -mb-32 pointer-events-none z-0"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 dark:bg-black/40 border border-indigo-100 dark:border-white/10 mb-8 shadow-sm backdrop-blur-md transition-transform hover:scale-105">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+</span>
+<span class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-300">Band 9.0 Analysis</span>
+</div>
+<h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-slate-900 dark:text-white drop-shadow-sm">
+                    Social Centre
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-300 dark:to-cyan-300">
+                        Activities
+                    </span>
+</h1>
+<div class="flex flex-wrap justify-center gap-3 md:gap-6 mt-2">
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-blue-500 text-lg">📊</span>
+<span>Line Chart</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-cyan-500 text-lg">📝</span>
+<span>Task 1 Report</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-emerald-500 text-lg">⏱️</span>
+<span>20 Mins</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full max-w-[95%] mx-auto px-2 relative z-10 pb-24 grid lg:grid-cols-12 gap-6">
+<!-- LEFT: Sample Answer -->
+<div class="lg:col-span-8 space-y-6">
+<section class="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden" id="sample">
+<!-- Chart Image -->
+<div class="mb-8 rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-lg">
+<img alt="Line chart showing social centre activity participants 2000–2020" class="w-full object-contain bg-white dark:bg-slate-900 p-4" src="../../../images/task1-sample1.webp"/>
+</div>
+<div class="bg-indigo-50/80 dark:bg-indigo-900/20 p-6 rounded-2xl border-l-4 border-indigo-500 mb-8 backdrop-blur-sm">
+<h3 class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2">Topic</h3>
+<p class="font-serif text-lg font-bold text-slate-800 dark:text-white italic leading-relaxed">
+                        "The line chart shows the number of participants for different activities at a social centre in Melbourne, Australia between 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
+                    </p>
+</div>
+<div class="prose dark:prose-invert max-w-none text-lg leading-[2.2] font-serif text-slate-700 dark:text-slate-300">
+<p class="mb-6">
+                        The line chart <span class="vocab-word" data-def="describes, shows">details</span> <span class="vocab-word" data-def="attendees, people taking part">participants</span> <span class="vocab-word" data-def="based on engagement in">according to activity</span> at a social center in the Australian city of Melbourne from 2000 to 2020. Looking from an <span class="vocab-word" data-def="from a broad, general viewpoint">overall perspective</span>, it is <span class="vocab-word" data-def="obviously clear">readily apparent</span> that participants for all activities increased <span class="vocab-word" data-def="to different extents">to varying degrees</span> <span class="vocab-word" data-def="excluding with regards to">except in terms of</span> <span class="vocab-word" data-def="combat sports like karate, judo">martial arts</span> and <span class="vocab-word" data-def="non-professional theatre">amateur drama</span>. Film club was <span class="vocab-word" data-def="significantly, by a large margin">by far</span> the most popular activity throughout, though table tennis <span class="vocab-word" data-def="showed the biggest increase">demonstrated the strongest growth</span>.
+                    </p>
+<p class="mb-6">
+                        In 2000, 64 individuals participated in film club, a <span class="vocab-word" data-def="number, statistic">figure</span> that <span class="vocab-word" data-def="fell slightly to">dipped to</span> 60 in 2010 and then <span class="vocab-word" data-def="surpassed the previous level">more than recovered</span> to <span class="vocab-word" data-def="end the timeframe at">finish the period at</span> 65. The <span class="vocab-word" data-def="pattern, direction">trend</span> for martial arts was <span class="vocab-word" data-def="comparably steady">similarly stable</span> with a <span class="vocab-word" data-def="starting figure">beginning data point</span> of 38, a high of 39 in 2010, and a <span class="vocab-word" data-def="ultimate number">final figure</span> of 37.
+                    </p>
+<p class="mb-6">
+                        The <span class="vocab-word" data-def="other, leftover">remaining</span> activities started the period lower with 27 participants for amateur drama, 18 for table tennis, and 0 for <span class="vocab-word" data-def="live music shows">musical performances</span> (<span class="vocab-word" data-def="not accessible at that time">unavailable</span> at the time). <span class="vocab-word" data-def="during the subsequent decade">Over the next 10 years</span>, amateur dramatics <span class="vocab-word" data-def="started falling">commenced</span> a decline that would end at just 5 by 2020, while table tennis <span class="vocab-word" data-def="experienced the opposite change">underwent the inverse transformation</span>, <span class="vocab-word" data-def="reaching its highest point at">peaking at</span> 52 <span class="vocab-word" data-def="within that same year">by the same year</span>. Musical performances were <span class="vocab-word" data-def="solely available from">only an option starting in</span> 2005, with participants growing and <span class="vocab-word" data-def="stabilizing, flattening out">levelling off</span> to just under 20 <span class="vocab-word" data-def="at the conclusion of the timeframe">by the end of the period</span>.
+                    </p>
+</div>
+</section>
+</div>
+<!-- RIGHT: Structure Analysis -->
+<div class="lg:col-span-4 space-y-6">
+<h2 class="text-xl font-black text-slate-900 dark:text-white px-2">Structure Analysis</h2>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-rose-500">
+<span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-2 block">01. Introduction</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"The line chart details participants according to activity at a social center in the Australian city of Melbourne from 2000 to 2020."</p>
+<p class="text-xs text-slate-400">→ Paraphrase what the chart shows</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-teal-500">
+<span class="text-[10px] font-bold text-teal-500 uppercase tracking-wider mb-2 block">02. Overview</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...it is readily apparent that participants for all activities increased to varying degrees except in terms of martial arts and amateur drama."</p>
+<p class="text-xs text-slate-400">→ State the main overall trend</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"Film club was by far the most popular activity throughout, though table tennis demonstrated the strongest growth."</p>
+<p class="text-xs text-slate-400">→ Add a second key comparison</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-violet-500">
+<span class="text-[10px] font-bold text-violet-500 uppercase tracking-wider mb-2 block">03. Body Paragraph 1</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"In 2000, 64 individuals participated in film club, a figure that dipped to 60 in 2010..."</p>
+<p class="text-xs text-slate-400">→ Begin with the highest-value data</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"The trend for martial arts was similarly stable..."</p>
+<p class="text-xs text-slate-400">→ Compare categories within same range</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-amber-500">
+<span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-2 block">04. Body Paragraph 2</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"The remaining activities started the period lower..."</p>
+<p class="text-xs text-slate-400">→ Group remaining categories together</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...table tennis underwent the inverse transformation, peaking at 52..."</p>
+<p class="text-xs text-slate-400">→ Highlight contrasting trends</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"Musical performances were only an option starting in 2005..."</p>
+<p class="text-xs text-slate-400">→ Include all data — even late starters</p>
+</div>
+</div>
+<!-- VOCAB LIST -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8" id="vocab">
+<h3 class="text-lg font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+<span class="text-indigo-500">📚</span> Vocabulary List
+                </h3>
+<div class="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-2">
+<div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">details</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">describes, shows</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">participants</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">attendees, people taking part</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">according to activity at</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">based on engagement in</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">social center</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">community hub</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">over the span of two decades</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">across 20 years</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">readily apparent</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">obviously clear</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">to varying degrees</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">to different extents</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">except in terms of</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">excluding with regards to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">martial arts</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">combat sports</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">amateur drama</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">non-professional theatre</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">Film club</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">movie group</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">by far</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">significantly, by a large margin</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">most popular activity throughout</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">predominant activity across the period</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">demonstrated the strongest growth</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">exhibited the most notable increase</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">figure</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">number, statistic</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">dipped to</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">fell slightly to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">more than recovered</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">surpassed the previous level</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">finish the period at</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">conclude the timeframe with</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">trend</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">pattern, direction</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">similarly stable</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">comparably steady</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">beginning data point</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">starting figure</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">final figure</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">ultimate number</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">remaining</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">other, leftover</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">musical performances</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">live music shows</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">unavailable</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">not accessible</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">Over the next 10 years</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">during the subsequent decade</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">commenced a decline</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">started falling</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">underwent the inverse transformation</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">experienced the opposite change</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">peaking at</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">reaching its highest point at</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">by the same year</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">within that same year</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">only an option starting in</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">solely available from</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">levelling off</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">stabilizing, flattening out</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">by the end of the period</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">at the conclusion of the timeframe</span>
+</div> </div>
+</section>
+</div>
+<!-- GAP FILL EXERCISE -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="exercise">
+<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+<div>
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-indigo-500">✎</span> Gap Fill Challenge
+                        </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Type the missing words. The box grows as you type.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-indigo-500/30 transition-all flex items-center gap-2" id="checkBtn" onclick="checkAnswers()">
+                            Check Answers
+                        </button>
+<button class="hidden bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-slate-300 transition-all" id="retryBtn" onclick="resetExercise()">
+                            Retry ↺
+                        </button>
+<span class="hidden bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-full text-sm font-bold border border-emerald-200 dark:border-emerald-800" id="scoreBadge">
+                            0/26
+                        </span>
+</div>
+</div>
+<div class="prose dark:prose-invert max-w-none text-lg leading-[2.2] font-serif text-slate-700 dark:text-slate-300">
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        The line chart 
+                        <span class="gap-fill" contenteditable="true" data-answer="details" data-hint="d...s"></span>
+<span class="gap-fill" contenteditable="true" data-answer="participants" data-hint="p...s"></span>
+<span class="gap-fill" contenteditable="true" data-answer="according to activity" data-hint="a...y"></span>
+                        at a social center in the Australian city of Melbourne from 2000 to 2020. Looking from an overall perspective, it is 
+                        <span class="gap-fill" contenteditable="true" data-answer="readily apparent" data-hint="r...t"></span>
+                        that participants for all activities increased 
+                        <span class="gap-fill" contenteditable="true" data-answer="to varying degrees" data-hint="t...s"></span>
+<span class="gap-fill" contenteditable="true" data-answer="except in terms of" data-hint="e...f"></span>
+<span class="gap-fill" contenteditable="true" data-answer="martial arts" data-hint="m...s"></span>
+                        and 
+                        <span class="gap-fill" contenteditable="true" data-answer="amateur drama" data-hint="a...a"></span>.
+                        Film club was 
+                        <span class="gap-fill" contenteditable="true" data-answer="by far" data-hint="b...r"></span>
+                        the most popular activity throughout, though table tennis 
+                        <span class="gap-fill" contenteditable="true" data-answer="demonstrated the strongest growth" data-hint="d...h"></span>.
+                    </p>
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        In 2000, 64 individuals participated in film club, a figure that 
+                        <span class="gap-fill" contenteditable="true" data-answer="dipped to" data-hint="d...o"></span>
+                        60 in 2010 and then 
+                        <span class="gap-fill" contenteditable="true" data-answer="more than recovered" data-hint="m...d"></span>
+                        to 
+                        <span class="gap-fill" contenteditable="true" data-answer="finish the period at" data-hint="f...t"></span>
+                        65. The trend for martial arts was 
+                        <span class="gap-fill" contenteditable="true" data-answer="similarly stable" data-hint="s...e"></span>
+                        with a 
+                        <span class="gap-fill" contenteditable="true" data-answer="beginning data point" data-hint="b...t"></span>
+                        of 38, a high of 39 in 2010, and a 
+                        <span class="gap-fill" contenteditable="true" data-answer="final figure" data-hint="f...e"></span>
+                        of 37.
+                    </p>
+<p class="p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        The 
+                        <span class="gap-fill" contenteditable="true" data-answer="remaining" data-hint="r...g"></span>
+                        activities started the period lower with 27 participants for amateur drama, 18 for table tennis, and 0 for 
+                        <span class="gap-fill" contenteditable="true" data-answer="musical performances" data-hint="m...s"></span>
+                        (
+                        <span class="gap-fill" contenteditable="true" data-answer="unavailable" data-hint="u...e"></span>
+                        at the time). 
+                        <span class="gap-fill" contenteditable="true" data-answer="Over the next 10 years" data-hint="O...s"></span>,
+                        amateur dramatics 
+                        <span class="gap-fill" contenteditable="true" data-answer="commenced" data-hint="c...d"></span>
+                        a decline that would end at just 5 by 2020, while table tennis 
+                        <span class="gap-fill" contenteditable="true" data-answer="underwent the inverse transformation" data-hint="u...n"></span>,
+                        <span class="gap-fill" contenteditable="true" data-answer="peaking at" data-hint="p...t"></span>
+                        52 
+                        <span class="gap-fill" contenteditable="true" data-answer="by the same year" data-hint="b...r"></span>.
+                        Musical performances were 
+                        <span class="gap-fill" contenteditable="true" data-answer="only an option starting in" data-hint="o...n"></span>
+                        2005, with participants growing and 
+                        <span class="gap-fill" contenteditable="true" data-answer="levelling off" data-hint="l...f"></span>
+                        to just under 20 
+                        <span class="gap-fill" contenteditable="true" data-answer="by the end of the period" data-hint="b...d"></span>.
+                    </p>
+</div>
+</section>
+</div>
+<!-- LISTENING -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="listening">
+<div class="mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-sky-500">🎧</span> Listening Practice
+                    </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Watch this video to build vocabulary and listening skills related to the topic.</p>
+</div>
+<div class="w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10">
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" class="w-full h-full" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/2J5warE7yj8?modestbranding=1&amp;rel=0" title="Social Centre Activities Listening">
+</iframe>
+</div>
+</section>
+</div>
+<!-- READING EXTENSION -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="reading">
+<div class="mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-purple-500">📖</span> Reading Extension
+                    </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">
+                        Explore the history and culture of Melbourne — the city behind the data.
+                    </p>
+</div>
+<a class="group relative block w-full aspect-[21/9] md:aspect-[3/1] rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10" href="https://www.britannica.com/place/Melbourne/History#:~:text=Melbourne%20became%20a%20town%20in,Melbourne%20increased%20fourfold%20to%2080%2C000." rel="noopener noreferrer" target="_blank">
+<img alt="Melbourne, Australia" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://images.unsplash.com/photo-1514395462725-fb4566210144?q=80&amp;w=2670&amp;auto=format&amp;fit=crop"/>
+<div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent"></div>
+<div class="absolute inset-0 p-8 md:p-12 flex flex-col justify-center max-w-2xl">
+<span class="inline-block py-1 px-3 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold uppercase tracking-widest w-fit mb-4">
+                            Britannica
+                        </span>
+<h4 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight group-hover:text-cyan-300 transition-colors">
+                            The History of Melbourne
+                        </h4>
+<p class="text-slate-300 text-lg mb-8 line-clamp-2 md:line-clamp-none">
+                            Discover how Melbourne grew from a small settlement into one of Australia's most vibrant cities — the context behind the chart.
+                        </p>
+<span class="flex items-center gap-2 text-sm font-bold text-white uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+                            Read Article <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+</a>
+</section>
+</div>
+<!-- SPEAKING -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden transition-all duration-300 hover:shadow-2xl" id="speaking">
+<div class="grid md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-4 space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-3xl shadow-xl transform -rotate-3">
+                                🎙️
+                            </div>
+<div>
+<h3 class="text-xl font-black text-slate-900 dark:text-white leading-tight">Speaking Coach</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Corrections &amp; Upgrades</p>
+</div>
+</div>
+<div class="bg-white/80 dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-20 h-20 bg-indigo-500/10 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
+<h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-3">Current Topic</h4>
+<p class="text-xl font-serif font-bold text-slate-800 dark:text-white mb-6 leading-snug relative z-10" id="exam-question">
+                                "What do you do on your day off?"
+                            </p>
+<button class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-2 relative z-10" onclick="nextQuestion()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                                Change Topic
+                            </button>
+</div>
+<div class="bg-slate-900 text-white rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden h-96 flex flex-col justify-center items-center group" id="recorder-box">
+<div class="absolute top-4 left-4 right-4 h-32 bg-white/10 rounded-xl p-3 text-left overflow-hidden" id="live-transcript-box">
+<p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Live Transcript:</p>
+<p class="text-xs text-white/80 font-mono leading-relaxed break-words" id="live-text">...</p>
+</div>
+<div class="mt-32 relative z-10">
+<div class="text-5xl font-mono font-black mb-2 tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" id="timer">00:00</div>
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-8" id="status">Ready</p>
+<button class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-[0_0_30px_rgba(79,70,229,0.4)] transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center mx-auto border-4 border-slate-800" id="mic-btn">
+<svg class="w-8 h-8 drop-shadow-md" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<div class="absolute inset-0 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center z-20 hidden transition-all" id="processing-ui">
+<div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+<p class="text-xs font-bold text-indigo-400 uppercase tracking-widest animate-pulse">Analyzing Speech...</p>
+</div>
+</div>
+</div>
+<div class="md:col-span-8 relative min-h-[600px]">
+<div class="h-full flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-white/10 rounded-3xl p-12 text-center opacity-60 hover:opacity-100 transition-opacity" id="report-placeholder">
+<div class="w-24 h-24 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
+<span class="text-4xl">✨</span>
+</div>
+<h3 class="font-bold text-2xl text-slate-700 dark:text-white mb-2">Ready to Practice?</h3>
+<p class="text-sm text-slate-500 max-w-sm mx-auto">Record your answer. I won't give you a score—just helpful corrections and better words to use!</p>
+</div>
+<div class="hidden bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 h-[600px] overflow-y-auto custom-scrollbar p-8" id="report-container"></div>
+</div>
+</div>
+</section>
+</div>
+<script>
+            const API_KEY = "YOUR_GROQ_API_KEY"; 
+            const MODEL_NAME = "llama-3.3-70b-versatile"; 
+
+            const questions = [
+                "What do you do on your day off?",
+                "Do you usually spend your days off with your parents or with your friends?",
+                "Do you make plans for your day off?",
+                "When was the last time you had a few days off?",
+                "Do you prefer to relax or be active on your days off?",
+                "Do you think it is important to have regular days off from work or study?",
+                "Have your days off changed since you were a child?",
+                "What is the best way to spend a day off in your city?",
+                "Do you feel refreshed after a day off, or do you prefer longer breaks?"
+            ];
+
+            let recognition;
+            let isRecording = false;
+            let transcript = "";
+            let startTime;
+            let timerInterval;
+            let qIndex = 0;
+
+            const micBtn = document.getElementById('mic-btn');
+            const timerDisplay = document.getElementById('timer');
+            const statusText = document.getElementById('status');
+            const liveText = document.getElementById('live-text');
+            const processingUi = document.getElementById('processing-ui');
+            const reportPlaceholder = document.getElementById('report-placeholder');
+            const reportContainer = document.getElementById('report-container');
+
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onresult = (event) => {
+                    let interim = "";
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) transcript += event.results[i][0].transcript + " ";
+                        else interim = event.results[i][0].transcript;
+                    }
+                    liveText.innerHTML = `<span class="text-white">${transcript}</span><span class="text-slate-400 italic">${interim}</span>`;
+                    const textBox = document.getElementById('live-transcript-box');
+                    textBox.scrollTop = textBox.scrollHeight;
+                };
+                recognition.onerror = (event) => { 
+                    if(event.error === 'no-speech') return; 
+                    stopRecording(); 
+                };
+            }
+
+            micBtn.addEventListener('click', () => {
+                if (!isRecording) startRecording();
+                else stopRecording();
+            });
+
+            function startRecording() {
+                isRecording = true;
+                transcript = "";
+                liveText.innerText = "...";
+                startTime = Date.now();
+                micBtn.classList.remove('bg-gradient-to-br', 'from-indigo-600', 'to-indigo-700');
+                micBtn.classList.add('bg-slate-700', 'animate-pulse');
+                micBtn.innerHTML = '<span class="text-2xl font-black text-red-500">■</span>';
+                statusText.innerText = "Listening...";
+                statusText.classList.add('text-indigo-400');
+                recognition.start();
+                timerInterval = setInterval(() => {
+                    const diff = Math.floor((Date.now() - startTime) / 1000);
+                    const m = Math.floor(diff / 60).toString().padStart(2, '0');
+                    const s = (diff % 60).toString().padStart(2, '0');
+                    timerDisplay.innerText = `${m}:${s}`;
+                }, 1000);
+            }
+
+            function stopRecording() {
+                isRecording = false;
+                recognition.stop();
+                clearInterval(timerInterval);
+                processingUi.classList.remove('hidden');
+                statusText.innerText = "Analyzing...";
+                analyzeWithGroq(transcript);
+            }
+
+            async function analyzeWithGroq(userSpeech) {
+                if(userSpeech.length < 5) {
+                    alert("Recording too short. Please try again.");
+                    resetRecorder();
+                    return;
+                }
+                const currentQ = document.getElementById('exam-question').innerText;
+                const prompt = `
+                    You are a helpful, encouraging English tutor. 
+                    The student has just spoken an answer to an IELTS question.
+                    **YOUR GOAL:** Do NOT give a band score. Do NOT give grades. 
+                    Instead, act like a supportive coach. Provide corrections, improvements, and vocabulary upgrades.
+                    ======================== INPUT ========================
+                    QUESTION: ${currentQ}
+                    TRANSCRIPT: "${userSpeech}"
+                    ======================== OUTPUT FORMAT (MANDATORY) ========================
+                    Return CLEAN, STRUCTURED HTML code only. Use Tailwind CSS classes.
+                    <div class="space-y-8 font-sans text-slate-800 dark:text-slate-200">
+                        <div class="bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-xl border border-indigo-100 dark:border-indigo-900/30">
+                            <h3 class="text-indigo-800 dark:text-indigo-300 font-bold text-lg mb-2">Great start! 🌟</h3>
+                            <p class="text-indigo-700 dark:text-indigo-200 leading-relaxed">[2-3 encouraging sentences about what they did well.]</p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase text-slate-500 mb-2">Your Speech Analysis</h3>
+                            <div class="p-5 bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl font-serif text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+                                [Transcript with <span class="bg-red-100 text-red-700 px-1 rounded">red for mistakes</span>, <span class="bg-orange-100 text-orange-700 px-1 rounded">orange for weak words</span>, <span class="bg-green-100 text-green-700 px-1 rounded font-bold">green for good phrases</span>.]
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase text-slate-500 mb-4">💡 Specific Improvements</h3>
+                            <div class="space-y-4">
+                                <div class="flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-white/5">
+                                    <div class="flex-shrink-0 w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">!</div>
+                                    <div>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-1 uppercase text-xs font-bold tracking-wider">[GRAMMAR / WORD CHOICE / PHRASING]</p>
+                                        <div class="mb-1"><span class="line-through decoration-red-400 text-slate-400 mr-2">[Original]</span><span class="text-slate-300">→</span><span class="text-indigo-600 dark:text-indigo-400 font-bold ml-2">[Better version]</span></div>
+                                        <p class="text-xs text-slate-500 italic">[Short explanation]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-5 bg-orange-50 dark:bg-orange-900/10 rounded-xl border border-orange-100 dark:border-orange-900/20">
+                                <h4 class="text-xs font-bold uppercase text-orange-700 dark:text-orange-400 mb-3">Instead of saying...</h4>
+                                <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300"><li>• [Weak Word 1]</li><li>• [Weak Word 2]</li></ul>
+                            </div>
+                            <div class="p-5 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900/20">
+                                <h4 class="text-xs font-bold uppercase text-green-700 dark:text-green-400 mb-3">Try using...</h4>
+                                <ul class="space-y-2 text-sm text-slate-700 dark:text-white font-bold"><li>✨ [Strong Synonym 1]</li><li>✨ [Strong Synonym 2]</li></ul>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 text-white p-6 rounded-xl relative overflow-hidden">
+                            <h3 class="text-sm font-bold uppercase text-indigo-300 mb-3">How a Native Speaker Would Say It</h3>
+                            <p class="font-serif text-lg leading-relaxed text-indigo-50 italic">"[Rewrite their answer at C1/C2 level]"</p>
+                        </div>
+                    </div>
+                `;
+                try {
+                    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            model: MODEL_NAME,
+                            messages: [
+                                { role: "system", content: "You are an API that outputs only raw HTML code. Do not wrap in markdown." },
+                                { role: "user", content: prompt }
+                            ],
+                            temperature: 0.2
+                        })
+                    });
+                    if (!response.ok) { const err = await response.json(); throw new Error(err.error?.message || "API Error"); }
+                    const data = await response.json();
+                    let htmlContent = data.choices[0].message.content;
+                    htmlContent = htmlContent.replace(/```html/g, '').replace(/```/g, '').trim();
+                    displayReport(htmlContent);
+                } catch (error) {
+                    alert("Analysis Error: " + error.message);
+                    resetRecorder();
+                }
+            }
+
+            function displayReport(html) {
+                processingUi.classList.add('hidden');
+                reportPlaceholder.classList.add('hidden');
+                reportContainer.classList.remove('hidden');
+                reportContainer.innerHTML = html;
+            }
+
+            function resetRecorder() {
+                reportContainer.classList.add('hidden');
+                reportPlaceholder.classList.remove('hidden');
+                processingUi.classList.add('hidden');
+                transcript = "";
+                timerDisplay.innerText = "00:00";
+                statusText.innerText = "Ready";
+                liveText.innerText = "...";
+                statusText.classList.remove('text-indigo-400');
+                micBtn.classList.add('bg-gradient-to-br', 'from-indigo-600', 'to-indigo-700');
+                micBtn.classList.remove('bg-slate-700', 'animate-pulse');
+                micBtn.innerHTML = '<svg class="w-8 h-8 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>';
+            }
+
+            function nextQuestion() {
+                qIndex = (qIndex + 1) % questions.length;
+                document.getElementById('exam-question').innerText = `"${questions[qIndex]}"`;
+                resetRecorder();
+            }
+        </script>
+<!-- WRITING SIMULATOR -->
+<script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<div class="lg:col-span-12 mt-12 mb-20">
+<section class="glass-panel rounded-3xl p-8 relative overflow-hidden transition-all duration-300 border border-slate-200 dark:border-white/10" id="writing">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-3xl shadow-xl transform rotate-3">✍️</div>
+<div>
+<h3 class="text-xl font-black text-slate-900 dark:text-white leading-tight">Writing Simulator</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">IELTS Task 1 Examiner</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 transition-all duration-700 ease-in-out" id="writing-grid">
+<div class="md:col-span-2 transition-all duration-700 ease-in-out flex flex-col min-h-[600px] md:h-[900px]" id="input-col">
+<div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 mb-4 shrink-0">
+<h4 class="font-bold text-purple-600 dark:text-purple-300 uppercase text-[10px] tracking-widest mb-2">Writing Task 1</h4>
+<div class="text-lg font-serif font-bold text-slate-800 dark:text-white leading-relaxed" id="static-question">
+<p>"The graph below shows the average monthly change in the prices of three metals during 2014. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."</p>
+</div>
+</div>
+<!-- Task 1 chart image -->
+<div class="mb-4 rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-md shrink-0">
+<img alt="Graph showing average monthly change in prices of three metals during 2014" class="w-full object-contain bg-white dark:bg-slate-900 p-2 max-h-72" src="../../../images/task1-sample2.webp"/>
+</div>
+<div class="relative flex-grow mb-4">
+<textarea class="w-full h-full p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:ring-0 transition-all font-serif text-lg leading-relaxed resize-none shadow-inner custom-scrollbar" id="essay-input" placeholder="Write your Task 1 report here..."></textarea>
+<div class="absolute bottom-4 right-4 text-xs font-bold text-slate-400 bg-white/80 dark:bg-slate-900/80 px-2 py-1 rounded" id="word-count">0 words</div>
+</div>
+<button class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold shadow-lg shadow-purple-500/30 hover:scale-[1.01] transition-all flex items-center justify-center gap-2 text-lg shrink-0" id="submit-btn" onclick="submitEssay()">
+<span>🚀</span> Submit for Official Grading
+                        </button>
+</div>
+<div class="hidden opacity-0 translate-x-10 transition-all duration-700 ease-in-out min-h-[600px] md:h-[900px]" id="feedback-col">
+<div class="h-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
+<div class="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-4 p-6 bg-gray-50 dark:bg-gray-900/50 shrink-0">
+<div>
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Examiner Report</h2>
+<p class="text-gray-500 text-xs">AI Evaluation &amp; Feedback</p>
+</div>
+<button class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-200 transition flex items-center gap-2 shadow-sm" onclick="generateDOCX()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                                    Download DOCX
+                                </button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 custom-scrollbar relative" id="feedback-content">
+<div class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm z-10" id="writing-loading">
+<div class="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+<p class="text-purple-600 font-bold animate-pulse">Examiner is evaluating...</p>
+</div>
+<div class="hidden space-y-6 prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200" id="ai-result"></div>
+</div>
+<div class="p-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-center shrink-0">
+<button class="text-sm font-bold text-gray-500 hover:text-purple-600 transition-colors" onclick="resetWriting()">Start New Report</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+            const GROQ_API_KEY = "YOUR_GROQ_API_KEY";
+
+            const essayInput = document.getElementById('essay-input');
+            const wordCountLabel = document.getElementById('word-count');
+            const inputCol = document.getElementById('input-col');
+            const feedbackCol = document.getElementById('feedback-col');
+            const submitBtn = document.getElementById('submit-btn');
+            const writingLoading = document.getElementById('writing-loading');
+            const aiResult = document.getElementById('ai-result');
+
+            essayInput.addEventListener('input', () => {
+                const words = essayInput.value.trim().split(/\s+/).length;
+                wordCountLabel.innerText = essayInput.value.trim() === '' ? '0 words' : `${words} words`;
+            });
+
+            async function submitEssay() {
+                const text = essayInput.value.trim();
+                if(text.length < 50) { alert("Please write a longer report before submitting."); return; }
+                
+                const question = document.getElementById('static-question').innerText;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Submitting...';
+
+                inputCol.classList.remove('md:col-span-2');
+                inputCol.classList.add('md:col-span-1');
+                feedbackCol.classList.remove('hidden', 'opacity-0', 'translate-x-10');
+                feedbackCol.classList.add('opacity-100', 'translate-x-0');
+                writingLoading.style.display = 'flex';
+                aiResult.classList.add('hidden');
+
+                const prompt = `
+                You are a strict but fair IELTS examiner. Grade the following Task 1 academic report.
+                QUESTION: ${question}
+                REPORT: ${text}
+                
+                Return structured HTML with Tailwind CSS using these exact sections:
+                1. Band Score header (large, bold) with a score from 1-9
+                2. Four criteria scores (Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy) each /9
+                3. What you did well (3 bullet points in green)  
+                4. What to improve (3 bullet points in orange/red)
+                5. A rewritten paragraph showing the improvement
+                Use clean, professional styling. Output only raw HTML, no markdown.`;
+
+                try {
+                    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [
+                                { role: "system", content: "Output only raw HTML, no markdown fences." },
+                                { role: "user", content: prompt }
+                            ],
+                            temperature: 0.3
+                        })
+                    });
+                    if (!res.ok) throw new Error("API failed");
+                    const data = await res.json();
+                    let html = data.choices[0].message.content.replace(/```html/g,'').replace(/```/g,'').trim();
+                    writingLoading.style.display = 'none';
+                    aiResult.classList.remove('hidden');
+                    aiResult.innerHTML = html;
+                } catch(e) {
+                    alert("Error: " + e.message);
+                    resetWriting();
+                }
+            }
+
+            function resetWriting() {
+                essayInput.value = '';
+                wordCountLabel.innerText = '0 words';
+                inputCol.classList.add('md:col-span-2');
+                inputCol.classList.remove('md:col-span-1');
+                feedbackCol.classList.add('hidden', 'opacity-0', 'translate-x-10');
+                feedbackCol.classList.remove('opacity-100', 'translate-x-0');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>🚀</span> Submit for Official Grading';
+            }
+
+            function generateDOCX() {
+                const content = `<!DOCTYPE html><html><body style="font-family: Arial; padding: 40px;">${aiResult.innerHTML}</body></html>`;
+                const converted = htmlDocx.asBlob(content);
+                saveAs(converted, 'IELTS_Task1_Feedback.docx');
+            }
+        </script>
+</main>
+<footer class="relative z-10 py-12 mt-20 border-t border-slate-200/50 dark:border-white/5 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xl">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-indigo-500/20">
+                    S
+                </div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-white leading-tight">IELTS's IELTS</span>
+<span class="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">IELTS Prep Platform</span>
+</div>
+</div>
+<p class="text-xs font-medium text-slate-400">
+                © 2026. All rights reserved.
+            </p>
+</div>
+</footer>
+<script>
+        // STARS GENERATOR
+        const starContainer = document.querySelector('.stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const duration = Math.random() * 3 + 2;
+            const size = Math.random() * 2 + 1;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--opacity', Math.random());
+            starContainer.appendChild(star);
+        }
+
+        // THEME TOGGLE
+        const themeBtn = document.getElementById('themeToggle');
+        const sun = document.querySelector('.sun');
+        const moon = document.querySelector('.moon');
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            sun.classList.remove('hidden');
+            moon.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            sun.classList.add('hidden');
+            moon.classList.remove('hidden');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sun.classList.remove('hidden');
+                moon.classList.add('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sun.classList.add('hidden');
+                moon.classList.remove('hidden');
+            }
+        });
+
+        // CHECK ANSWERS
+        function checkAnswers() {
+            const inputs = document.querySelectorAll('.gap-fill');
+            let correctCount = 0;
+            inputs.forEach(input => {
+                const userAnswer = input.innerText.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-answer').toLowerCase();
+                input.classList.remove('correct', 'wrong');
+                if (userAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                    correctCount++;
+                } else {
+                    input.classList.add('wrong');
+                }
+            });
+            const badge = document.getElementById('scoreBadge');
+            const checkBtn = document.getElementById('checkBtn');
+            const retryBtn = document.getElementById('retryBtn');
+            badge.innerText = `${correctCount}/${inputs.length}`;
+            badge.classList.remove('hidden');
+            checkBtn.classList.add('hidden');
+            retryBtn.classList.remove('hidden');
+            const firstWrong = document.querySelector('.gap-fill.wrong');
+            if(firstWrong) firstWrong.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // RESET
+        function resetExercise() {
+            const inputs = document.querySelectorAll('.gap-fill');
+            const badge = document.getElementById('scoreBadge');
+            const checkBtn = document.getElementById('checkBtn');
+            const retryBtn = document.getElementById('retryBtn');
+            inputs.forEach(input => {
+                input.innerText = '';
+                input.classList.remove('correct', 'wrong');
+            });
+            badge.classList.add('hidden');
+            checkBtn.classList.remove('hidden');
+            retryBtn.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

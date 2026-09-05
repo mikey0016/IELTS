@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Task 2 Sample: Cookery, Dressmaking &amp; Woodwork</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
+                    animation: {
+                        'twinkle': 'twinkle 4s ease-in-out infinite',
+                        'float':   'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        twinkle: { '0%, 100%': { opacity: '0.8' }, '50%': { opacity: '0.3' } },
+                        float:   { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .stars { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;background:#090a0f;overflow:hidden; }
+        .star  { position:absolute;background:white;border-radius:50%;animation:twinkle var(--duration) ease-in-out infinite;opacity:var(--opacity); }
+        .nebula{ position:absolute;width:60vw;height:60vw;border-radius:50%;filter:blur(80px);opacity:.3;animation:float 10s ease-in-out infinite; }
+        html:not(.dark) .stars { display:none; }
+
+        .day-bg { position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;background:linear-gradient(135deg,#fafdfb 0%,#e8eeea 100%); }
+        html.dark .day-bg { display:none; }
+
+        .glass-panel { background:rgba(255,255,255,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.3);box-shadow:0 8px 32px 0 rgba(31,38,135,.07);transition:all .3s ease; }
+        .dark .glass-panel { background:rgba(17,25,40,.6);border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 32px 0 rgba(0,0,0,.3); }
+
+        .vocab-word { border-bottom:2px dashed #10b981;cursor:help;position:relative;font-weight:600;color:#059669;transition:all .2s; }
+        .dark .vocab-word { border-color:#34d399;color:#6ee7b7; }
+        .vocab-word:hover { background:rgba(16,185,129,.15);border-radius:4px;color:#047857; }
+        .dark .vocab-word:hover { color:#d1fae5; }
+        .vocab-word::after { content:attr(data-def);position:absolute;bottom:140%;left:50%;transform:translateX(-50%) translateY(10px);background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,.2);padding:6px 12px;font-size:12px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;box-shadow:0 10px 20px rgba(0,0,0,.5);font-family:'Inter',sans-serif;z-index:50; }
+        .vocab-word:hover::after { opacity:1;transform:translateX(-50%) translateY(0); }
+
+        .gap-fill { display:inline-block;min-width:80px;border-bottom:3px solid #94a3b8;color:#334155;font-weight:700;text-align:center;outline:none;padding:0 4px 3px 4px;margin:0 2px;transition:all .2s;cursor:text;white-space:pre-wrap;overflow-wrap:anywhere;vertical-align:baseline;line-height:1.4; }
+        .dark .gap-fill { border-bottom-color:#475569;color:#e2e8f0; }
+        .gap-fill:empty::before { content:attr(data-hint);color:#cbd5e1;font-weight:400;font-size:.9em;letter-spacing:1px; }
+        .dark .gap-fill:empty::before { color:#475569; }
+        .gap-fill:focus  { border-bottom:3px solid #10b981;background:rgba(16,185,129,.1); }
+        .gap-fill.correct{ border-bottom:3px solid #10b981;color:#059669;background:rgba(16,185,129,.1); }
+        .gap-fill.wrong  { border-bottom:3px solid #ef4444;color:#ef4444;background:rgba(239,68,68,.1); }
+
+        html { scroll-padding-top:120px; }
+        .custom-scrollbar::-webkit-scrollbar { width:6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background:transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background:#cbd5e1;border-radius:3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background:#334155; }
+    </style>
+<script>
+// Blok: Ctrl+U, F12, Ctrl+Shift+I/J/C, Ctrl+S va o'ng klik
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' ||
+        (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+        (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.key.toLowerCase() === 's')) {
+        e.preventDefault();
+        return false;
+    }
+});
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat kod ko'rishni bloklaymiz */ });
+</script>
+<script>
+// Offline Writing Analysis v2 - tries real server, fallback to improved local heuristic
+(function(){
+    const _origFetch = window.fetch;
+    function _countWords(t){ return (t||'').trim().split(/\s+/).filter(Boolean).length; }
+    function _uniqueRatio(t){
+        const w=(t||'').toLowerCase().match(/\b[a-z]+\b/g)||[];
+        if(!w.length) return 0;
+        return (new Set(w)).size / w.length;
+    }
+    function _avgSentenceLen(t){
+        const s=(t||'').split(/[.!?]+/).filter(x=>x.trim().length>5);
+        if(!s.length) return 0;
+        const words=_countWords(t);
+        return words / s.length;
+    }
+    function _hasComplex(t){
+        return /although|however|moreover|therefore|whereas|because|since|while|despite|in contrast/i.test(t);
+    }
+    function _genBandDetailed(text, minWords){
+        const wc=_countWords(text);
+        const ur=_uniqueRatio(text);
+        const asl=_avgSentenceLen(text);
+        const complex=_hasComplex(text);
+        let band=5.5;
+        if(wc>=minWords) band+=0.5; else if(wc>=minWords-10) band+=0;
+        else band-=0.5;
+        if(wc>=minWords+30) band+=0.5;
+        if(ur>0.55) band+=0.5;
+        if(ur>0.65) band+=0.5;
+        if(asl>=12 && asl<=22) band+=0.5;
+        if(complex) band+=0.5;
+        if(wc<minWords-20) band=Math.min(band,5.0);
+        if(wc<30) band=4.5;
+        band=Math.round(band*2)/2;
+        if(band>8) band=8;
+        if(band<4) band=4;
+        return band;
+    }
+    function _fb(band, label){
+        if(band>=7) return `${label}: Very good. Clear position, well-developed ideas, wide vocabulary, few errors.`;
+        if(band>=6.5) return `${label}: Good. Covers task well, logical structure, some less common words, occasional inaccuracies remain.`;
+        if(band>=6) return `${label}: Satisfactory. Addresses task, coherent organisation, adequate vocabulary/grammar but some repetition and errors.`;
+        if(band>=5.5) return `${label}: Modest. Partially addresses task, limited cohesion, vocabulary adequate for task, frequent grammar errors.`;
+        return `${label}: Needs work. Incomplete response, weak organisation, limited vocabulary, many grammar errors.`;
+    }
+    function _makeTask(text, minWords, topic){
+        const band=_genBandDetailed(text, minWords);
+        const wc=_countWords(text);
+        const wcComment = wc < minWords ? `Word count low: ${wc}/${minWords} - Task Achievement penalised.` : `Word count OK: ${wc} words.`;
+        // create one sample correction from first sentence if any
+        const firstSent=(text||'').split(/[.!?]+/).filter(s=>s.trim().length>10)[0]||'';
+        let corrections=[];
+        if(firstSent){
+            corrections=[{original: firstSent.trim().slice(0,120), corrected: firstSent.trim().slice(0,120)+" (improved cohesion & article use)", explanation: "Offline demo: check articles, verb forms and linking words. Online AI gives full sentence-by-sentence corrections."}];
+        }
+        return {
+            band: band,
+            ta_band: band, ta_feedback: _fb(band, "Task Achievement"),
+            cc_band: Math.max(5, Math.round((band-0.3)*2)/2), cc_feedback: _fb(Math.max(5, Math.round((band-0.3)*2)/2), "Coherence"),
+            lr_band: band, lr_feedback: _fb(band, "Lexical Resource"),
+            gra_band: Math.max(5, Math.round((band-0.2)*2)/2), gra_feedback: _fb(Math.max(5, Math.round((band-0.2)*2)/2), "Grammar"),
+            overall_comment: wc<minWords ? "Increase word count to meet minimum - otherwise band is capped." : "Offline analysis: based on word count, lexical diversity, sentence variety and linking words. For AI sentence corrections, use online.",
+            word_count_comment: wcComment,
+            sentence_corrections: corrections,
+            model_paragraph: "Offline model not available - online provides Band 9 sample."
+        };
+    }
+    window.fetch = async function(input, init){
+        const url = typeof input==='string' ? input : (input.url||'');
+        if(url.includes('check_writing_test.php')){
+            // try real server first
+            try{
+                const res = await _origFetch.apply(this, arguments);
+                if(res.ok){
+                    const clone=res.clone();
+                    const txt=await clone.text();
+                    try{
+                        const data=JSON.parse(txt);
+                        if(data && data.success) {
+                            console.log('[Online] Real evaluation used');
+                            return new Response(txt, {status:res.status, headers:{'Content-Type':'application/json'}});
+                        }
+                    }catch{}
+                    // if not success, fall through to mock
+                }
+            }catch(e){
+                console.log('[Offline] Real fetch failed, using mock', e.message);
+            }
+            try{
+                const body = init && init.body ? JSON.parse(init.body) : {};
+                const t1text=body.task1||'';
+                const t2text=body.task2||'';
+                const t1w=body.task1_words||_countWords(t1text);
+                const t2w=body.task2_words||_countWords(t2text);
+                // generate tasks
+                const t1=_makeTask(t1text, 150, body.task1_topic||'');
+                const t2=_makeTask(t2text, 250, body.task2_topic||'');
+                const overall=Math.round(((t1.band/3)+(t2.band*2/3))*2)/2;
+                const evaluation={
+                    overall_band: overall,
+                    overall_summary: "Offline evaluation (improved heuristic) - word count, lexical diversity, sentence length, linking words. Online AI is more accurate.",
+                    strategic_advice: "• Task 1: Overview + 2 detail paragraphs, compare data.\n• Task 2: Clear 2-3 ideas, examples.\n• Avoid memorised phrases, check 150/250 words.",
+                    task1: t1,
+                    task2: t2
+                };
+                return new Response(JSON.stringify({success:true, evaluation}), {status:200, headers:{'Content-Type':'application/json'}});
+            }catch(e){
+                return new Response(JSON.stringify({success:false, error:e.message}), {status:500, headers:{'Content-Type':'application/json'}});
+            }
+        }
+        if(url.includes('save_writing_result.php') || url.includes('award_xp.php')){
+            try{ return await _origFetch.apply(this, arguments); }catch{ return new Response(JSON.stringify({success:true}), {status:200, headers:{'Content-Type':'application/json'}}); }
+        }
+        return _origFetch.apply(this, arguments);
+    };
+    console.log('Offline writing analysis v2 installed (online first, offline fallback)');
+})();
+</script>
+</head>
+<body class="antialiased text-slate-800 dark:text-slate-200 selection:bg-emerald-500 selection:text-white" oncontextmenu="return false">
+<div class="day-bg"></div>
+<div class="stars">
+<div class="nebula bg-emerald-600 top-[-10%] left-[-10%]"></div>
+<div class="nebula bg-teal-600 bottom-[-10%] right-[-10%]" style="animation-delay:2s"></div>
+</div>
+<!-- NAVBAR -->
+<div class="fixed z-50 top-0 left-0 right-0 w-full md:top-6 md:flex md:justify-center md:pointer-events-none transition-all duration-300">
+<nav class="pointer-events-auto bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-slate-200/50 dark:border-white/10 shadow-2xl shadow-emerald-500/10 transition-all duration-300 w-full border-b p-4 md:w-auto md:max-w-7xl md:rounded-full md:border md:p-2 md:pr-3">
+<div class="flex items-center justify-between">
+<a class="group flex items-center gap-3 pr-4 pl-1 py-1 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-all shrink-0" href="writing.php">
+<div class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-[-10deg] transition-all duration-300">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-none mb-0.5">Back to</span>
+<span class="text-sm font-black text-slate-800 dark:text-white leading-none group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Library</span>
+</div>
+</a>
+<div class="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-black/20 rounded-full p-1 border border-slate-200/50 dark:border-white/5 shadow-inner">
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-white hover:shadow-sm transition-all" href="#sample">Sample</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-white hover:shadow-sm transition-all" href="#vocab">Vocab</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-white hover:shadow-sm transition-all" href="#exercise">Exercise</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-white hover:shadow-sm transition-all" href="#listening">Listen</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-white hover:shadow-sm transition-all" href="#reading">Read</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-emerald-600 dark:hover:text-white hover:shadow-sm transition-all" href="#speaking">Speak</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 hover:shadow-md transition-all shadow-lg shadow-emerald-500/30" href="#writing">Write</a>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-all active:scale-90 border border-slate-200 dark:border-white/5" id="themeToggle">
+<svg class="sun w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<svg class="moon hidden w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="md:hidden w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-white border border-slate-200 dark:border-white/5 active:scale-90 transition-all" onclick="toggleMobileMenu()">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<div class="hidden md:hidden pt-4 pb-2 border-t border-slate-200 dark:border-white/10 mt-4 space-y-1" id="mobileMenu">
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#sample" onclick="toggleMobileMenu()">📄 Sample Essay</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#vocab" onclick="toggleMobileMenu()">📚 Vocabulary</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#exercise" onclick="toggleMobileMenu()">✎ Gap Fill</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#listening" onclick="toggleMobileMenu()">🎧 Listening</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#reading" onclick="toggleMobileMenu()">📖 Reading</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#speaking" onclick="toggleMobileMenu()">🎙️ Speaking</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 transition-colors" href="#writing" onclick="toggleMobileMenu()">✍️ Writing</a>
+</div>
+</nav>
+</div>
+<script>function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('hidden');}</script>
+<!-- HEADER -->
+<header class="relative w-full max-w-[95%] mx-auto pt-28 pb-10 z-10">
+<div class="glass-panel rounded-[2.5rem] p-10 md:p-16 overflow-hidden relative border border-white/20 shadow-2xl group">
+<div class="absolute inset-0 z-0 pointer-events-none">
+<img alt="Cooking and practical skills" class="w-full h-full object-cover opacity-15 dark:opacity-20 mix-blend-overlay dark:mix-blend-soft-light filter blur-[1px] scale-105 transform transition-transform duration-[2000ms] group-hover:scale-110" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&amp;w=2670&amp;auto=format&amp;fit=crop"/>
+<div class="absolute inset-0 bg-gradient-to-b from-white/70 via-transparent to-white/70 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-slate-900/80"></div>
+</div>
+<div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none z-0"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/20 rounded-full blur-[100px] -ml-32 -mb-32 pointer-events-none z-0"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 dark:bg-black/40 border border-emerald-100 dark:border-white/10 mb-8 shadow-sm backdrop-blur-md hover:scale-105 transition-transform">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+<span class="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">Band 9.0 Analysis</span>
+</div>
+<h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-slate-900 dark:text-white drop-shadow-sm">
+                Cookery,
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-300 dark:to-teal-300">
+                    Dressmaking
+                </span>
+<br class="hidden md:block"/>&amp; Woodwork
+            </h1>
+<div class="flex flex-wrap justify-center gap-3 md:gap-6 mt-2">
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-emerald-500 text-lg">🎓</span><span>Agree &amp; Disagree</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-teal-500 text-lg">📝</span><span>Task 2 Essay</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-emerald-500 text-lg">⏱️</span><span>40 Mins</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full max-w-[95%] mx-auto px-2 relative z-10 pb-24 grid lg:grid-cols-12 gap-6">
+<!-- SAMPLE ESSAY -->
+<div class="lg:col-span-8 space-y-6">
+<section class="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden" id="sample">
+<div class="bg-emerald-50/80 dark:bg-emerald-900/20 p-6 rounded-2xl border-l-4 border-emerald-500 mb-8 backdrop-blur-sm">
+<h3 class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">Essay Question</h3>
+<p class="font-serif text-lg font-bold text-slate-800 dark:text-white italic leading-relaxed">
+                    "Schools should focus on academic success and passing examinations. Skills such as cookery, dressmaking and woodworking should not be taught at school as it is better to learn these from family. To what extent do you agree or disagree?"
+                </p>
+</div>
+<div class="prose dark:prose-invert max-w-none text-lg leading-[2.2] font-serif text-slate-700 dark:text-slate-300">
+<p class="mb-6">
+<span class="vocab-word" data-def="a swiftly changing world">A rapidly evolving world</span> <span class="vocab-word" data-def="requires">necessitates</span> <span class="vocab-word" data-def="basic reforms to schools">fundamental changes to educational institutions</span>. While <span class="vocab-word" data-def="established academic areas">traditional subjects</span> like mathematics, science, and literature are <span class="vocab-word" data-def="unquestionably significant">undoubtedly important</span>, I strongly believe that schools should also <span class="vocab-word" data-def="integrate practical abilities">incorporate practical skills</span> such as <span class="vocab-word" data-def="cooking">cookery</span>, <span class="vocab-word" data-def="tailoring, making clothes">dressmaking</span>, and <span class="vocab-word" data-def="making things from wood">woodworking</span> into their <span class="vocab-word" data-def="what you study in school">curricula</span>.
+                </p>
+<p class="mb-6">
+                    On the one hand, teaching practical skills at home <span class="vocab-word" data-def="allows for">enables</span> students to <span class="vocab-word" data-def="gain crucial life abilities">acquire essential life skills</span> that are often <span class="vocab-word" data-def="ignored in normal scholastic contexts">overlooked in traditional academic settings</span>. For instance, many parents <span class="vocab-word" data-def="think about, view as">consider</span> it a <span class="vocab-word" data-def="accountability, duty">responsibility</span> to teach their children <span class="vocab-word" data-def="understanding">knowledge</span> of <span class="vocab-word" data-def="nourishment, food science">nutrition</span>, <span class="vocab-word" data-def="thinking about what to eat">meal planning</span>, and <span class="vocab-word" data-def="cooking methods">culinary techniques</span>. By learning to <span class="vocab-word" data-def="cook their own food">prepare their own meals</span>, young people can <span class="vocab-word" data-def="attain a profound comprehension of nutritious dietary practices">gain a deep understanding of healthy eating habits</span>, <span class="vocab-word" data-def="not eating too much">portion control</span>, and the <span class="vocab-word" data-def="importance of well-rounded nourishment">value of balanced nutrition</span>. These skills not only <span class="vocab-word" data-def="add to">contribute</span> to their physical well-being but also <span class="vocab-word" data-def="inspire, give power to">empower</span> them to <span class="vocab-word" data-def="make educated decisions">make informed choices</span> about their <span class="vocab-word" data-def="nutritional plan">diet</span>, leading to a <span class="vocab-word" data-def="enduring influence">lifelong impact</span> on their health. This <span class="vocab-word" data-def="procedure, method">process</span> is best done in families where <span class="vocab-word" data-def="patterns can develop over the long haul">habits can form in the long-term</span>.
+                </p>
+<p class="mb-6">
+                    However, incorporating practical skills into the curriculum <span class="vocab-word" data-def="encourages">promotes</span> a <span class="vocab-word" data-def="comprehensive learning accommodating various requirements">well-rounded education catering to</span> <span class="vocab-word" data-def="various requirements and interests">diverse needs and interests</span>. Not all students <span class="vocab-word" data-def="succeed">excel</span> in academics, and by <span class="vocab-word" data-def="offering choices">providing alternatives</span>, schools can <span class="vocab-word" data-def="harness the possibilities of">tap into the potential of</span> students who might <span class="vocab-word" data-def="alternatively">otherwise</span> feel <span class="vocab-word" data-def="not paid attention to, excluded">marginalized</span> or <span class="vocab-word" data-def="detached, uninvolved">disengaged</span>. For example, a student who <span class="vocab-word" data-def="encounters difficulties with">struggles with</span> academic subjects might <span class="vocab-word" data-def="unearth an innate ability">discover a natural talent</span> and <span class="vocab-word" data-def="enthusiasm">passion</span> for woodworking. By <span class="vocab-word" data-def="fostering, supporting growth">nurturing</span> their interest and <span class="vocab-word" data-def="offering chances">providing opportunities</span> to develop their woodworking skills, the student <span class="vocab-word" data-def="attains a sense of meaning and achievement">gains a feeling of purpose and accomplishment</span>, <span class="vocab-word" data-def="enhancing their general involvement">boosting their overall engagement</span> and <span class="vocab-word" data-def="drive, desire to succeed">motivation</span>. In a fashion class, a student can learn to <span class="vocab-word" data-def="create">design</span>, <span class="vocab-word" data-def="calculate size">measure</span>, <span class="vocab-word" data-def="trim fabric">cut</span>, and <span class="vocab-word" data-def="stitch clothes">sew garments</span>. Both classes <span class="vocab-word" data-def="foster a feeling of confidence">instill a sense of pride</span> if students can produce <span class="vocab-word" data-def="functional wooden items">useful wood objects</span> or <span class="vocab-word" data-def="put on clothes">wear garments</span> they have <span class="vocab-word" data-def="made">crafted</span> themselves.
+                </p>
+<p class="mb-6">
+                    In conclusion, rather than <span class="vocab-word" data-def="depending on families">relying on families</span>, schools should <span class="vocab-word" data-def="place emphasis on">prioritize</span> incorporating practical skills into the curriculum while also <span class="vocab-word" data-def="upholding strict criteria for">maintaining rigorous standards for</span> the current core subjects. By doing so, students will have a more <span class="vocab-word" data-def="holistic learning">comprehensive education</span> that <span class="vocab-word" data-def="provides">equips</span> them with both <span class="vocab-word" data-def="academic understanding and applied proficiency">theoretical knowledge and practical expertise</span>.
+                </p>
+</div>
+</section>
+</div>
+<!-- STRUCTURE ANALYSIS -->
+<div class="lg:col-span-4 space-y-6">
+<h2 class="text-xl font-black text-slate-900 dark:text-white px-2">Structure Analysis</h2>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-rose-500">
+<span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-2 block">01. Introduction</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"A rapidly evolving world necessitates fundamental changes to educational institutions."</p>
+<p class="text-xs text-slate-400">→ Paraphrase the essay topic</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"I strongly believe that schools should also incorporate practical skills..."</p>
+<p class="text-xs text-slate-400">→ State a clear, direct opinion</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-teal-500">
+<span class="text-[10px] font-bold text-teal-500 uppercase tracking-wider mb-2 block">02. Body Paragraph 1</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"On the one hand, teaching practical skills at home enables students to acquire essential life skills..."</p>
+<p class="text-xs text-slate-400">→ Topic sentence — concede the other side fairly</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...knowledge of nutrition, meal planning, and culinary techniques."</p>
+<p class="text-xs text-slate-400">→ Give a specific, developed example</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"This process is best done in families where habits can form in the long-term."</p>
+<p class="text-xs text-slate-400">→ Close with a clear, memorable sentence</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-violet-500">
+<span class="text-[10px] font-bold text-violet-500 uppercase tracking-wider mb-2 block">03. Body Paragraph 2</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"However, incorporating practical skills into the curriculum promotes a well-rounded education..."</p>
+<p class="text-xs text-slate-400">→ New topic sentence — introduce the main counter-argument</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...a student who struggles with academic subjects might discover a natural talent..."</p>
+<p class="text-xs text-slate-400">→ Develop with a specific hypothetical example</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"Both classes instill a sense of pride..."</p>
+<p class="text-xs text-slate-400">→ Finish with a strong, unifying statement</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-amber-500">
+<span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-2 block">04. Conclusion</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...rather than relying on families, schools should prioritize incorporating practical skills..."</p>
+<p class="text-xs text-slate-400">→ Summarise the main position clearly</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...a more comprehensive education that equips them with both theoretical knowledge and practical expertise."</p>
+<p class="text-xs text-slate-400">→ End with a forward-looking final thought</p>
+</div>
+</div>
+<!-- VOCAB LIST -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8" id="vocab">
+<h3 class="text-lg font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+<span class="text-emerald-500">📚</span> Vocabulary List
+            </h3>
+<div class="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-2">
+<div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">A rapidly evolving world</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">a swiftly changing world</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">necessitates</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">requires</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">fundamental changes to educational institutions</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">basic reforms to schools</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">traditional subjects</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">established academic areas</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">undoubtedly important</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">unquestionably significant</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">incorporate practical skills</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">integrate practical abilities</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">cookery</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">cooking</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">dressmaking</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">tailoring, making clothes</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">woodworking</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">making things from wood</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">curricula</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">what you study in school</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">enables</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">allows for</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">acquire essential life skills</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">gain crucial life abilities</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">overlooked in traditional academic settings</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">ignored in normal scholastic contexts</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">consider</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">think about, view as</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">responsibility</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">accountability, duty</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">nutrition</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">nourishment, food science</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">meal planning</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">thinking about what to eat</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">culinary techniques</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">cooking methods</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">prepare their own meals</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">cook their own food</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">gain a deep understanding of healthy eating habits</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">attain a profound comprehension of nutritious dietary practices</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">portion control</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">not eating too much</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">value of balanced nutrition</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">importance of well-rounded nourishment</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">contribute</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">add to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">empower</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">inspire, give power to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">make informed choices</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">make educated decisions</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">diet</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">nutritional plan</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">lifelong impact</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">enduring influence</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">habits can form in the long-term</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">patterns can develop over the long haul</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">promotes</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">encourages</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">well-rounded education catering to diverse needs</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">comprehensive learning accommodating various requirements</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">excel</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">succeed</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">providing alternatives</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">offering choices</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">tap into the potential of</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">harness the possibilities of</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">marginalized</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">excluded, not paid attention to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">disengaged</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">detached, uninvolved</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">struggles with</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">encounters difficulties with</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">discover a natural talent</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">unearth an innate ability</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">passion</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">enthusiasm</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">nurturing</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">fostering, supporting growth</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">providing opportunities</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">offering chances</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">gains a feeling of purpose and accomplishment</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">attains a sense of meaning and achievement</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">boosting their overall engagement</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">enhancing their general involvement</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">motivation</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">drive, desire to succeed</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">sew garments</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">stitch clothes</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">instill a sense of pride</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">foster a feeling of confidence</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">useful wood objects</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">functional wooden items</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">crafted</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">made</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">relying on families</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">depending on families</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">prioritize</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">place emphasis on</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">maintaining rigorous standards for</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">upholding strict criteria for</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">comprehensive education</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">holistic learning</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">equips</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">provides</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-emerald-600 dark:text-emerald-400">theoretical knowledge and practical expertise</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">academic understanding and applied proficiency</span>
+</div> </div>
+</section>
+</div>
+<!-- GAP FILL -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="exercise">
+<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+<div>
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-emerald-500">✎</span> Gap Fill Challenge
+                    </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Type the missing words. The box grows as you type.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 transition-all" id="checkBtn" onclick="checkAnswers()">
+                        Check Answers
+                    </button>
+<button class="hidden bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-slate-300 transition-all" id="retryBtn" onclick="resetExercise()">
+                        Retry ↺
+                    </button>
+<span class="hidden bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-full text-sm font-bold border border-emerald-200 dark:border-emerald-800" id="scoreBadge">0/40</span>
+</div>
+</div>
+<div class="prose dark:prose-invert max-w-none text-lg leading-[2.2] font-serif text-slate-700 dark:text-slate-300">
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+<span class="gap-fill" contenteditable="true" data-answer="A rapidly evolving world" data-hint="A...d"></span>
+<span class="gap-fill" contenteditable="true" data-answer="necessitates fundamental changes to educational institutions" data-hint="n...s"></span>.
+                    While <span class="gap-fill" contenteditable="true" data-answer="traditional subjects" data-hint="t...s"></span>
+                    like mathematics, science, and literature are
+                    <span class="gap-fill" contenteditable="true" data-answer="undoubtedly important" data-hint="u...t"></span>,
+                    I strongly believe that schools should also
+                    <span class="gap-fill" contenteditable="true" data-answer="incorporate practical skills" data-hint="i...s"></span>
+                    such as
+                    <span class="gap-fill" contenteditable="true" data-answer="cookery" data-hint="c...y"></span>,
+                    <span class="gap-fill" contenteditable="true" data-answer="dressmaking" data-hint="d...g"></span>,
+                    and
+                    <span class="gap-fill" contenteditable="true" data-answer="woodworking" data-hint="w...g"></span>
+                    into their
+                    <span class="gap-fill" contenteditable="true" data-answer="curricula" data-hint="c...a"></span>.
+                </p>
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                    On the one hand, teaching practical skills at home
+                    <span class="gap-fill" contenteditable="true" data-answer="enables" data-hint="e...s"></span>
+                    students to
+                    <span class="gap-fill" contenteditable="true" data-answer="acquire essential life skills" data-hint="a...s"></span>
+                    that are often
+                    <span class="gap-fill" contenteditable="true" data-answer="overlooked in traditional academic settings" data-hint="o...s"></span>.
+                    For instance, many parents
+                    <span class="gap-fill" contenteditable="true" data-answer="consider" data-hint="c...r"></span>
+                    it a
+                    <span class="gap-fill" contenteditable="true" data-answer="responsibility" data-hint="r...y"></span>
+                    to teach their children
+                    <span class="gap-fill" contenteditable="true" data-answer="knowledge" data-hint="k...e"></span>
+                    of
+                    <span class="gap-fill" contenteditable="true" data-answer="nutrition" data-hint="n...n"></span>,
+                    <span class="gap-fill" contenteditable="true" data-answer="meal planning" data-hint="m...g"></span>,
+                    and
+                    <span class="gap-fill" contenteditable="true" data-answer="culinary techniques" data-hint="c...s"></span>.
+                    By learning to
+                    <span class="gap-fill" contenteditable="true" data-answer="prepare their own meals" data-hint="p...s"></span>,
+                    young people can
+                    <span class="gap-fill" contenteditable="true" data-answer="gain a deep understanding of healthy eating habits" data-hint="g...s"></span>,
+                    <span class="gap-fill" contenteditable="true" data-answer="portion control" data-hint="p...l"></span>,
+                    and the
+                    <span class="gap-fill" contenteditable="true" data-answer="value of balanced nutrition" data-hint="v...n"></span>.
+                    These skills not only
+                    <span class="gap-fill" contenteditable="true" data-answer="contribute" data-hint="c...e"></span>
+                    to their physical well-being but also
+                    <span class="gap-fill" contenteditable="true" data-answer="empower" data-hint="e...r"></span>
+                    them to
+                    <span class="gap-fill" contenteditable="true" data-answer="make informed choices" data-hint="m...s"></span>
+                    about their
+                    <span class="gap-fill" contenteditable="true" data-answer="diet" data-hint="d...t"></span>,
+                    leading to a
+                    <span class="gap-fill" contenteditable="true" data-answer="lifelong impact" data-hint="l...t"></span>
+                    on their health. This
+                    <span class="gap-fill" contenteditable="true" data-answer="process" data-hint="p...s"></span>
+                    is best done in families where
+                    <span class="gap-fill" contenteditable="true" data-answer="habits can form in the long-term" data-hint="h...m"></span>.
+                </p>
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                    However, incorporating practical skills into the curriculum
+                    <span class="gap-fill" contenteditable="true" data-answer="promotes" data-hint="p...s"></span>
+                    a
+                    <span class="gap-fill" contenteditable="true" data-answer="well-rounded education catering to" data-hint="w...o"></span>
+<span class="gap-fill" contenteditable="true" data-answer="diverse needs and interests" data-hint="d...s"></span>.
+                    Not all students
+                    <span class="gap-fill" contenteditable="true" data-answer="excel" data-hint="e...l"></span>
+                    in academics, and by
+                    <span class="gap-fill" contenteditable="true" data-answer="providing alternatives" data-hint="p...s"></span>,
+                    schools can
+                    <span class="gap-fill" contenteditable="true" data-answer="tap into the potential of" data-hint="t...f"></span>
+                    students who might
+                    <span class="gap-fill" contenteditable="true" data-answer="otherwise" data-hint="o...e"></span>
+                    feel
+                    <span class="gap-fill" contenteditable="true" data-answer="marginalized" data-hint="m...d"></span>
+                    or
+                    <span class="gap-fill" contenteditable="true" data-answer="disengaged" data-hint="d...d"></span>.
+                    For example, a student who
+                    <span class="gap-fill" contenteditable="true" data-answer="struggles with" data-hint="s...h"></span>
+                    academic subjects might
+                    <span class="gap-fill" contenteditable="true" data-answer="discover a natural talent" data-hint="d...t"></span>
+                    and
+                    <span class="gap-fill" contenteditable="true" data-answer="passion" data-hint="p...n"></span>
+                    for woodworking. By
+                    <span class="gap-fill" contenteditable="true" data-answer="nurturing" data-hint="n...g"></span>
+                    their interest and
+                    <span class="gap-fill" contenteditable="true" data-answer="providing opportunities" data-hint="p...s"></span>
+                    to develop their woodworking skills, the student
+                    <span class="gap-fill" contenteditable="true" data-answer="gains a feeling of purpose and accomplishment" data-hint="g...t"></span>,
+                    <span class="gap-fill" contenteditable="true" data-answer="boosting their overall engagement" data-hint="b...t"></span>
+                    and
+                    <span class="gap-fill" contenteditable="true" data-answer="motivation" data-hint="m...n"></span>.
+                    In a fashion class, a student can learn to
+                    <span class="gap-fill" contenteditable="true" data-answer="design" data-hint="d...n"></span>,
+                    <span class="gap-fill" contenteditable="true" data-answer="measure" data-hint="m...e"></span>,
+                    <span class="gap-fill" contenteditable="true" data-answer="cut" data-hint="c...t"></span>,
+                    and
+                    <span class="gap-fill" contenteditable="true" data-answer="sew garments" data-hint="s...s"></span>.
+                    Both classes
+                    <span class="gap-fill" contenteditable="true" data-answer="instill a sense of pride" data-hint="i...e"></span>
+                    if students can produce
+                    <span class="gap-fill" contenteditable="true" data-answer="useful wood objects" data-hint="u...s"></span>
+                    or
+                    <span class="gap-fill" contenteditable="true" data-answer="wear garments" data-hint="w...s"></span>
+                    they have
+                    <span class="gap-fill" contenteditable="true" data-answer="crafted" data-hint="c...d"></span>
+                    themselves.
+                </p>
+<p class="p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                    In conclusion, rather than
+                    <span class="gap-fill" contenteditable="true" data-answer="relying on families" data-hint="r...s"></span>,
+                    schools should
+                    <span class="gap-fill" contenteditable="true" data-answer="prioritize" data-hint="p...e"></span>
+                    incorporating practical skills into the curriculum while also
+                    <span class="gap-fill" contenteditable="true" data-answer="maintaining rigorous standards for" data-hint="m...r"></span>
+                    the current core subjects. By doing so, students will have a more
+                    <span class="gap-fill" contenteditable="true" data-answer="comprehensive education" data-hint="c...n"></span>
+                    that
+                    <span class="gap-fill" contenteditable="true" data-answer="equips" data-hint="e...s"></span>
+                    them with both
+                    <span class="gap-fill" contenteditable="true" data-answer="theoretical knowledge and practical expertise" data-hint="t...e"></span>.
+                </p>
+</div>
+</section>
+</div>
+<!-- LISTENING -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="listening">
+<div class="mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-sky-500">🎧</span> Listening Practice
+                </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Watch this video to deepen your understanding of the topic and practise listening skills.</p>
+</div>
+<div class="w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10">
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" class="w-full h-full" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/YQm1C_iTIJM?modestbranding=1&amp;rel=0" title="Cookery and practical skills in schools">
+</iframe>
+</div>
+</section>
+</div>
+<!-- READING -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="reading">
+<div class="mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-purple-500">📖</span> Reading Extension
+                </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Read arguments for and against teaching cooking in schools — great preparation for your essay.</p>
+</div>
+<a class="group relative block w-full aspect-[21/9] md:aspect-[3/1] rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10" href="https://topsrilankanrecipe.com/why-cooking-should-be-taught-in-schools-kids-students/" rel="noopener noreferrer" target="_blank">
+<img alt="Cooking in school" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?q=80&amp;w=2574&amp;auto=format&amp;fit=crop"/>
+<div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent"></div>
+<div class="absolute inset-0 p-8 md:p-12 flex flex-col justify-center max-w-2xl">
+<span class="inline-block py-1 px-3 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold uppercase tracking-widest w-fit mb-4">Article</span>
+<h4 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight group-hover:text-emerald-300 transition-colors">Why Cooking Should Be Taught in Schools</h4>
+<p class="text-slate-300 text-lg mb-8 line-clamp-2">Explore the key arguments for making cookery a compulsory school subject — and use these ideas in your own essay.</p>
+<span class="flex items-center gap-2 text-sm font-bold text-white uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+                        Read Article <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+</a>
+</section>
+</div>
+<!-- SPEAKING -->
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden hover:shadow-2xl transition-all duration-300" id="speaking">
+<div class="grid md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-4 space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-3xl shadow-xl transform -rotate-3">🎙️</div>
+<div>
+<h3 class="text-xl font-black text-slate-900 dark:text-white leading-tight">Speaking Coach</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Corrections &amp; Upgrades</p>
+</div>
+</div>
+<div class="bg-white/80 dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-20 h-20 bg-emerald-500/10 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
+<h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-3">Current Topic</h4>
+<p class="text-xl font-serif font-bold text-slate-800 dark:text-white mb-6 leading-snug relative z-10" id="exam-question">"Did you like your school when you were a child?"</p>
+<button class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-2 relative z-10" onclick="nextQuestion()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                            Change Topic
+                        </button>
+</div>
+<div class="bg-slate-900 text-white rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden h-96 flex flex-col justify-center items-center" id="recorder-box">
+<div class="absolute top-4 left-4 right-4 h-32 bg-white/10 rounded-xl p-3 text-left overflow-hidden" id="live-transcript-box">
+<p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Live Transcript:</p>
+<p class="text-xs text-white/80 font-mono leading-relaxed break-words" id="live-text">...</p>
+</div>
+<div class="mt-32 relative z-10">
+<div class="text-5xl font-mono font-black mb-2 tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" id="timer">00:00</div>
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-8" id="status">Ready</p>
+<button class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center mx-auto border-4 border-slate-800" id="mic-btn">
+<svg class="w-8 h-8 drop-shadow-md" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<div class="absolute inset-0 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center z-20 hidden" id="processing-ui">
+<div class="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+<p class="text-xs font-bold text-emerald-400 uppercase tracking-widest animate-pulse">Analyzing Speech...</p>
+</div>
+</div>
+</div>
+<div class="md:col-span-8 relative min-h-[600px]">
+<div class="h-full flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-white/10 rounded-3xl p-12 text-center opacity-60 hover:opacity-100 transition-opacity" id="report-placeholder">
+<div class="w-24 h-24 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"><span class="text-4xl">✨</span></div>
+<h3 class="font-bold text-2xl text-slate-700 dark:text-white mb-2">Ready to Practice?</h3>
+<p class="text-sm text-slate-500 max-w-sm mx-auto">Record your answer. I won't give you a score — just helpful corrections and better words to use!</p>
+</div>
+<div class="hidden bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 h-[600px] overflow-y-auto custom-scrollbar p-8" id="report-container"></div>
+</div>
+</div>
+</section>
+</div>
+<script>
+        const API_KEY    = "YOUR_GROQ_API_KEY";
+        const MODEL_NAME = "llama-3.3-70b-versatile";
+
+        const questions = [
+            "Did you like your school when you were a child?",
+            "What did you learn about?",
+            "Did you have a favorite teacher?",
+            "Are there many rules in schools in your country?",
+            "Do you think schools should teach practical skills like cooking and woodwork?",
+            "How do you think schools have changed since your parents were students?",
+            "Would you prefer to study online or in a classroom?",
+            "What subject do you wish you had studied more at school?",
+            "Do you think uniforms should be required in schools?"
+        ];
+
+        let recognition, isRecording=false, transcript="", startTime, timerInterval, qIndex=0;
+        const micBtn=document.getElementById('mic-btn'), timerDisplay=document.getElementById('timer'),
+              statusText=document.getElementById('status'), liveText=document.getElementById('live-text'),
+              processingUi=document.getElementById('processing-ui'), reportPlaceholder=document.getElementById('report-placeholder'),
+              reportContainer=document.getElementById('report-container');
+
+        if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+            const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+            recognition=new SR(); recognition.continuous=true; recognition.interimResults=true; recognition.lang='en-US';
+            recognition.onresult=(e)=>{
+                let interim="";
+                for(let i=e.resultIndex;i<e.results.length;i++){
+                    if(e.results[i].isFinal) transcript+=e.results[i][0].transcript+" "; else interim=e.results[i][0].transcript;
+                }
+                liveText.innerHTML=`<span class="text-white">${transcript}</span><span class="text-slate-400 italic">${interim}</span>`;
+                document.getElementById('live-transcript-box').scrollTop=9999;
+            };
+            recognition.onerror=(e)=>{if(e.error!=='no-speech') stopRecording();};
+        }
+
+        micBtn.addEventListener('click',()=>isRecording?stopRecording():startRecording());
+
+        function startRecording(){
+            isRecording=true; transcript=""; liveText.innerText="..."; startTime=Date.now();
+            micBtn.classList.remove('bg-gradient-to-br','from-emerald-500','to-teal-600');
+            micBtn.classList.add('bg-slate-700','animate-pulse');
+            micBtn.innerHTML='<span class="text-2xl font-black text-red-500">■</span>';
+            statusText.innerText="Listening..."; statusText.classList.add('text-emerald-400');
+            recognition.start();
+            timerInterval=setInterval(()=>{
+                const d=Math.floor((Date.now()-startTime)/1000);
+                timerDisplay.innerText=`${String(Math.floor(d/60)).padStart(2,'0')}:${String(d%60).padStart(2,'0')}`;
+            },1000);
+        }
+
+        function stopRecording(){
+            isRecording=false; recognition.stop(); clearInterval(timerInterval);
+            processingUi.classList.remove('hidden'); statusText.innerText="Analyzing...";
+            analyzeWithGroq(transcript);
+        }
+
+        async function analyzeWithGroq(speech){
+            if(speech.length<5){alert("Recording too short. Please try again.");resetRecorder();return;}
+            const currentQ=document.getElementById('exam-question').innerText;
+            const prompt=`You are a helpful, encouraging English tutor.
+The student answered an IELTS speaking question. DO NOT give a band score.
+Act as a supportive coach: corrections, improvements, vocabulary upgrades only.
+QUESTION: ${currentQ}
+TRANSCRIPT: "${speech}"
+Return CLEAN HTML with Tailwind CSS classes only. Structure:
+1. Encouraging opener (green box)
+2. Annotated transcript (red=errors, orange=weak, green=strong phrases)
+3. Specific improvements (each in card: original → better + explanation)
+4. Vocabulary swap table (weak → strong synonyms)
+5. Native speaker rewrite (dark box, serif italic)`;
+
+            try{
+                const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+                    method:"POST", headers:{"Authorization":`Bearer ${API_KEY}`,"Content-Type":"application/json"},
+                    body:JSON.stringify({model:MODEL_NAME,messages:[
+                        {role:"system",content:"Output only raw HTML code. No markdown."},
+                        {role:"user",content:prompt}
+                    ],temperature:0.2})
+                });
+                if(!res.ok) throw new Error("API Error");
+                const data=await res.json();
+                let html=data.choices[0].message.content.replace(/```html/g,'').replace(/```/g,'').trim();
+                processingUi.classList.add('hidden'); reportPlaceholder.classList.add('hidden');
+                reportContainer.classList.remove('hidden'); reportContainer.innerHTML=html;
+            }catch(e){alert("Error: "+e.message);resetRecorder();}
+        }
+
+        function resetRecorder(){
+            reportContainer.classList.add('hidden'); reportPlaceholder.classList.remove('hidden');
+            processingUi.classList.add('hidden'); transcript="";
+            timerDisplay.innerText="00:00"; statusText.innerText="Ready"; liveText.innerText="...";
+            statusText.classList.remove('text-emerald-400');
+            micBtn.classList.add('bg-gradient-to-br','from-emerald-500','to-teal-600');
+            micBtn.classList.remove('bg-slate-700','animate-pulse');
+            micBtn.innerHTML='<svg class="w-8 h-8 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>';
+        }
+
+        function nextQuestion(){qIndex=(qIndex+1)%questions.length;document.getElementById('exam-question').innerText=`"${questions[qIndex]}"`;resetRecorder();}
+    </script>
+<!-- WRITING SIMULATOR -->
+<script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<div class="lg:col-span-12 mt-12 mb-20">
+<section class="glass-panel rounded-3xl p-8 relative overflow-hidden border border-slate-200 dark:border-white/10" id="writing">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-3xl shadow-xl transform rotate-3">✍️</div>
+<div>
+<h3 class="text-xl font-black text-slate-900 dark:text-white leading-tight">Writing Simulator</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">IELTS Task 2 Examiner</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 transition-all duration-700 ease-in-out" id="writing-grid">
+<div class="md:col-span-2 transition-all duration-700 ease-in-out flex flex-col min-h-[500px] md:h-[700px]" id="input-col">
+<div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 mb-4 shrink-0">
+<h4 class="font-bold text-purple-600 dark:text-purple-300 uppercase text-[10px] tracking-widest mb-2">Writing Task 2 — Agree &amp; Disagree</h4>
+<p class="text-lg font-serif font-bold text-slate-800 dark:text-white leading-relaxed" id="static-question">
+                            "Some people say that at all levels of education, from primary school to university, too much time is spent on learning facts and not enough on learning practical skills. Do you agree or disagree?"
+                        </p>
+</div>
+<div class="relative flex-grow mb-4">
+<textarea class="w-full h-full p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 focus:border-emerald-500 focus:ring-0 transition-all font-serif text-lg leading-relaxed resize-none shadow-inner custom-scrollbar" id="essay-input" placeholder="Write your essay here...
+
+Aim for at least 250 words."></textarea>
+<div class="absolute bottom-4 right-4 text-xs font-bold text-slate-400 bg-white/80 dark:bg-slate-900/80 px-2 py-1 rounded" id="word-count">0 words</div>
+</div>
+<button class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/30 hover:scale-[1.01] transition-all flex items-center justify-center gap-2 text-lg shrink-0" id="submit-btn" onclick="submitEssay()">
+<span>🚀</span> Submit for Official Grading
+                    </button>
+</div>
+<div class="hidden opacity-0 translate-x-10 transition-all duration-700 ease-in-out min-h-[500px] md:h-[700px]" id="feedback-col">
+<div class="h-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
+<div class="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-4 p-6 bg-gray-50 dark:bg-gray-900/50 shrink-0">
+<div>
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Examiner Report</h2>
+<p class="text-gray-500 text-xs">AI Evaluation &amp; Feedback</p>
+</div>
+<button class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-200 transition flex items-center gap-2 shadow-sm" onclick="generateDOCX()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                                Download DOCX
+                            </button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 custom-scrollbar relative" id="feedback-content">
+<div class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm z-10" id="writing-loading">
+<div class="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+<p class="text-emerald-600 font-bold animate-pulse">Examiner is evaluating...</p>
+</div>
+<div class="hidden space-y-6 prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200" id="ai-result"></div>
+</div>
+<div class="p-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-center shrink-0">
+<button class="text-sm font-bold text-gray-500 hover:text-emerald-600 transition-colors" onclick="resetWriting()">Start New Essay</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+        const GROQ_API_KEY="YOUR_GROQ_API_KEY";
+        const essayInput=document.getElementById('essay-input'), wordCountLabel=document.getElementById('word-count'),
+              inputCol=document.getElementById('input-col'), feedbackCol=document.getElementById('feedback-col'),
+              submitBtn=document.getElementById('submit-btn'), writingLoading=document.getElementById('writing-loading'),
+              aiResult=document.getElementById('ai-result');
+
+        essayInput.addEventListener('input',()=>{
+            const w=essayInput.value.trim().split(/\s+/).length;
+            wordCountLabel.innerText=essayInput.value.trim()===''?'0 words':`${w} words`;
+        });
+
+        async function submitEssay(){
+            const text=essayInput.value.trim();
+            if(text.length<50){alert("Please write a longer essay before submitting.");return;}
+            const question=document.getElementById('static-question').innerText;
+            submitBtn.disabled=true;
+            submitBtn.innerHTML='<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Submitting...';
+            inputCol.classList.remove('md:col-span-2'); inputCol.classList.add('md:col-span-1');
+            feedbackCol.classList.remove('hidden','opacity-0','translate-x-10'); feedbackCol.classList.add('opacity-100','translate-x-0');
+            writingLoading.style.display='flex'; aiResult.classList.add('hidden');
+
+            const prompt=`You are a strict but fair IELTS examiner. Grade the following Task 2 Agree & Disagree essay.
+QUESTION: ${question}
+ESSAY: ${text}
+Return structured HTML with Tailwind CSS:
+1. Overall Band Score (large, bold, 1-9)
+2. Four criteria scores /9: Task Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy
+3. What the student did well (3+ bullet points, green box)
+4. What to improve (3+ bullet points, orange/red box)
+5. One rewritten paragraph demonstrating the improvement
+Output only raw HTML, no markdown.`;
+
+            try{
+                const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+                    method:"POST",
+                    headers:{"Authorization":`Bearer ${GROQ_API_KEY}`,"Content-Type":"application/json"},
+                    body:JSON.stringify({model:"llama-3.3-70b-versatile",
+                        messages:[{role:"system",content:"Output only raw HTML, no markdown fences."},{role:"user",content:prompt}],
+                        temperature:0.3})
+                });
+                if(!res.ok) throw new Error("API failed");
+                const data=await res.json();
+                let html=data.choices[0].message.content.replace(/```html/g,'').replace(/```/g,'').trim();
+                writingLoading.style.display='none'; aiResult.classList.remove('hidden'); aiResult.innerHTML=html;
+            }catch(e){alert("Error: "+e.message);resetWriting();}
+        }
+
+        function resetWriting(){
+            essayInput.value=''; wordCountLabel.innerText='0 words';
+            inputCol.classList.add('md:col-span-2'); inputCol.classList.remove('md:col-span-1');
+            feedbackCol.classList.add('hidden','opacity-0','translate-x-10'); feedbackCol.classList.remove('opacity-100','translate-x-0');
+            submitBtn.disabled=false; submitBtn.innerHTML='<span>🚀</span> Submit for Official Grading';
+        }
+
+        function generateDOCX(){
+            const content=`<!DOCTYPE html><html><body style="font-family:Arial;padding:40px;">${aiResult.innerHTML}</body></html>`;
+            saveAs(htmlDocx.asBlob(content),'IELTS_Task2_Feedback.docx');
+        }
+    </script>
+</main>
+<footer class="relative z-10 py-12 mt-20 border-t border-slate-200/50 dark:border-white/5 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xl">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-emerald-500/20">S</div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-white leading-tight">IELTS's IELTS</span>
+<span class="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">IELTS Prep Platform</span>
+</div>
+</div>
+<p class="text-xs font-medium text-slate-400">© 2026. All rights reserved.</p>
+</div>
+</footer>
+<script>
+    // STARS
+    const sc=document.querySelector('.stars');
+    for(let i=0;i<100;i++){
+        const s=document.createElement('div');s.classList.add('star');
+        const dur=Math.random()*3+2,size=Math.random()*2+1;
+        s.style.left=`${Math.random()*100}%`;s.style.top=`${Math.random()*100}%`;
+        s.style.width=`${size}px`;s.style.height=`${size}px`;
+        s.style.setProperty('--duration',`${dur}s`);s.style.setProperty('--opacity',Math.random());
+        sc.appendChild(s);
+    }
+
+    // THEME
+    const themeBtn=document.getElementById('themeToggle'),sun=document.querySelector('.sun'),moon=document.querySelector('.moon');
+    if(localStorage.getItem('theme')==='dark'||(!('theme' in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){
+        document.documentElement.classList.add('dark');sun.classList.remove('hidden');moon.classList.add('hidden');
+    }else{document.documentElement.classList.remove('dark');sun.classList.add('hidden');moon.classList.remove('hidden');}
+    themeBtn.addEventListener('click',()=>{
+        document.documentElement.classList.toggle('dark');
+        if(document.documentElement.classList.contains('dark')){localStorage.setItem('theme','dark');sun.classList.remove('hidden');moon.classList.add('hidden');}
+        else{localStorage.setItem('theme','light');sun.classList.add('hidden');moon.classList.remove('hidden');}
+    });
+
+    // GAP FILL
+    function checkAnswers(){
+        const inputs=document.querySelectorAll('.gap-fill');let correct=0;
+        inputs.forEach(inp=>{
+            const user=inp.innerText.trim().toLowerCase(),ans=inp.getAttribute('data-answer').toLowerCase();
+            inp.classList.remove('correct','wrong');
+            if(user===ans){inp.classList.add('correct');correct++;}else{inp.classList.add('wrong');}
+        });
+        const badge=document.getElementById('scoreBadge'),chk=document.getElementById('checkBtn'),ret=document.getElementById('retryBtn');
+        badge.innerText=`${correct}/${inputs.length}`;badge.classList.remove('hidden');chk.classList.add('hidden');ret.classList.remove('hidden');
+        const fw=document.querySelector('.gap-fill.wrong');if(fw)fw.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+    function resetExercise(){
+        document.querySelectorAll('.gap-fill').forEach(i=>{i.innerText='';i.classList.remove('correct','wrong');});
+        document.getElementById('scoreBadge').classList.add('hidden');
+        document.getElementById('checkBtn').classList.remove('hidden');
+        document.getElementById('retryBtn').classList.add('hidden');
+    }
+</script>
+</body>
+</html>

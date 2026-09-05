@@ -123,29 +123,54 @@ export function AdminUsers() {
   );
 
   const handleBan = async (id: string) => {
-    await adminBanUser(id, "Banned by admin");
-    load();
+    try {
+      await adminBanUser(id, "Banned by admin");
+      toast("User banned successfully", "success");
+      load();
+    } catch (e: any) {
+      toast(e.message || "Ban failed", "error");
+    }
   };
 
   const handleUnban = async (id: string) => {
-    await adminUnbanUser(id);
-    load();
+    try {
+      await adminUnbanUser(id);
+      toast("User unbanned successfully", "success");
+      load();
+    } catch (e: any) {
+      toast(e.message || "Unban failed", "error");
+    }
   };
 
   const handleRole = async (id: string, role: UserProfile["role"]) => {
-    await adminSetRole(id, role);
-    load();
+    try {
+      await adminSetRole(id, role);
+      toast("Role updated", "success");
+      load();
+    } catch (e: any) {
+      toast(e.message || "Role update failed", "error");
+    }
   };
 
   const handlePlan = async (id: string, plan: UserProfile["planType"]) => {
-    await adminSetPlan(id, plan);
-    load();
+    try {
+      await adminSetPlan(id, plan);
+      toast("Plan updated", "success");
+      load();
+    } catch (e: any) {
+      toast(e.message || "Plan update failed", "error");
+    }
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Delete this user?")) {
-      await adminDeleteUser(id);
-      load();
+    if (confirm("Bu user-ni delete qilmoqchisiz? Bu amalni qaytarish mumkin emas!")) {
+      try {
+        await adminDeleteUser(id);
+        toast("User deleted successfully", "success");
+        load();
+      } catch (e: any) {
+        toast(e.message || "Delete failed", "error");
+      }
     }
   };
 

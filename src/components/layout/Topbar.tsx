@@ -79,14 +79,11 @@ export function Topbar({ onMenuClick }: TopbarProps) {
     if (!q) return;
     const paths: [string, string[]][] = [
       ["/app/vocabulary", ["vocabulary", "words", "flashcard", "deck"]],
-      ["/app/writing", ["writing", "essay"]],
-      ["/app/speaking", ["speaking"]],
+      ["/app/cdi-practice", ["writing", "essay", "speaking"]],
       ["/app/mock-test", ["mock", "test"]],
-      ["/app/practice", ["practice", "exercise"]],
       ["/app/grammar", ["grammar"]],
       ["/app/study-plan", ["plan", "study"]],
-      ["/app/listening", ["listening", "audio"]],
-      ["/app/reading", ["reading"]],
+      ["/app/cdi-practice", ["listening", "audio", "reading"]],
     ];
     const match = paths.find(([, keys]) => keys.some((k) => q.includes(k)));
     if (match) {

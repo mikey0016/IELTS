@@ -2,10 +2,6 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   BookOpen,
-  Headphones,
-  FileText,
-  PenLine,
-  Mic,
   BookMarked,
   Languages,
   ClipboardCheck,
@@ -41,10 +37,6 @@ const NAV_SECTIONS: {
   {
     label: "Skills",
     items: [
-      { to: "/app/listening", label: "Listening", icon: Headphones },
-      { to: "/app/reading", label: "Reading", icon: FileText },
-      { to: "/app/writing", label: "Writing", icon: PenLine },
-      { to: "/app/speaking", label: "Speaking", icon: Mic },
       { to: "/app/vocabulary", label: "Vocabulary", icon: BookMarked },
       { to: "/app/grammar", label: "Grammar", icon: Languages },
     ],
@@ -54,6 +46,7 @@ const NAV_SECTIONS: {
     items: [
       { to: "/app/arena", label: "IELTS Arena", icon: Swords },
       { to: "/app/mock-test", label: "Mock Tests", icon: ClipboardCheck },
+      { to: "/app/cdi-practice", label: "CDI Practice", icon: BookOpen },
       { to: "/app/study-plan", label: "Study Plan", icon: CalendarDays },
       { to: "/app/progress", label: "Progress", icon: TrendingUp },
       { to: "/app/achievements", label: "Achievements", icon: Trophy },

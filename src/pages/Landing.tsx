@@ -74,7 +74,7 @@ function Hero() {
             AI feedback in one premium platform.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link to={user ? "/app/practice" : "/signup"}>
+            <Link to={user ? "/app" : "/signup"}>
               <Button size="lg">
                 Start Free Practice <ArrowRight className="h-4 w-4" />
               </Button>

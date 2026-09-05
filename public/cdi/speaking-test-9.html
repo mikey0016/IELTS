@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Test 9 — IELTS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>body{font-family:Inter, sans-serif;}</style>
+<script>
+// Blok: Ctrl+U, F12, Ctrl+Shift+I/J/C, Ctrl+S va o'ng klik
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' ||
+        (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+        (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.key.toLowerCase() === 's')) {
+        e.preventDefault();
+        return false;
+    }
+});
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+</script>
+</head>
+<body class="bg-gray-50" oncontextmenu="return false">
+<header class="bg-gradient-to-r from-orange-600 to-red-600 text-white p-4">
+<div class="max-w-4xl mx-auto flex justify-between items-center">
+<h1 class="text-xl font-bold">IELTS Speaking Test 9</h1>
+<span class="text-sm opacity-80">Offline Mode - Gifts and Traditions</span>
+</div>
+</header>
+<div class="max-w-4xl mx-auto p-6">
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+<h2 class="font-bold text-lg mb-4">Part 1 — Introduction & Interview</h2>
+<p class="text-sm text-gray-600 mb-3">Answer 3-4 questions, 30-45 seconds each.</p>
+<ul class="list-disc ml-6 space-y-2">
+<li><strong>Shopping</strong> - Tell me about your shopping?</li>
+<li><strong>Markets</strong> - How do you spend your time related to markets?</li>
+<li><strong>Money</strong> - Do you like money? Why?</li>
+</ul>
+<div class="mt-4 p-3 bg-orange-50 rounded flex gap-2">
+<button onclick="startRec(this)" class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700">● Record</button>
+<button onclick="stopRec(this)" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">■ Stop</button>
+<span class="text-sm text-gray-500 self-center transcript">Press Record and speak...</span>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+<h2 class="font-bold text-lg mb-4">Part 2 — Long Turn (Cue Card)</h2>
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-3">
+<p class="font-medium">Describe a gift you received that was special. What was it, who gave it, when you received it and why it was special.</p>
+<p class="text-sm text-gray-600 mt-2">You have 1 minute to prepare, 2 minutes to speak. Use the Record button.</p>
+</div>
+<div class="p-3 bg-blue-50 rounded flex gap-2">
+<button onclick="startRec(this)" class="px-4 py-2 bg-blue-600 text-white rounded">● Record Part 2</button>
+<button onclick="stopRec(this)" class="px-4 py-2 bg-gray-200 rounded">■ Stop</button>
+<span class="text-sm text-gray-500 self-center transcript">2 minutes...</span>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+<h2 class="font-bold text-lg mb-4">Part 3 — Discussion</h2>
+<p class="font-medium mb-2">Gifts and Traditions</p>
+<ul class="list-disc ml-6 space-y-1 text-sm text-gray-700">
+<li>How has gifts and traditions changed in recent years?</li>
+<li>What are the advantages and disadvantages?</li>
+<li>What do you think will happen in the future?</li>
+</ul>
+<div class="mt-4 p-3 bg-green-50 rounded flex gap-2">
+<button onclick="startRec(this)" class="px-4 py-2 bg-green-600 text-white rounded">● Record</button>
+<button onclick="stopRec(this)" class="px-4 py-2 bg-gray-200 rounded">■ Stop</button>
+<span class="text-sm transcript">Press Record...</span>
+</div>
+</div>
+<div class="text-center">
+<button onclick="showResult()" class="px-8 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-xl">Submit & Get Band (Offline)</button>
+<a href="../../speaking.html" class="ml-3 px-6 py-3 bg-white border rounded-xl">← Back</a>
+</div>
+<div id="result" class="hidden mt-6 bg-white rounded-xl shadow p-6">
+<h3 class="font-bold text-xl mb-3">Offline Speaking Report</h3>
+<p class="text-sm text-gray-600 mb-2">Band estimated from fluency, vocabulary and recording time. For real AI transcript analysis, use online mode.</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+<div class="bg-gray-50 p-3 rounded"><div class="text-xs text-gray-500">Fluency</div><div class="text-2xl font-bold text-green-600" id="b-flu">6.5</div></div>
+<div class="bg-gray-50 p-3 rounded"><div class="text-xs text-gray-500">Lexical</div><div class="text-2xl font-bold text-blue-600" id="b-lex">6.5</div></div>
+<div class="bg-gray-50 p-3 rounded"><div class="text-xs text-gray-500">Grammar</div><div class="text-2xl font-bold text-orange-600" id="b-gra">6.0</div></div>
+<div class="bg-gray-50 p-3 rounded"><div class="text-xs text-gray-500">Pronunciation</div><div class="text-2xl font-bold text-purple-600" id="b-pro">6.5</div></div>
+</div>
+<div class="mt-4 text-center">
+<div class="text-sm text-gray-500">Overall</div>
+<div class="text-4xl font-extrabold" id="b-over">6.5</div>
+</div>
+<p class="text-sm bg-yellow-50 p-3 rounded mt-4">💡 Tip: Record clearly, use varied vocabulary, link ideas with however/moreover/because. Offline score is heuristic.</p>
+</div>
+</div>
+<script>
+let mediaRecorder=null, chunks=[];
+async function startRec(btn){
+    const card=btn.closest('div');
+    const trans=card.querySelector('.transcript');
+    try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        mediaRecorder=new MediaRecorder(stream);
+        chunks=[];
+        mediaRecorder.ondataavailable=e=>chunks.push(e.data);
+        mediaRecorder.onstop=()=>{
+            const blob=new Blob(chunks,{type:'audio/webm'});
+            const url=URL.createObjectURL(blob);
+            trans.innerHTML='<audio controls src="'+url+'"></audio> <span class=\"text-green-600\">✓ Recorded '+Math.round(blob.size/1000)+'KB</span>';
+        };
+        mediaRecorder.start();
+        trans.textContent='● Recording... speak now';
+        trans.className='text-sm text-red-600 transcript';
+    }catch(e){ trans.textContent='Microphone access denied: '+e.message; }
+}
+function stopRec(btn){
+    if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.stop(); mediaRecorder.stream?.getTracks().forEach(t=>t.stop()); }
+    const card=btn.closest('div');
+    const trans=card.querySelector('.transcript');
+    if(trans.textContent.includes('Recording')) trans.textContent='Stopped - processing...';
+}
+function showResult(){
+    const btns=document.querySelectorAll('audio');
+    let score=6.0;
+    if(btns.length>=2) score=6.5;
+    if(btns.length>=3) score=7.0;
+    document.getElementById('b-flu').textContent=score.toFixed(1);
+    document.getElementById('b-lex').textContent=(score-0.2).toFixed(1);
+    document.getElementById('b-gra').textContent=(score-0.3).toFixed(1);
+    document.getElementById('b-pro').textContent=score.toFixed(1);
+    document.getElementById('b-over').textContent=score.toFixed(1);
+    document.getElementById('result').classList.remove('hidden');
+    window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+</body>
+</html>

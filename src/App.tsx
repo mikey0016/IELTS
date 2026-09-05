@@ -11,16 +11,11 @@ import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { NotFound } from "@/pages/NotFound";
 import { Dashboard } from "@/pages/app/Dashboard";
 import { Courses } from "@/pages/app/Courses";
-import { SkillPage } from "@/pages/app/SkillPage";
 import { Grammar } from "@/pages/app/Grammar";
-import { Practice } from "@/pages/app/Practice";
-import { PracticeSession } from "@/pages/app/PracticeSession";
 import { Vocabulary } from "@/pages/app/Vocabulary";
 import { MockTests } from "@/pages/app/MockTests";
 import { MockTestRunner } from "@/pages/app/MockTestRunner";
 import { MockTestResults } from "@/pages/app/MockTestResults";
-import { Writing } from "@/pages/app/Writing";
-import { Speaking } from "@/pages/app/Speaking";
 import { StudyPlan } from "@/pages/app/StudyPlan";
 import { Progress } from "@/pages/app/Progress";
 import { Achievements } from "@/pages/app/Achievements";
@@ -40,6 +35,7 @@ import { AdminAchievements } from "@/pages/admin/AdminAchievements";
 import { AdminSettings } from "@/pages/admin/AdminSettings";
 import { AdminIeltsBuilder } from "@/pages/admin/AdminIeltsBuilder";
 import { Arena } from "@/pages/app/Arena";
+import { CDIPractice } from "@/pages/app/CDIPractice";
 import { XpToastListener } from "@/components/XpToastListener";
 import type { Skill } from "@/types";
 
@@ -62,18 +58,7 @@ export default function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/app" element={<Dashboard />} />
             <Route path="/app/courses" element={<Courses />} />
-            <Route
-              path="/app/listening"
-              element={<SkillPage skill={"listening" as Skill} />}
-            />
-            <Route
-              path="/app/reading"
-              element={<SkillPage skill={"reading" as Skill} />}
-            />
-            <Route path="/app/writing" element={<Writing />} />
-            <Route path="/app/speaking" element={<Speaking />} />
-            <Route path="/app/practice" element={<Practice />} />
-            <Route path="/app/practice/session" element={<PracticeSession />} />
+            <Route path="/app/practice" element={<CDIPractice />} />
             <Route path="/app/grammar" element={<Grammar />} />
             <Route path="/app/vocabulary" element={<Vocabulary />} />
             <Route path="/app/mock-test" element={<MockTests />} />
@@ -85,6 +70,7 @@ export default function App() {
               path="/app/mock-test/results/:id"
               element={<MockTestResults />}
             />
+            <Route path="/app/cdi-practice" element={<CDIPractice />} />
             <Route path="/app/study-plan" element={<StudyPlan />} />
             <Route path="/app/progress" element={<Progress />} />
             <Route path="/app/achievements" element={<Achievements />} />

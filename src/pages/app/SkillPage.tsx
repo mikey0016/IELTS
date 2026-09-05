@@ -149,24 +149,7 @@ export function SkillPage({ skill }: { skill: Skill }) {
     examMode !== "single" && (skill === "reading" || skill === "listening");
 
   const startPractice = () => {
-    if (skill === "writing") {
-      navigate("/app/writing");
-    } else if (skill === "speaking") {
-      navigate("/app/speaking");
-    } else {
-      const params = new URLSearchParams();
-      params.set("skill", skill);
-      if (selectedDifficulty !== "all")
-        params.set("difficulty", selectedDifficulty);
-      if (selectedType !== "all") params.set("type", selectedType);
-      if (selectedTopic !== "all") params.set("topic", selectedTopic);
-      if (skill === "reading" && examMode !== "single")
-        params.set("examMode", examMode);
-      if (skill === "listening" && examMode === "full")
-        params.set("examMode", "full");
-      params.set("limit", String(filteredQuestions.length || 6));
-      navigate(`/app/practice/session?${params.toString()}`);
-    }
+    navigate("/app/cdi-practice");
   };
 
   const topics = Array.from(
@@ -543,7 +526,7 @@ export function SkillPage({ skill }: { skill: Skill }) {
                                       String(group.questions.length),
                                     );
                                     navigate(
-                                      `/app/practice/session?${params.toString()}`,
+                                      `/app/cdi-practice`,
                                     );
                                   }}
                                 >
@@ -642,7 +625,7 @@ export function SkillPage({ skill }: { skill: Skill }) {
                               params.set("limit", "1");
                               params.set("questionId", q.id);
                               navigate(
-                                `/app/practice/session?${params.toString()}`,
+                                `/app/cdi-practice`,
                               );
                             }}
                           >

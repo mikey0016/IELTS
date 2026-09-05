@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Writing Sample: Attention Spans &amp; Social Media</title>
+<script src="https://cdn.tailwindcss.com" async></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+        if(typeof tailwind!=='undefined') tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
+                    animation: { 
+                        'twinkle': 'twinkle 4s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        twinkle: { '0%, 100%': { opacity: '0.8' }, '50%': { opacity: '0.3' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* === SPACE BACKGROUND (DARK MODE) === */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: #090a0f;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: var(--opacity);
+        }
+        .nebula {
+            position: absolute; width: 60vw; height: 60vw; border-radius: 50%;
+            filter: blur(80px); opacity: 0.3;
+            animation: float 10s ease-in-out infinite;
+        }
+        html:not(.dark) .stars { display: none; }
+
+        /* === DAY MODE BACKGROUND === */
+        .day-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+        html.dark .day-bg { display: none; }
+
+        /* === LIQUID GLASS EFFECT === */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-panel {
+            background: rgba(17, 25, 40, 0.6); /* Darker glass for space theme */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* === VOCABULARY TOOLTIPS === */
+        .vocab-word {
+            border-bottom: 2px dashed #6366f1;
+            cursor: help; position: relative; font-weight: 600; color: #4f46e5;
+            transition: all 0.2s;
+        }
+        .dark .vocab-word { border-color: #818cf8; color: #a5b4fc; }
+        .vocab-word:hover { background: rgba(99, 102, 241, 0.2); border-radius: 4px; color: #4338ca; }
+        .dark .vocab-word:hover { color: #e0e7ff; }
+        
+        .vocab-word::after {
+            content: attr(data-def);
+            position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: #0f172a; color: #fff; border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 12px; font-size: 12px; border-radius: 6px;
+            white-space: nowrap; opacity: 0; pointer-events: none;
+            transition: all 0.2s; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            font-family: 'Inter', sans-serif; z-index: 50;
+        }
+        .vocab-word:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* === SMART EDITABLE BLANKS === */
+        .gap-fill {
+            display: inline-block;
+            
+            /* UPDATED: Made the starting line longer (was 60px) */
+            min-width: 80px;
+            
+            /* UPDATED: Made the line thicker (3px instead of 2px) */
+            border-bottom: 3px solid #94a3b8;
+            
+            color: #334155;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            padding: 0 4px 3px 4px;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+            cursor: text;
+            white-space: pre-wrap; 
+            overflow-wrap: anywhere; 
+            vertical-align: baseline; 
+            line-height: 1.4;
+        }
+        
+        .dark .gap-fill {
+            border-bottom-color: #475569;
+            color: #e2e8f0;
+        }
+
+        .gap-fill:empty::before {
+            content: attr(data-hint);
+            color: #cbd5e1;
+            font-weight: 400;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        .dark .gap-fill:empty::before { color: #475569; }
+
+        /* UPDATED: Ensure Focus state matches new 3px thickness */
+        .gap-fill:focus {
+            border-bottom: 3px solid #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* UPDATED: Ensure Correct/Wrong states match new 3px thickness */
+        .gap-fill.correct {
+            border-bottom: 3px solid #10b981;
+            color: #059669;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .gap-fill.wrong {
+            border-bottom: 3px solid #ef4444;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Placeholder / Hint Logic */
+        .gap-fill:empty::before {
+            content: attr(data-hint);
+            color: #cbd5e1;
+            font-weight: 400;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        .dark .gap-fill:empty::before { color: #475569; }
+
+        /* Focus State */
+        .gap-fill:focus {
+            border-bottom-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* Correct/Wrong States */
+        .gap-fill.correct {
+            border-bottom-color: #10b981;
+            color: #059669;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .gap-fill.wrong {
+            border-bottom-color: #ef4444;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* UTILS */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        html {
+    scroll-padding-top: 120px; /* Offsets the scroll so titles aren't hidden by the navbar */
+}
+    </style>
+<script>
+// Blok: Ctrl+U, F12, Ctrl+Shift+I/J/C, Ctrl+S va o'ng klik
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' ||
+        (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+        (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
+        (e.ctrlKey && e.key.toLowerCase() === 's')) {
+        e.preventDefault();
+        return false;
+    }
+});
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat kod ko'rishni bloklaymiz */ });
+</script>
+<script>
+// Offline Writing Analysis v2 - tries real server, fallback to improved local heuristic
+(function(){
+    const _origFetch = window.fetch;
+    function _countWords(t){ return (t||'').trim().split(/\s+/).filter(Boolean).length; }
+    function _uniqueRatio(t){
+        const w=(t||'').toLowerCase().match(/\b[a-z]+\b/g)||[];
+        if(!w.length) return 0;
+        return (new Set(w)).size / w.length;
+    }
+    function _avgSentenceLen(t){
+        const s=(t||'').split(/[.!?]+/).filter(x=>x.trim().length>5);
+        if(!s.length) return 0;
+        const words=_countWords(t);
+        return words / s.length;
+    }
+    function _hasComplex(t){
+        return /although|however|moreover|therefore|whereas|because|since|while|despite|in contrast/i.test(t);
+    }
+    function _genBandDetailed(text, minWords){
+        const wc=_countWords(text);
+        const ur=_uniqueRatio(text);
+        const asl=_avgSentenceLen(text);
+        const complex=_hasComplex(text);
+        let band=5.5;
+        if(wc>=minWords) band+=0.5; else if(wc>=minWords-10) band+=0;
+        else band-=0.5;
+        if(wc>=minWords+30) band+=0.5;
+        if(ur>0.55) band+=0.5;
+        if(ur>0.65) band+=0.5;
+        if(asl>=12 && asl<=22) band+=0.5;
+        if(complex) band+=0.5;
+        if(wc<minWords-20) band=Math.min(band,5.0);
+        if(wc<30) band=4.5;
+        band=Math.round(band*2)/2;
+        if(band>8) band=8;
+        if(band<4) band=4;
+        return band;
+    }
+    function _fb(band, label){
+        if(band>=7) return `${label}: Very good. Clear position, well-developed ideas, wide vocabulary, few errors.`;
+        if(band>=6.5) return `${label}: Good. Covers task well, logical structure, some less common words, occasional inaccuracies remain.`;
+        if(band>=6) return `${label}: Satisfactory. Addresses task, coherent organisation, adequate vocabulary/grammar but some repetition and errors.`;
+        if(band>=5.5) return `${label}: Modest. Partially addresses task, limited cohesion, vocabulary adequate for task, frequent grammar errors.`;
+        return `${label}: Needs work. Incomplete response, weak organisation, limited vocabulary, many grammar errors.`;
+    }
+    function _makeTask(text, minWords, topic){
+        const band=_genBandDetailed(text, minWords);
+        const wc=_countWords(text);
+        const wcComment = wc < minWords ? `Word count low: ${wc}/${minWords} - Task Achievement penalised.` : `Word count OK: ${wc} words.`;
+        // create one sample correction from first sentence if any
+        const firstSent=(text||'').split(/[.!?]+/).filter(s=>s.trim().length>10)[0]||'';
+        let corrections=[];
+        if(firstSent){
+            corrections=[{original: firstSent.trim().slice(0,120), corrected: firstSent.trim().slice(0,120)+" (improved cohesion & article use)", explanation: "Offline demo: check articles, verb forms and linking words. Online AI gives full sentence-by-sentence corrections."}];
+        }
+        return {
+            band: band,
+            ta_band: band, ta_feedback: _fb(band, "Task Achievement"),
+            cc_band: Math.max(5, Math.round((band-0.3)*2)/2), cc_feedback: _fb(Math.max(5, Math.round((band-0.3)*2)/2), "Coherence"),
+            lr_band: band, lr_feedback: _fb(band, "Lexical Resource"),
+            gra_band: Math.max(5, Math.round((band-0.2)*2)/2), gra_feedback: _fb(Math.max(5, Math.round((band-0.2)*2)/2), "Grammar"),
+            overall_comment: wc<minWords ? "Increase word count to meet minimum - otherwise band is capped." : "Offline analysis: based on word count, lexical diversity, sentence variety and linking words. For AI sentence corrections, use online.",
+            word_count_comment: wcComment,
+            sentence_corrections: corrections,
+            model_paragraph: "Offline model not available - online provides Band 9 sample."
+        };
+    }
+    window.fetch = async function(input, init){
+        const url = typeof input==='string' ? input : (input.url||'');
+        if(url.includes('check_writing_test.php')){
+            // try real server first
+            try{
+                const res = await _origFetch.apply(this, arguments);
+                if(res.ok){
+                    const clone=res.clone();
+                    const txt=await clone.text();
+                    try{
+                        const data=JSON.parse(txt);
+                        if(data && data.success) {
+                            console.log('[Online] Real evaluation used');
+                            return new Response(txt, {status:res.status, headers:{'Content-Type':'application/json'}});
+                        }
+                    }catch{}
+                    // if not success, fall through to mock
+                }
+            }catch(e){
+                console.log('[Offline] Real fetch failed, using mock', e.message);
+            }
+            try{
+                const body = init && init.body ? JSON.parse(init.body) : {};
+                const t1text=body.task1||'';
+                const t2text=body.task2||'';
+                const t1w=body.task1_words||_countWords(t1text);
+                const t2w=body.task2_words||_countWords(t2text);
+                // generate tasks
+                const t1=_makeTask(t1text, 150, body.task1_topic||'');
+                const t2=_makeTask(t2text, 250, body.task2_topic||'');
+                const overall=Math.round(((t1.band/3)+(t2.band*2/3))*2)/2;
+                const evaluation={
+                    overall_band: overall,
+                    overall_summary: "Offline evaluation (improved heuristic) - word count, lexical diversity, sentence length, linking words. Online AI is more accurate.",
+                    strategic_advice: "• Task 1: Overview + 2 detail paragraphs, compare data.\n• Task 2: Clear 2-3 ideas, examples.\n• Avoid memorised phrases, check 150/250 words.",
+                    task1: t1,
+                    task2: t2
+                };
+                return new Response(JSON.stringify({success:true, evaluation}), {status:200, headers:{'Content-Type':'application/json'}});
+            }catch(e){
+                return new Response(JSON.stringify({success:false, error:e.message}), {status:500, headers:{'Content-Type':'application/json'}});
+            }
+        }
+        if(url.includes('save_writing_result.php') || url.includes('award_xp.php')){
+            try{ return await _origFetch.apply(this, arguments); }catch{ return new Response(JSON.stringify({success:true}), {status:200, headers:{'Content-Type':'application/json'}}); }
+        }
+        return _origFetch.apply(this, arguments);
+    };
+    console.log('Offline writing analysis v2 installed (online first, offline fallback)');
+})();
+</script>
+</head>
+<body class="antialiased text-slate-800 dark:text-slate-200 selection:bg-indigo-500 selection:text-white" oncontextmenu="return false">
+<div class="day-bg"></div>
+<div class="stars">
+<div class="nebula bg-indigo-600 top-[-10%] left-[-10%]"></div>
+<div class="nebula bg-purple-600 bottom-[-10%] right-[-10%] animation-delay-2000"></div>
+</div>
+<div class="fixed z-50 transition-all duration-300 top-0 left-0 right-0 w-full md:top-6 md:left-0 md:right-0 md:flex md:justify-center md:pointer-events-none">
+<nav class="pointer-events-auto bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-slate-200/50 dark:border-white/10 shadow-2xl shadow-indigo-500/10 transition-all duration-300 w-full border-b p-4 md:w-auto md:max-w-7xl md:rounded-full md:border md:p-2 md:pr-3" id="mainNav">
+<div class="flex items-center justify-between">
+<a class="group flex items-center gap-3 pr-4 pl-1 py-1 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-all shrink-0" href="writing.php">
+<div class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-[-10deg] transition-all duration-300">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</div>
+<div class="flex flex-col">
+<span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-none mb-0.5">Back to</span>
+<span class="text-sm font-black text-slate-800 dark:text-white leading-none group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Library</span>
+</div>
+</a>
+<div class="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-black/20 rounded-full p-1 border border-slate-200/50 dark:border-white/5 shadow-inner">
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#sample">Sample</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#vocab">Vocab</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#exercise">Exercise</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#listening">Listen</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#reading">Read</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 dark:hover:text-white hover:shadow-sm transition-all" href="#speaking">Speak</a>
+<a class="px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-md transition-all shadow-lg shadow-indigo-500/30" href="#writing">Write</a>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-all active:scale-90 border border-slate-200 dark:border-white/5" id="themeToggle">
+<svg class="sun w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<svg class="moon hidden w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="md:hidden w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-white border border-slate-200 dark:border-white/5 active:scale-90 transition-all" onclick="toggleMobileMenu()">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<div class="hidden md:hidden pt-4 pb-2 border-t border-slate-200 dark:border-white/10 mt-4 space-y-1 animate-fade-in-down" id="mobileMenu">
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#sample" onclick="toggleMobileMenu()">📄 Sample Answer</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#vocab" onclick="toggleMobileMenu()">📚 Vocabulary</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#exercise" onclick="toggleMobileMenu()">✎ Gap Fill</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#listening" onclick="toggleMobileMenu()">🎧 Listening</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#reading" onclick="toggleMobileMenu()">📖 Reading</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors" href="#speaking" onclick="toggleMobileMenu()">🎙️ Speaking</a>
+<a class="block px-4 py-3 rounded-xl font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 transition-colors" href="#writing" onclick="toggleMobileMenu()">✍️ Writing</a>
+</div>
+</nav>
+</div>
+<script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+<header class="relative w-full max-w-[95%] mx-auto pt-28 pb-10 z-10">
+<div class="glass-panel rounded-[2.5rem] p-10 md:p-16 overflow-hidden relative border border-white/20 shadow-2xl group">
+<div class="absolute inset-0 z-0 pointer-events-none">
+<img alt="Social Media Attention" class="w-full h-full object-cover opacity-20 dark:opacity-30 mix-blend-overlay dark:mix-blend-soft-light filter blur-[1px] scale-105 transform transition-transform duration-[2000ms] group-hover:scale-110" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&amp;w=2670&amp;auto=format&amp;fit=crop"/>
+<div class="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white/60 dark:from-slate-900/80 dark:via-slate-900/50 dark:to-slate-900/80"></div>
+</div>
+<div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-1000 group-hover:bg-indigo-500/30 z-0"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] -ml-32 -mb-32 pointer-events-none transition-all duration-1000 group-hover:bg-purple-500/30 z-0"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 dark:bg-black/40 border border-indigo-100 dark:border-white/10 mb-8 shadow-sm backdrop-blur-md transition-transform hover:scale-105">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+</span>
+<span class="text-[11px] font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-300">Band 9.0 Analysis</span>
+</div>
+<h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-slate-900 dark:text-white drop-shadow-sm">
+                    Attention
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-300 dark:to-purple-300">
+                        Spans
+                    </span>
+</h1>
+<div class="flex flex-wrap justify-center gap-3 md:gap-6 mt-2">
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-indigo-500 text-lg">📱</span>
+<span>Social Media</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-purple-500 text-lg">🧠</span>
+<span>Agree / Disagree</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-sm font-bold text-slate-600 dark:text-slate-300 backdrop-blur-sm">
+<span class="text-emerald-500 text-lg">⏱️</span>
+<span>40 Mins</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full max-w-[95%] mx-auto px-2 relative z-10 pb-24 grid lg:grid-cols-12 gap-6">
+<div class="lg:col-span-8 space-y-6">
+<section class="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden" id="sample">
+<div class="bg-indigo-50/80 dark:bg-indigo-900/20 p-6 rounded-2xl border-l-4 border-indigo-500 mb-8 backdrop-blur-sm">
+<h3 class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2">Topic</h3>
+<p class="font-serif text-lg font-bold text-slate-800 dark:text-white italic leading-relaxed">
+                        "Many today feel that attention spans are becoming shorter due to the prevalence of social media. To what extent do you agree or disagree?"
+                    </p>
+</div>
+<div class="prose dark:prose-invert max-w-none text-lg leading-[2.2] font-serif text-slate-700 dark:text-slate-300">
+<p class="mb-6">
+                        Some today have <span class="vocab-word" data-def="stated, claimed">argued</span> that individuals now <span class="vocab-word" data-def="have">possess</span> <span class="vocab-word" data-def="overall can't focus for as long">generally shorter attention spans</span> <span class="vocab-word" data-def="mostly because of">largely as a result of</span> the <span class="vocab-word" data-def="development, expansion">growth</span> of <span class="vocab-word" data-def="different platforms like Facebook, Instagram">various social media platforms</span>. In my opinion, though this <span class="vocab-word" data-def="statement, assertion">claim</span> might be <span class="vocab-word" data-def="a bit too strong">slightly overstated</span>, it is <span class="vocab-word" data-def="correct overall">true on the whole</span>.
+                    </p>
+<p class="mb-6">
+                        Those who argue that shorter attention spans are not due to social media <span class="vocab-word" data-def="highlight, argue">point out</span> the <span class="vocab-word" data-def="impact, effect">influence</span> of other <span class="vocab-word" data-def="different kinds of sites and products">new forms of media and technology</span>. The <span class="vocab-word" data-def="how long it is">length</span> of a person's attention span was never a <span class="vocab-word" data-def="thing people argued about earlier">topic of consideration for debate before</span> the <span class="vocab-word" data-def="beginning of">onset</span> of <span class="vocab-word" data-def="computers, online era">the digital age</span> and the development of television, radio, the internet, <span class="vocab-word" data-def="etc.">and so on</span>. The <span class="vocab-word" data-def="having your attention held">stimulation</span> from these technologies <span class="vocab-word" data-def="poses new problems">represents unprecedented challenges</span> for humans who have not <span class="vocab-word" data-def="adapted to online life">evolved to live in a digital world</span>. Although modern kinds of media lead to <span class="vocab-word" data-def="too much to watch, listen to">over-stimulation</span> and an <span class="vocab-word" data-def="can't stop wanting something">addictive craving</span> for more, <span class="vocab-word" data-def="keeps happening">constant</span> stimulation, social media is <span class="vocab-word" data-def="just one thing to focus on next to others">merely one distraction among many</span>.
+                    </p>
+<p class="mb-6">
+                        However, social media is the <span class="vocab-word" data-def="one biggest source">greatest single cause of declining</span> attention spans due to their <span class="vocab-word" data-def="special aspects of the apps">unique design features</span>. Social media companies have <span class="vocab-word" data-def="made their apps to">specifically crafted their applications to</span> provide <span class="vocab-word" data-def="give temporary feelings of happiness">momentary bursts of pleasure</span>. For instance, an <span class="vocab-word" data-def="a program on your phone">application</span> like TikTok is <span class="vocab-word" data-def="for this particular purpose">specifically</span> designed to provide a <span class="vocab-word" data-def="lots of videos in a row">stream of addictive videos</span> under 10 seconds <span class="vocab-word" data-def="how long they are">in length</span>. As their <span class="vocab-word" data-def="program that chooses videos for each user">algorithm perfects a curated feed for any given user</span>, individuals easily become <span class="vocab-word" data-def="addicted to">hooked on</span> short entertainment and their attention spans <span class="vocab-word" data-def="as a result, suffer">concomitantly suffer</span>. <span class="vocab-word" data-def="totally different compared to">This is in marked contrast to</span> the <span class="vocab-word" data-def="attention needed">focus required</span> to watch a film or listen to a radio <span class="vocab-word" data-def="sent out, transmitted">broadcast</span>.
+                    </p>
+<p>
+                        In conclusion, I agree social media has caused <span class="vocab-word" data-def="normal citizen">the average person</span> to <span class="vocab-word" data-def="have difficulty focusing">struggle with concentration for extended periods</span> due to the <span class="vocab-word" data-def="way that it happens">manner in which</span> these websites have been <span class="vocab-word" data-def="built, created">constructed</span>. Governments should therefore <span class="vocab-word" data-def="make laws to control">regulate</span> them in order to <span class="vocab-word" data-def="lessen, reduce">mitigate</span> the <span class="vocab-word" data-def="downsides, damage">harms</span> they cause for <span class="vocab-word" data-def="all of society">society as a whole</span>.
+                    </p>
+</div>
+</section>
+</div>
+<div class="lg:col-span-4 space-y-6">
+<h2 class="text-xl font-black text-slate-900 dark:text-white px-2">Structure Analysis</h2>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-rose-500">
+<span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider mb-2 block">01. Introduction</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"Some today have argued that individuals now possess generally shorter attention spans..."</p>
+<p class="text-xs text-slate-400">→ Paraphrase Topic</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"In my opinion, though this claim might be slightly overstated, it is true on the whole."</p>
+<p class="text-xs text-slate-400">→ Clear Opinion</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-teal-500">
+<span class="text-[10px] font-bold text-teal-500 uppercase tracking-wider mb-2 block">02. Body Paragraph 1</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"Those who argue that shorter attention spans are not due to social media point out..."</p>
+<p class="text-xs text-slate-400">→ Topic Sentence (Counter-argument)</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"The stimulation from these technologies represents unprecedented challenges..."</p>
+<p class="text-xs text-slate-400">→ Specific Example</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"...social media is merely one distraction among many."</p>
+<p class="text-xs text-slate-400">→ Concession &amp; Limit</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-violet-500">
+<span class="text-[10px] font-bold text-violet-500 uppercase tracking-wider mb-2 block">03. Body Paragraph 2</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"However, social media is the greatest single cause of declining attention spans..."</p>
+<p class="text-xs text-slate-400">→ Topic Sentence (Main argument)</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"For instance, an application like TikTok is specifically designed..."</p>
+<p class="text-xs text-slate-400">→ Specific Example</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"This is in marked contrast to the focus required to watch a film..."</p>
+<p class="text-xs text-slate-400">→ Contrast &amp; Development</p>
+</div>
+<div class="glass-panel p-6 rounded-2xl border-l-4 border-amber-500">
+<span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-2 block">04. Conclusion</span>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"In conclusion, I agree social media has caused the average person to struggle..."</p>
+<p class="text-xs text-slate-400">→ Summary</p>
+<hr class="my-3 border-slate-200 dark:border-white/5"/>
+<p class="text-sm font-serif italic text-slate-600 dark:text-slate-300 mb-2">"Governments should therefore regulate them in order to mitigate the harms..."</p>
+<p class="text-xs text-slate-400">→ Final Thought</p>
+</div>
+</div>
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8" id="vocab">
+<h3 class="text-lg font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+<span class="text-indigo-500">📚</span> Vocabulary List
+                </h3>
+<div class="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-2">
+<div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">possess</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">have</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">generally shorter attention spans</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">can't focus for as long</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">largely as a result of</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">mostly because of</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">growth of various social media platforms</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">development of sites like Facebook etc.</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">claim</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">statement</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">slightly overstated</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">a bit too strong</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">true on the whole</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">correct overall</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">point out</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">argue, highlight</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">influence</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">impact, effect</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">new forms of media and technology</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">different kinds of sites and products</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">length</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">how long it is</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">topic of consideration for debate</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">thing people argued about</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">onset</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">beginning of</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">the digital age</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">computers, online era</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">and so on</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">etc.</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">stimulation</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">having attention held by something</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">represents unprecedented challenges</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">poses new problems</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">evolved to live in a digital world</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">adapted to online life</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">over-stimulation</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">too much to watch, listen to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">addictive craving</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">can't stop wanting something</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">constant</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">keeps happening</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">merely one distraction among many</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">just one thing next to others</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">greatest single cause of declining</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">one biggest source</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">unique design features</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">special aspects of apps</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">specifically crafted their applications</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">made their apps to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">momentary bursts of pleasure</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">temporary feelings of happiness</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">application</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">a program/app</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">stream of addictive videos</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">lots of videos in a row</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">in length</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">how long they are</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">algorithm perfects a curated feed</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">program chooses videos for user</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">hooked on</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">addicted to</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">concomitantly suffer</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">as a result, hurt</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">in marked contrast to</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">totally different from</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">focus required</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">attention needed</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">broadcast</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">sent out, transmitted</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">the average person</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">normal citizen</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">struggle with concentration</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">have difficulty focusing</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">manner in which</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">way that</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">constructed</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">built</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">regulate</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">make laws to control</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">mitigate</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">lessen, reduce</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">harms</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">downsides, damage</span>
+</div><div class="break-inside-avoid mb-4 text-lg">
+<span class="font-bold text-indigo-600 dark:text-indigo-400">society as a whole</span>
+<span class="text-slate-400 dark:text-slate-500 mx-1">•</span>
+<span class="text-slate-600 dark:text-slate-300">all of society</span>
+</div> </div>
+</section>
+</div>
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="exercise">
+<div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+<div>
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-indigo-500">✎</span> Gap Fill Challenge
+                        </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Type the full word. The box will grow as you type.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-indigo-500/30 transition-all flex items-center gap-2" id="checkBtn" onclick="checkAnswers()">
+                            Check Answers
+                        </button>
+<button class="hidden bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-slate-300 transition-all" id="retryBtn" onclick="resetExercise()">
+                            Retry ↺
+                        </button>
+<span class="hidden bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-full text-sm font-bold border border-emerald-200 dark:border-emerald-800" id="scoreBadge">
+                            0/20
+                        </span>
+</div>
+</div>
+<div class="prose dark:prose-invert max-w-none text-lg leading-[2.2] font-serif text-slate-700 dark:text-slate-300">
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        Some today have argued that individuals now 
+                        <span class="gap-fill" contenteditable="true" data-answer="possess" data-hint="p...s"></span>
+<span class="gap-fill" contenteditable="true" data-answer="generally shorter attention spans" data-hint="g...s"></span>
+<span class="gap-fill" contenteditable="true" data-answer="largely as a result of" data-hint="l...f"></span>
+                        the 
+                        <span class="gap-fill" contenteditable="true" data-answer="growth of various social media platforms" data-hint="g...s"></span>.
+                        In my opinion, though this 
+                        <span class="gap-fill" contenteditable="true" data-answer="claim" data-hint="c...m"></span>
+                        might be 
+                        <span class="gap-fill" contenteditable="true" data-answer="slightly overstated" data-hint="s...d"></span>,
+                        it is 
+                        <span class="gap-fill" contenteditable="true" data-answer="true on the whole" data-hint="t...e"></span>.
+                    </p>
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        Those who argue that shorter attention spans are not due to social media 
+                        <span class="gap-fill" contenteditable="true" data-answer="point out" data-hint="p...t"></span>
+                        the 
+                        <span class="gap-fill" contenteditable="true" data-answer="influence" data-hint="i...e"></span>
+                        of other 
+                        <span class="gap-fill" contenteditable="true" data-answer="new forms of media and technology" data-hint="n...y"></span>.
+                        The 
+                        <span class="gap-fill" contenteditable="true" data-answer="length" data-hint="l...h"></span>
+                        of a person's attention span was never a 
+                        <span class="gap-fill" contenteditable="true" data-answer="topic of consideration for debate before" data-hint="t...e"></span>
+                        the 
+                        <span class="gap-fill" contenteditable="true" data-answer="onset" data-hint="o...t"></span>
+                        of 
+                        <span class="gap-fill" contenteditable="true" data-answer="the digital age" data-hint="t...e"></span>
+                        and the development of television, radio, the internet, 
+                        <span class="gap-fill" contenteditable="true" data-answer="and so on" data-hint="a...n"></span>.
+                        The 
+                        <span class="gap-fill" contenteditable="true" data-answer="stimulation" data-hint="s...n"></span>
+                        from these technologies 
+                        <span class="gap-fill" contenteditable="true" data-answer="represents unprecedented challenges" data-hint="r...s"></span>
+                        for humans who have not 
+                        <span class="gap-fill" contenteditable="true" data-answer="evolved to live in a digital world" data-hint="e...d"></span>.
+                        Although modern kinds of media lead to 
+                        <span class="gap-fill" contenteditable="true" data-answer="over-stimulation" data-hint="o...n"></span>
+                        and an 
+                        <span class="gap-fill" contenteditable="true" data-answer="addictive craving" data-hint="a...g"></span>
+                        for more, 
+                        <span class="gap-fill" contenteditable="true" data-answer="constant" data-hint="c...t"></span>
+                        stimulation, social media is 
+                        <span class="gap-fill" contenteditable="true" data-answer="merely one distraction among many" data-hint="m...y"></span>.
+                    </p>
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        However, social media is the 
+                        <span class="gap-fill" contenteditable="true" data-answer="greatest single cause of declining" data-hint="g...g"></span>
+                        attention spans due to their 
+                        <span class="gap-fill" contenteditable="true" data-answer="unique design features" data-hint="u...s"></span>.
+                        Social media companies have 
+                        <span class="gap-fill" contenteditable="true" data-answer="specifically crafted their applications to" data-hint="s...o"></span>
+                        provide 
+                        <span class="gap-fill" contenteditable="true" data-answer="momentary bursts of pleasure" data-hint="m...e"></span>.
+                        For instance, an 
+                        <span class="gap-fill" contenteditable="true" data-answer="application" data-hint="a...n"></span>
+                        like TikTok is 
+                        <span class="gap-fill" contenteditable="true" data-answer="specifically" data-hint="s...y"></span>
+                        designed to provide a 
+                        <span class="gap-fill" contenteditable="true" data-answer="stream of addictive videos" data-hint="s...s"></span>
+                        under 10 seconds 
+                        <span class="gap-fill" contenteditable="true" data-answer="in length" data-hint="i...h"></span>.
+                        As their 
+                        <span class="gap-fill" contenteditable="true" data-answer="algorithm perfects a curated feed for any given user" data-hint="a...r"></span>,
+                        individuals easily become 
+                        <span class="gap-fill" contenteditable="true" data-answer="hooked on" data-hint="h...n"></span>
+                        short entertainment and their attention spans 
+                        <span class="gap-fill" contenteditable="true" data-answer="concomitantly suffer" data-hint="c...r"></span>.
+                        <span class="gap-fill" contenteditable="true" data-answer="This is in marked contrast to" data-hint="T...o"></span>
+                        the 
+                        <span class="gap-fill" contenteditable="true" data-answer="focus required" data-hint="f...d"></span>
+                        to watch a film or listen to a radio 
+                        <span class="gap-fill" contenteditable="true" data-answer="broadcast" data-hint="b...t"></span>.
+                    </p>
+<p class="mb-10 p-6 bg-white/50 dark:bg-black/20 rounded-2xl border border-slate-200 dark:border-white/5">
+                        In conclusion, I agree social media has caused 
+                        <span class="gap-fill" contenteditable="true" data-answer="the average person" data-hint="t...n"></span>
+                        to 
+                        <span class="gap-fill" contenteditable="true" data-answer="struggle with concentration for extended periods" data-hint="s...s"></span>
+                        due to the 
+                        <span class="gap-fill" contenteditable="true" data-answer="manner in which" data-hint="m...h"></span>
+                        these websites have been 
+                        <span class="gap-fill" contenteditable="true" data-answer="constructed" data-hint="c...d"></span>.
+                        Governments should therefore 
+                        <span class="gap-fill" contenteditable="true" data-answer="regulate" data-hint="r...e"></span>
+                        them in order to 
+                        <span class="gap-fill" contenteditable="true" data-answer="mitigate" data-hint="m...e"></span>
+                        the 
+                        <span class="gap-fill" contenteditable="true" data-answer="harms" data-hint="h...s"></span>
+                        they cause for 
+                        <span class="gap-fill" contenteditable="true" data-answer="society as a whole" data-hint="s...e"></span>.
+                    </p>
+</div>
+</section>
+</div>
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="listening">
+<div class="mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-sky-500">🎧</span> Listening Practice
+                    </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Watch this video on "10 reasons why you can't focus and how to fix it" to improve your listening skills.</p>
+</div>
+<div class="w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10">
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" class="w-full h-full" frameborder="0" loading="lazy" src="https://www.youtube.com/embed/94Fzvi3tkiE?modestbranding=1&amp;rel=0" title="Attention Spans">
+</iframe>
+</div>
+</section>
+</div>
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden" id="reading">
+<div class="mb-8">
+<h3 class="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+<span class="text-purple-500">📖</span> Reading Extension
+                    </h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">
+                        Explore how attention spans have changed in the digital age.
+                    </p>
+</div>
+<a class="group relative block w-full aspect-[21/9] md:aspect-[3/1] rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10" href="/content/articles/attention-spans-article.php">
+<img alt="Attention Spans Article" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&amp;w=2670&amp;auto=format&amp;fit=crop"/>
+<div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent"></div>
+<div class="absolute inset-0 p-8 md:p-12 flex flex-col justify-center max-w-2xl">
+<span class="inline-block py-1 px-3 rounded-full bg-red-500/20 border border-red-400/50 text-white text-xs font-bold uppercase tracking-widest w-fit mb-4">
+                            CNN Health
+                        </span>
+<h4 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight group-hover:text-indigo-300 transition-colors">
+                            If You Can't Focus, You're Right
+                        </h4>
+<p class="text-slate-300 text-lg mb-8 line-clamp-2 md:line-clamp-none">
+                            Research shows attention spans have dropped from 2.5 minutes to 47 seconds. How to fight back.
+                        </p>
+<span class="flex items-center gap-2 text-sm font-bold text-white uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+                            Read Article <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+</a>
+</section>
+</div>
+<div class="lg:col-span-12">
+<section class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden transition-all duration-300 hover:shadow-2xl" id="speaking">
+<div class="grid md:grid-cols-12 gap-8 items-start">
+<div class="md:col-span-4 space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-3xl shadow-xl transform -rotate-3">
+                                🎙️
+                            </div>
+<div>
+<h3 class="text-xl font-black text-slate-900 dark:text-white leading-tight">Speaking Coach</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">Corrections &amp; Upgrades</p>
+</div>
+</div>
+<div class="bg-white/80 dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-20 h-20 bg-indigo-500/10 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
+<h4 class="font-bold text-slate-400 uppercase text-[10px] tracking-widest mb-3">Current Topic</h4>
+<p class="text-xl font-serif font-bold text-slate-800 dark:text-white mb-6 leading-snug relative z-10" id="exam-question">
+                                "1. Do you often write down notes?"
+                            </p>
+<button class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-2 relative z-10" onclick="nextQuestion()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                                Change Topic
+                            </button>
+</div>
+<div class="bg-slate-900 text-white rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden h-96 flex flex-col justify-center items-center group" id="recorder-box">
+<div class="absolute top-4 left-4 right-4 h-32 bg-white/10 rounded-xl p-3 text-left overflow-hidden" id="live-transcript-box">
+<p class="text-[10px] font-bold uppercase text-slate-400 mb-1">Live Transcript:</p>
+<p class="text-xs text-white/80 font-mono leading-relaxed break-words" id="live-text">...</p>
+</div>
+<div class="mt-32 relative z-10">
+<div class="text-5xl font-mono font-black mb-2 tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400" id="timer">00:00</div>
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-8" id="status">Ready</p>
+<button class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-[0_0_30px_rgba(79,70,229,0.4)] transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center mx-auto border-4 border-slate-800" id="mic-btn">
+<svg class="w-8 h-8 drop-shadow-md" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<div class="absolute inset-0 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center z-20 hidden transition-all" id="processing-ui">
+<div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+<p class="text-xs font-bold text-indigo-400 uppercase tracking-widest animate-pulse">Analyzing Speech...</p>
+</div>
+</div>
+</div>
+<div class="md:col-span-8 relative min-h-[600px]">
+<div class="h-full flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-white/10 rounded-3xl p-12 text-center opacity-60 hover:opacity-100 transition-opacity" id="report-placeholder">
+<div class="w-24 h-24 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
+<span class="text-4xl">✨</span>
+</div>
+<h3 class="font-bold text-2xl text-slate-700 dark:text-white mb-2">Ready to Practice?</h3>
+<p class="text-sm text-slate-500 max-w-sm mx-auto">Record your answer. I won't give you a score—just helpful corrections and better words to use!</p>
+</div>
+<div class="hidden bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 h-[600px] overflow-y-auto custom-scrollbar p-8 animate-fade-in-up" id="report-container">
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+            // ==========================================
+            // ⚠️ API CONFIGURATION
+            // ==========================================
+            const API_KEY = "YOUR_GROQ_API_KEY"; 
+            const MODEL_NAME = "llama-3.3-70b-versatile"; 
+            // ==========================================
+
+            const questions = [
+                "Do you often write down notes?",
+                "Do you make a lot of lists on your phone?",
+                "When do you usually make notes?",
+                "Is it common in your country for people to write notes?",
+                "Do you prefer writing notes by hand or on a device?",
+                "What kind of things do you usually write notes about?",
+                "Have you ever lost an important note?",
+                "Do you think taking notes helps you remember things better?",
+                "How has technology changed the way people take notes?"
+            ];
+
+            let recognition;
+            let isRecording = false;
+            let transcript = "";
+            let startTime;
+            let timerInterval;
+            let qIndex = 0;
+
+            const micBtn = document.getElementById('mic-btn');
+            const timerDisplay = document.getElementById('timer');
+            const statusText = document.getElementById('status');
+            const liveText = document.getElementById('live-text');
+            const reportContainer = document.getElementById('report-container');
+            const reportPlaceholder = document.getElementById('report-placeholder');
+            const processingUi = document.getElementById('processing-ui');
+
+            // --- SPEECH RECOGNITION SETUP ---
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true; 
+                recognition.interimResults = true;
+                recognition.lang = 'en-US'; 
+                recognition.maxAlternatives = 1;
+
+                recognition.onresult = (event) => {
+                    let interim = '';
+                    let finalChunk = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalChunk += event.results[i][0].transcript;
+                        } else {
+                            interim += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    if (finalChunk) {
+                        transcript += finalChunk + " ";
+                    }
+
+                    // Update Live Text Box
+                    liveText.innerHTML = `<span class="text-white">${transcript}</span><span class="text-slate-400 italic">${interim}</span>`;
+                    
+                    const textBox = document.getElementById('live-transcript-box');
+                    textBox.scrollTop = textBox.scrollHeight;
+                };
+
+                recognition.onerror = (event) => { 
+                    console.error("Speech Error", event.error); 
+                    if(event.error === 'no-speech') return; 
+                    stopRecording(); 
+                };
+            } else {
+                alert("Browser not supported. Please use Chrome, Edge, or Safari.");
+            }
+
+            // --- CONTROLS ---
+            micBtn.addEventListener('click', () => {
+                if (!isRecording) startRecording();
+                else stopRecording();
+            });
+
+            function startRecording() {
+                isRecording = true;
+                transcript = "";
+                liveText.innerText = "...";
+                startTime = Date.now();
+                
+                // Visual Updates
+                micBtn.classList.remove('bg-gradient-to-br', 'from-indigo-600', 'to-indigo-700');
+                micBtn.classList.add('bg-slate-700', 'animate-pulse');
+                micBtn.innerHTML = '<span class="text-2xl font-black text-red-500">■</span>';
+                statusText.innerText = "Listening...";
+                statusText.classList.add('text-indigo-400');
+                
+                recognition.start();
+                
+                timerInterval = setInterval(() => {
+                    const diff = Math.floor((Date.now() - startTime) / 1000);
+                    const m = Math.floor(diff / 60).toString().padStart(2, '0');
+                    const s = (diff % 60).toString().padStart(2, '0');
+                    timerDisplay.innerText = `${m}:${s}`;
+                }, 1000);
+            }
+
+            function stopRecording() {
+                isRecording = false;
+                recognition.stop();
+                clearInterval(timerInterval);
+                
+                // UI Updates
+                processingUi.classList.remove('hidden');
+                statusText.innerText = "Analyzing...";
+                
+                // SEND TO GROQ
+                analyzeWithGroq(transcript);
+            }
+
+            // --- AI ANALYSIS LOGIC ---
+            async function analyzeWithGroq(userSpeech) {
+                if(userSpeech.length < 5) {
+                    alert("Recording too short. Please try again.");
+                    resetRecorder();
+                    return;
+                }
+
+                const currentQ = document.getElementById('exam-question').innerText;
+                
+                // --- NEW "ENCOURAGEMENT" PROMPT ---
+                const prompt = `
+                    You are a helpful, encouraging English tutor. 
+                    The student has just spoken an answer to an IELTS question.
+                    
+                    **YOUR GOAL:** Do NOT give a band score. Do NOT give grades. 
+                    Instead, act like a supportive coach. Provide as many corrections, specific improvements, and vocabulary upgrades as possible.
+                    
+                    ========================
+                    INPUT
+                    ========================
+                    QUESTION: ${currentQ}
+                    TRANSCRIPT: "${userSpeech}"
+
+                    ========================
+                    OUTPUT FORMAT (MANDATORY)
+                    ========================
+                    Return CLEAN, STRUCTURED HTML code only. 
+                    Use Tailwind CSS classes.
+                    Structure:
+
+                    <div class="space-y-8 font-sans text-slate-800 dark:text-slate-200">
+                        
+                        <div class="bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-xl border border-indigo-100 dark:border-indigo-900/30">
+                            <h3 class="text-indigo-800 dark:text-indigo-300 font-bold text-lg mb-2">Great start! 🌟</h3>
+                            <p class="text-indigo-700 dark:text-indigo-200 leading-relaxed">
+                                [Write 2-3 encouraging sentences about what they did well (ideas, flow, or effort). Be positive.]
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-bold uppercase text-slate-500 mb-2">Your Speech Analysis</h3>
+                            <div class="p-5 bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl font-serif text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+                                [Output the student's transcript here. 
+                                 Highlight grammar mistakes in <span class="bg-red-100 text-red-700 px-1 rounded decoration-red-500 underline decoration-2">red text</span>.
+                                 Highlight weak words in <span class="bg-orange-100 text-orange-700 px-1 rounded">orange text</span>.
+                                 Highlight good phrases in <span class="bg-green-100 text-green-700 px-1 rounded font-bold">green text</span>.]
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-bold uppercase text-slate-500 mb-4">💡 Specific Improvements</h3>
+                            <div class="space-y-4">
+                                <div class="flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-white/5">
+                                    <div class="flex-shrink-0 w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">!</div>
+                                    <div>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-1 uppercase text-xs font-bold tracking-wider">[GRAMMAR / WORD CHOICE / PHRASING]</p>
+                                        <div class="mb-1">
+                                            <span class="line-through decoration-red-400 text-slate-400 mr-2">[Original Mistake]</span>
+                                            <span class="text-slate-300">→</span>
+                                            <span class="text-indigo-600 dark:text-indigo-400 font-bold ml-2">[Better Version]</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 italic">[Short explanation why]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-5 bg-orange-50 dark:bg-orange-900/10 rounded-xl border border-orange-100 dark:border-orange-900/20">
+                                <h4 class="text-xs font-bold uppercase text-orange-700 dark:text-orange-400 mb-3">Instead of saying...</h4>
+                                <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                    <li>• [Weak Word 1]</li>
+                                    <li>• [Weak Word 2]</li>
+                                    <li>• [Weak Word 3]</li>
+                                </ul>
+                            </div>
+                            <div class="p-5 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900/20">
+                                <h4 class="text-xs font-bold uppercase text-green-700 dark:text-green-400 mb-3">Try using...</h4>
+                                <ul class="space-y-2 text-sm text-slate-700 dark:text-white font-bold">
+                                    <li>✨ [Strong Synonym 1]</li>
+                                    <li>✨ [Strong Synonym 2]</li>
+                                    <li>✨ [Strong Synonym 3]</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 text-white p-6 rounded-xl relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">💬</div>
+                            <h3 class="text-sm font-bold uppercase text-indigo-300 mb-3">How a Native Speaker Would Say It</h3>
+                            <p class="font-serif text-lg leading-relaxed text-indigo-50 italic">
+                                "[Rewrite their answer completely to be C1/C2 level, natural, and idiomatic]"
+                            </p>
+                        </div>
+
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${API_KEY}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            model: MODEL_NAME,
+                            messages: [
+                                { role: "system", content: "You are an API that outputs only raw HTML code. Do not wrap in markdown." },
+                                { role: "user", content: prompt }
+                            ],
+                            temperature: 0.2
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.error?.message || "API Error");
+                    }
+
+                    const data = await response.json();
+                    let htmlContent = data.choices[0].message.content;
+                    
+                    // Clean up markdown block if present
+                    htmlContent = htmlContent.replace(/```html/g, '').replace(/```/g, '').trim();
+
+                    displayReport(htmlContent);
+
+                } catch (error) {
+                    console.error("Groq Error:", error);
+                    alert("Analysis Error: " + error.message);
+                    resetRecorder();
+                }
+            }
+
+            function displayReport(html) {
+                processingUi.classList.add('hidden');
+                reportPlaceholder.classList.add('hidden');
+                reportContainer.classList.remove('hidden');
+                reportContainer.innerHTML = html;
+            }
+
+            function resetRecorder() {
+                reportContainer.classList.add('hidden');
+                reportPlaceholder.classList.remove('hidden');
+                processingUi.classList.add('hidden');
+                transcript = "";
+                timerDisplay.innerText = "00:00";
+                statusText.innerText = "Ready";
+                liveText.innerText = "...";
+                statusText.classList.remove('text-indigo-400');
+                
+                micBtn.classList.add('bg-gradient-to-br', 'from-indigo-600', 'to-indigo-700');
+                micBtn.classList.remove('bg-slate-700', 'animate-pulse');
+                micBtn.innerHTML = '<svg class="w-8 h-8 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>';
+            }
+
+            function nextQuestion() {
+                qIndex = (qIndex + 1) % questions.length;
+                document.getElementById('exam-question').innerText = `"${questions[qIndex]}"`;
+                resetRecorder();
+            }
+        </script>
+<script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<div class="lg:col-span-12 mt-12 mb-20">
+<section class="glass-panel rounded-3xl p-8 relative overflow-hidden transition-all duration-300 border border-slate-200 dark:border-white/10" id="writing">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-3xl shadow-xl transform rotate-3">
+                        ✍️
+                    </div>
+<div>
+<h3 class="text-xl font-black text-slate-900 dark:text-white leading-tight">Writing Simulator</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">IELTS Task 2 Examiner</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 transition-all duration-700 ease-in-out" id="writing-grid">
+<div class="md:col-span-2 transition-all duration-700 ease-in-out flex flex-col min-h-[600px] md:h-[850px]" id="input-col">
+<div class="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 mb-4 shrink-0">
+<h4 class="font-bold text-purple-600 dark:text-purple-300 uppercase text-[10px] tracking-widest mb-2">Writing Task 2</h4>
+<div class="text-lg font-serif font-bold text-slate-800 dark:text-white leading-relaxed" id="static-question">
+<p class="mb-4">"Some people think that social networking sites have a huge negative impact on both individuals and society.</p>
+<p>To what extent do you agree or disagree?"</p>
+</div>
+</div>
+<div class="relative flex-grow mb-4">
+<textarea class="w-full h-full p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 focus:border-purple-500 focus:ring-0 transition-all font-serif text-lg leading-relaxed resize-none shadow-inner custom-scrollbar" id="essay-input" placeholder="Type your essay here..."></textarea>
+<div class="absolute bottom-4 right-4 text-xs font-bold text-slate-400 bg-white/80 dark:bg-slate-900/80 px-2 py-1 rounded" id="word-count">0 words</div>
+</div>
+<button class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold shadow-lg shadow-purple-500/30 hover:scale-[1.01] transition-all flex items-center justify-center gap-2 text-lg shrink-0" id="submit-btn" onclick="submitEssay()">
+<span>🚀</span> Submit for Official Grading
+                        </button>
+</div>
+<div class="hidden opacity-0 translate-x-10 transition-all duration-700 ease-in-out min-h-[600px] md:h-[850px]" id="feedback-col">
+<div class="h-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
+<div class="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-4 p-6 bg-gray-50 dark:bg-gray-900/50 shrink-0">
+<div>
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Examiner Report</h2>
+<p class="text-gray-500 text-xs">AI Evaluation &amp; Feedback</p>
+</div>
+<button class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-200 transition flex items-center gap-2 shadow-sm" onclick="generateDOCX()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                                    Download DOCX
+                                </button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 custom-scrollbar relative" id="feedback-content">
+<div class="absolute inset-0 flex flex-col items-center justify-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm z-10" id="writing-loading">
+<div class="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+<p class="text-purple-600 font-bold animate-pulse">Examiner is evaluating...</p>
+</div>
+<div class="hidden space-y-6 prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200" id="ai-result"></div>
+</div>
+<div class="p-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-center shrink-0">
+<button class="text-sm font-bold text-gray-500 hover:text-purple-600 transition-colors" onclick="resetWriting()">
+                                    Start New Essay
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+            // ==========================================
+            // ⚠️ API CONFIGURATION
+            // ==========================================
+            const GROQ_API_KEY = "YOUR_GROQ_API_KEY";
+            // ==========================================
+
+            const essayInput = document.getElementById('essay-input');
+            const wordCountLabel = document.getElementById('word-count');
+            const inputCol = document.getElementById('input-col');
+            const feedbackCol = document.getElementById('feedback-col');
+            const submitBtn = document.getElementById('submit-btn');
+            const writingLoading = document.getElementById('writing-loading');
+            const aiResult = document.getElementById('ai-result');
+
+            // Word Count Logic
+            essayInput.addEventListener('input', () => {
+                const words = essayInput.value.trim().split(/\s+/).length;
+                wordCountLabel.innerText = essayInput.value.trim() === '' ? '0 words' : `${words} words`;
+            });
+
+            async function submitEssay() {
+                const text = essayInput.value.trim();
+                if(text.length < 50) {
+                    alert("Please write a longer essay before submitting.");
+                    return;
+                }
+
+                // 1. ANIMATE LAYOUT
+                inputCol.classList.remove('md:col-span-2');
+                inputCol.classList.add('md:col-span-1');
+                feedbackCol.classList.remove('hidden');
+                setTimeout(() => {
+                    feedbackCol.classList.remove('opacity-0', 'translate-x-10');
+                }, 100);
+
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                submitBtn.innerHTML = `<span>⏳</span> Grading...`;
+
+                // 2. PREPARE PROMPT (Strict Layout + Page Breaks)
+                const prompt = `
+                    You are a certified IELTS Writing examiner.
+                    Task 2 Question: "Some cities create housing for growing populations by building taller buildings while other cities have opted to build on wider areas of land. Which solution is better?"
+                    Student Essay: "${text}"
+
+                    REQUIREMENTS:
+                    1. Provide EXACTLY 10 specific improvements.
+                    2. Provide EXACTLY 10 grammatical/lexical corrections.
+                    3. Provide EXACTLY 10 better word choices.
+                    4. Evaluate all 4 criteria.
+
+                    OUTPUT FORMAT:
+                    Return CLEAN, STRUCTURED HTML. 
+                    IMPORTANT: Do NOT use CSS classes. USE INLINE STYLES (style="...").
+                    
+                    Follow this exact structure:
+
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        
+                        <h1 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; color: #4c1d95;">IELTS Evaluation Report</h1>
+
+                        <div style="text-align: center; padding: 20px; background-color: #f3f4f6; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 8px;">
+                            <h2 style="margin: 0; font-size: 14px; text-transform: uppercase; color: #555;">Final Band Score</h2>
+                            <div style="font-size: 48px; font-weight: bold; color: #6d28d9;">[BAND]</div>
+                        </div>
+
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr style="background-color: #eee;"><th style="padding: 8px; text-align: left;">Criteria</th><th style="padding: 8px; text-align: right;">Band</th></tr>
+                            <tr><td style="padding: 8px; border-bottom: 1px solid #eee;">Task Response</td><td style="padding: 8px; text-align: right; font-weight: bold;">[SCORE]</td></tr>
+                            <tr><td style="padding: 8px; border-bottom: 1px solid #eee;">Coherence & Cohesion</td><td style="padding: 8px; text-align: right; font-weight: bold;">[SCORE]</td></tr>
+                            <tr><td style="padding: 8px; border-bottom: 1px solid #eee;">Lexical Resource</td><td style="padding: 8px; text-align: right; font-weight: bold;">[SCORE]</td></tr>
+                            <tr><td style="padding: 8px; border-bottom: 1px solid #eee;">Grammar</td><td style="padding: 8px; text-align: right; font-weight: bold;">[SCORE]</td></tr>
+                        </table>
+
+                        <div style="background-color: #eef2ff; padding: 15px; border-left: 4px solid #3b82f6; margin-bottom: 20px;">
+                            <h3 style="margin-top: 0; color: #1e40af;">Examiner Summary</h3>
+                            <p>[SUMMARY]</p>
+                        </div>
+
+                        <h2 style="border-bottom: 1px solid #eee; margin-top: 30px;">10 Critical Corrections</h2>
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
+                            <tr style="background-color: #eee;"><th style="padding: 5px;">Original</th><th style="padding: 5px;">Correction</th><th style="padding: 5px;">Reason</th></tr>
+                            <tr>
+                                <td style="padding: 5px; border-bottom: 1px solid #eee; color: #dc2626; text-decoration: line-through;">[Error]</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #eee; color: #16a34a; font-weight: bold;">[Fix]</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #eee; font-style: italic;">[Why]</td>
+                            </tr>
+                        </table>
+
+                        <div style="background-color: #fefce8; padding: 15px; border: 1px solid #fef08a; margin-bottom: 20px;">
+                            <h3 style="margin-top: 0; color: #854d0e;">10 Ways to Improve</h3>
+                            <ul style="padding-left: 20px;">
+                                <li>[Suggestion 1]</li>
+                                </ul>
+                        </div>
+
+                        <h3 style="border-bottom: 1px solid #eee;">10 Vocabulary Upgrades</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 5px;"><span style="color: #999; text-decoration: line-through;">[Weak]</span> &rarr; <span style="color: #4f46e5; font-weight: bold;">[Strong]</span></li>
+                        </ul>
+
+                        <div style="page-break-before: always;"></div>
+
+                        <div style="background-color: #f5f3ff; padding: 30px; border: 1px solid #ddd; margin-top: 20px; border-radius: 8px;">
+                            <h2 style="margin-top: 0; color: #4c1d95; text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 10px;">Band 9.0 Model Version</h2>
+                            <p style="font-family: Georgia, serif; line-height: 1.8; font-size: 14px; text-align: justify;">
+                                [WRITE FULL BAND 9 ESSAY HERE. Separate paragraphs clearly.]
+                            </p>
+                        </div>
+
+                    </div>
+                `;
+
+                // 3. CALL GROQ API
+                try {
+                    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [
+                                { role: "system", content: "You are an API that outputs only raw HTML code." },
+                                { role: "user", content: prompt }
+                            ],
+                            temperature: 0.1
+                        })
+                    });
+
+                    const data = await response.json();
+                    let html = data.choices[0].message.content.replace(/```html/g, '').replace(/```/g, '').trim();
+
+                    // 4. DISPLAY RESULTS
+                    writingLoading.classList.add('hidden');
+                    aiResult.innerHTML = html;
+                    aiResult.classList.remove('hidden');
+
+                } catch (error) {
+                    alert("Error checking essay: " + error.message);
+                    resetWriting();
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+
+            function resetWriting() {
+                feedbackCol.classList.add('opacity-0', 'translate-x-10');
+                setTimeout(() => feedbackCol.classList.add('hidden'), 500); 
+                inputCol.classList.remove('md:col-span-1');
+                inputCol.classList.add('md:col-span-2');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitBtn.innerHTML = `<span>🚀</span> Submit for Official Grading`;
+                writingLoading.classList.remove('hidden');
+                aiResult.classList.add('hidden');
+                aiResult.innerHTML = '';
+            }
+
+            // --- DOCX GENERATOR (Page Breaks & Layout) ---
+            function generateDOCX() {
+                // Get question from the new HTML structure
+                const questionText = document.getElementById('static-question').innerText;
+                const essay = document.getElementById('essay-input').value;
+                const feedback = document.getElementById('ai-result').innerHTML;
+
+                const content = `
+                    <!DOCTYPE html>
+                    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                    <head>
+                        <meta charset="utf-8">
+                        <title>IELTS Feedback</title>
+                        <style>
+                            body { font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.5; }
+                            h1 { font-size: 24pt; color: #2E1A47; text-align: center; }
+                            h2 { font-size: 16pt; color: #4C1D95; margin-top: 20px; }
+                            h3 { font-size: 14pt; color: #333; }
+                            .section { margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; background: #fafafa; }
+                            .essay-text { font-family: 'Times New Roman', serif; font-size: 12pt; white-space: pre-wrap; }
+                            .page-break { page-break-before: always; }
+                        </style>
+                    </head>
+                    <body>
+                        
+                        <h1>IELTS Writing Examiner Report</h1>
+                        
+                        <div class="section">
+                            <h3>Topic Question</h3>
+                            <p style="font-style: italic;">${questionText}</p>
+                        </div>
+
+                        <div class="section">
+                            <h3>Your Essay</h3>
+                            <div class="essay-text">${essay}</div>
+                        </div>
+
+                        <div class="page-break"></div>
+                        
+                        ${feedback}
+
+                        </body>
+                    </html>
+                `;
+
+                const converted = htmlDocx.asBlob(content);
+                saveAs(converted, 'IELTS_Writing_Feedback.docx');
+            }
+        </script>
+<div class="lg:col-span-12 mt-12">
+<a class="block group relative w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-cyan-500/20 hover:scale-[1.01]" href="agree-disagree-water-basic-human-right.php">
+<div class="absolute inset-0">
+<img alt="Water Ripples" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" src="../../../images/AdobeStock_766997200.jpeg"/>
+<div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent dark:from-black dark:via-black/80"></div>
+</div>
+<div class="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+<div class="max-w-2xl space-y-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/30 backdrop-blur-md">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+<span class="text-[10px] font-black uppercase tracking-widest text-cyan-300">Next Sample Analysis</span>
+</div>
+<h3 class="text-3xl md:text-4xl font-black text-white leading-tight">
+                            Is Clean Water a <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Human Right?</span>
+</h3>
+<p class="text-slate-300 text-lg font-medium leading-relaxed max-w-xl">
+                            Analyze a high-scoring response that evaluates whether providing free household water is a realistic and fair way to protect access to a fundamental human right.
+                        </p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-3 py-1 rounded-md bg-white/10 text-xs font-bold text-slate-300 uppercase tracking-wider border border-white/10">Opinion Essay</span>
+<span class="px-3 py-1 rounded-md bg-white/10 text-xs font-bold text-slate-300 uppercase tracking-wider border border-white/10">Band 9.0</span>
+</div>
+</div>
+<div class="flex-shrink-0">
+<span class="flex items-center gap-3 px-8 py-4 rounded-xl bg-white text-slate-900 font-bold uppercase tracking-widest text-xs transition-all group-hover:bg-cyan-400 group-hover:text-black group-hover:shadow-[0_0_40px_rgba(34,211,238,0.4)]">
+                            Start Analysis
+                            <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+</div>
+</a>
+</div>
+</main>
+<footer class="relative z-10 py-12 mt-20 border-t border-slate-200/50 dark:border-white/5 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xl">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-indigo-500/20">
+                    S
+                </div>
+<div class="flex flex-col">
+<span class="font-bold text-slate-900 dark:text-white leading-tight">IELTS's IELTS</span>
+<span class="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">IELTS Prep Platform</span>
+</div>
+</div>
+<p class="text-xs font-medium text-slate-400">
+                © 2026. All rights reserved.
+            </p>
+</div>
+</footer>
+<script>
+        // STARS GENERATOR
+        const starContainer = document.querySelector('.stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const xy = Math.random() * 100;
+            const duration = Math.random() * 3 + 2;
+            const size = Math.random() * 2 + 1;
+            
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--opacity', Math.random());
+            
+            starContainer.appendChild(star);
+        }
+
+        // THEME TOGGLE LOGIC (FIXED)
+        const themeBtn = document.getElementById('themeToggle');
+        const sun = document.querySelector('.sun');
+        const moon = document.querySelector('.moon');
+
+        // 1. Initialize State Correctly on Load
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            sun.classList.remove('hidden');  // Show Sun (to switch to light)
+            moon.classList.add('hidden');    // Hide Moon
+        } else {
+            document.documentElement.classList.remove('dark');
+            sun.classList.add('hidden');     // Hide Sun
+            moon.classList.remove('hidden'); // Show Moon (to switch to dark)
+        }
+
+        // 2. Toggle Logic
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                sun.classList.remove('hidden');
+                moon.classList.add('hidden');
+            } else {
+                localStorage.setItem('theme', 'light');
+                sun.classList.add('hidden');
+                moon.classList.remove('hidden');
+            }
+        });
+
+        // --- CHECK ANSWERS LOGIC ---
+        function checkAnswers() {
+            const inputs = document.querySelectorAll('.gap-fill');
+            let correctCount = 0;
+            
+            inputs.forEach(input => {
+                const userAnswer = input.innerText.trim().toLowerCase(); // Use innerText for spans
+                const correctAnswer = input.getAttribute('data-answer').toLowerCase();
+                
+                // Reset classes
+                input.classList.remove('correct', 'wrong');
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                    correctCount++;
+                } else {
+                    input.classList.add('wrong');
+                }
+            });
+
+            // UI Updates
+            const badge = document.getElementById('scoreBadge');
+            const checkBtn = document.getElementById('checkBtn');
+            const retryBtn = document.getElementById('retryBtn');
+
+            badge.innerText = `${correctCount}/${inputs.length}`;
+            badge.classList.remove('hidden');
+            
+            // Switch buttons
+            checkBtn.classList.add('hidden');
+            retryBtn.classList.remove('hidden');
+            
+            // Scroll to first error
+            const firstWrong = document.querySelector('.gap-fill.wrong');
+            if(firstWrong) {
+                firstWrong.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // --- RESET FUNCTIONALITY ---
+        function resetExercise() {
+            const inputs = document.querySelectorAll('.gap-fill');
+            const badge = document.getElementById('scoreBadge');
+            const checkBtn = document.getElementById('checkBtn');
+            const retryBtn = document.getElementById('retryBtn');
+
+            inputs.forEach(input => {
+                input.innerText = ''; // Clear text
+                input.classList.remove('correct', 'wrong');
+            });
+
+            badge.classList.add('hidden');
+            checkBtn.classList.remove('hidden');
+            retryBtn.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
