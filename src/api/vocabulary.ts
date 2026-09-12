@@ -1,12 +1,29 @@
 import type { VocabularyWord, ReviewState } from "@/types";
 import { VOCAB_DECK, wordById } from "@/data/vocabulary";
 import { mockRequest, mockItem } from "./mockClient";
+import { apiFetch, isRealApi } from "./http";
 
-export function getDeck(): Promise<VocabularyWord[]> {
+export async function getDeck(): Promise<VocabularyWord[]> {
+  if (isRealApi()) {
+    try {
+      const data = await apiFetch("/api/vocabulary");
+      const words = data as VocabularyWord[];
+      if (words && words.length > 0) return words;
+    } catch {}
+  }
   return mockRequest(() => VOCAB_DECK, 400);
 }
 
-export function getWordOfDay(): Promise<VocabularyWord> {
+export async function getWordOfDay(): Promise<VocabularyWord> {
+  if (isRealApi()) {
+    try {
+      const words = (await apiFetch("/api/vocabulary")) as VocabularyWord[];
+      if (words && words.length > 0) {
+        const index = new Date().getDate() % words.length;
+        return words[index];
+      }
+    } catch {}
+  }
   const index = new Date().getDate() % VOCAB_DECK.length;
   return mockItem(VOCAB_DECK[index], 300);
 }

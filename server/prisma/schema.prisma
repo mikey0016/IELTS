@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  avatarColor  String   @default("#7c3aed")
+  targetBand   Float    @default(7)
+  examDate     String   @default("")
+  dailyGoalMin Int      @default(30)
+  notifications Json    @default("{\"practice\":true,\"reminders\":true,\"results\":true}")
+  planType     String   @default("free")
+  role         String   @default("student")
+  status       String   @default("active")
+  bannedReason String?
+  createdAt    DateTime @default(now())
+  lastActiveAt DateTime @default(now()) @updatedAt
+  coins        Int      @default(250)
+  xp           Int      @default(0)
+  level        Int      @default(1)
+
+  walletTransactions WalletTransaction[]
+
+  @@map("users")
+}
+
+model WalletTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  reason    String
+  balance   Int
+  createdAt DateTime @default(now())
+
+  @@map("wallet_transactions")
+}
+
+model Music {
+  id          String   @id @default(cuid())
+  title       String
+  artist      String   @default("IELTS Master")
+  url         String   @db.Text
+  coverUrl    String?  @db.Text
+  durationSec Int?     @default(0)
+  category    String   @default("reading")
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@map("music")
+}
+
+model Question {
+  id               String   @id
+  skill            String
+  type             String
+  topic            String   @default("General")
+  difficulty       String   @default("medium")
+  timeLimitSec     Int      @default(120)
+  passage          String?  @db.Text
+  passageLabel     String?
+  prompt           String   @db.Text
+  options          String?  @db.Text
+  correctIndex     Int?
+  correctAnswer    String?  @db.Text
+  transcript       String?  @db.Text
+  audioDurationSec Int?
+  explanation      String   @default("") @db.Text
+  recommendLesson  String   @default("General lesson")
+  createdAt        DateTime @default(now())
+
+  @@map("questions")
+}
+
+model VocabularyWord {
+  id           String   @id
+  word         String
+  phonetic     String   @default("")
+  partOfSpeech String   @default("noun")
+  meaning      String   @db.Text
+  example      String?  @db.Text
+  synonyms     String?  @db.Text
+  difficulty   String   @default("medium")
+  band         Int?
+  topic        String?
+  createdAt    DateTime @default(now())
+
+  @@map("vocabulary_words")
+}
+
+model Course {
+  key         String   @id
+  title       String
+  description String   @default("") @db.Text
+  color       String   @default("brand")
+  createdAt   DateTime @default(now())
+  lessons     Lesson[]
+
+  @@map("courses")
+}
+
+model Lesson {
+  id        String   @id
+  title     String
+  meta      String   @default("")
+  minutes   Int      @default(20)
+  skill     String
+  courseKey String
+  course    Course   @relation(fields: [courseKey], references: [key], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("lessons")
+}
+
+model GrammarTopic {
+  id        String   @id
+  title     String
+  level     String   @default("Intermediate (Band 5–6)")
+  summary   String   @default("") @db.Text
+  example   String   @default("") @db.Text
+  minutes   Int      @default(20)
+  createdAt DateTime @default(now())
+
+  @@map("grammar_topics")
+}
+
+model WritingPrompt {
+  id           String   @id
+  task         String   @default("Academic Task 2")
+  type         String   @default("academic-task2")
+  difficulty   String   @default("medium")
+  timeLimitMin Int      @default(40)
+  minWords     Int      @default(250)
+  prompt       String   @db.Text
+  instructions String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  @@map("writing_prompts")
+}
+
+model SpeakingPrompt {
+  id              String   @id
+  part            Int      @default(1)
+  difficulty      String   @default("medium")
+  prepTimeSec     Int      @default(60)
+  speakingTimeSec Int      @default(120)
+  cueCardTitle    String   @db.Text
+  prompt          String   @db.Text
+  followUps       String?  @db.Text
+  createdAt       DateTime @default(now())
+
+  @@map("speaking_prompts")
+}
+
+model MockTest {
+  id          String   @id
+  title       String
+  type        String   @default("Academic")
+  durationMin Int      @default(60)
+  questions   Int      @default(0)
+  description String   @default("") @db.Text
+  sections    String?  @db.Text
+  difficulty  String?
+  createdAt   DateTime @default(now())
+
+  @@map("mock_tests")
+}
+
+model Achievement {
+  id          String   @id
+  title       String
+  description String   @default("") @db.Text
+  icon        String   @default("🏆")
+  progress    Int      @default(0)
+  max         Int      @default(1)
+  condition   String?
+  reward      String?
+  tier        String?
+  createdAt   DateTime @default(now())
+
+  @@map("achievements")
+}

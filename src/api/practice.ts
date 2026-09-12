@@ -4,6 +4,7 @@ import { mockRequest } from "./mockClient";
 import { bandFromCorrect } from "@/lib/bands";
 import { randomId } from "@/lib/format";
 import { storage } from "@/lib/storage";
+import { apiFetch, isRealApi } from "./http";
 
 const ADMIN_QUESTIONS_KEY = "ielts-master:admin_questions";
 
@@ -29,9 +30,13 @@ function sanitizePassage(p: string | undefined): string | undefined {
 
 function getAdminQuestions(): Question[] {
   try {
-    const raw = localStorage.getItem(ADMIN_QUESTIONS_KEY);
-    if (!raw) return [];
-    let parsed = JSON.parse(raw) as Question[];
+    const { storage } = require("@/lib/storage") as { storage: typeof import("@/lib/storage").storage };
+    const raw = storage.get<any>(ADMIN_QUESTIONS_KEY.replace("ielts-master:", ""), null);
+    let rawStr: string | null = null;
+    if (raw) rawStr = typeof raw === "string" ? raw : JSON.stringify(raw);
+    else rawStr = localStorage.getItem(ADMIN_QUESTIONS_KEY);
+    if (!rawStr) return [];
+    let parsed = JSON.parse(rawStr) as Question[];
     // sanitize passages
     parsed = parsed.map((q) => ({ ...q, passage: sanitizePassage(q.passage) }));
     // auto-fix corrupted Dolls prompts (from old import)
@@ -185,10 +190,26 @@ export interface QuizFilters {
   limit?: number;
 }
 
-export function fetchQuestions(
+export async function fetchQuestions(
   skill: "listening" | "reading",
   filters: QuizFilters,
 ): Promise<Question[]> {
+  // Real DB mode — fetch from FastAPI
+  if (isRealApi()) {
+    try {
+      const params = new URLSearchParams();
+      params.set("skill", skill);
+      if (filters.difficulty && filters.difficulty !== "all") params.set("difficulty", filters.difficulty);
+      if (filters.type && filters.type !== "all") params.set("type", filters.type);
+      if (filters.topic && filters.topic !== "all") params.set("topic", filters.topic);
+      if (filters.limit) params.set("limit", String(filters.limit));
+      const data = await apiFetch(`/api/questions?${params.toString()}`);
+      return (data as Question[]).slice(0, filters.limit ?? (data as Question[]).length);
+    } catch {
+      // fallback to mock below
+    }
+  }
+
   const staticSource = QUESTION_BANK[skill] || [];
   const adminSource = getAdminQuestions().filter((q) => q.skill === skill);
   const combined = [...staticSource, ...adminSource];

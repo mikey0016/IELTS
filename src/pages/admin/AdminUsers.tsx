@@ -26,9 +26,12 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/context/ToastContext";
+import { useAuth } from "@/context/AuthContext";
 
 export function AdminUsers() {
   const { toast } = useToast();
+  const { user: currentUser } = useAuth();
+  const isOwner = currentUser?.role === "superadmin";
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -126,7 +129,7 @@ export function AdminUsers() {
     try {
       await adminBanUser(id, "Banned by admin");
       toast("User banned successfully", "success");
-      load();
+      await load();
     } catch (e: any) {
       toast(e.message || "Ban failed", "error");
     }
@@ -136,7 +139,7 @@ export function AdminUsers() {
     try {
       await adminUnbanUser(id);
       toast("User unbanned successfully", "success");
-      load();
+      await load();
     } catch (e: any) {
       toast(e.message || "Unban failed", "error");
     }
@@ -146,7 +149,7 @@ export function AdminUsers() {
     try {
       await adminSetRole(id, role);
       toast("Role updated", "success");
-      load();
+      await load();
     } catch (e: any) {
       toast(e.message || "Role update failed", "error");
     }
@@ -156,7 +159,7 @@ export function AdminUsers() {
     try {
       await adminSetPlan(id, plan);
       toast("Plan updated", "success");
-      load();
+      await load();
     } catch (e: any) {
       toast(e.message || "Plan update failed", "error");
     }
@@ -167,7 +170,7 @@ export function AdminUsers() {
       try {
         await adminDeleteUser(id);
         toast("User deleted successfully", "success");
-        load();
+        await load();
       } catch (e: any) {
         toast(e.message || "Delete failed", "error");
       }
@@ -347,13 +350,25 @@ export function AdminUsers() {
                             <Ban className="h-4 w-4" />
                           </button>
                         )}
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="rounded-lg p-1.5 text-rose-600 hover:bg-rose-50"
-                          title="Delete"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {(() => {
+                          const isPrivileged = user.role === "admin" || user.role === "superadmin";
+                          const canDelete = !isPrivileged || isOwner;
+                          const isSelf = currentUser?.id === user.id;
+                          const disabled = !canDelete || isSelf;
+                          let title = "Delete";
+                          if (isSelf) title = "O'zingizni o'chira olmaysiz";
+                          else if (!canDelete) title = "Faqat Super Admin o'chira oladi";
+                          return (
+                            <button
+                              onClick={() => handleDelete(user.id)}
+                              disabled={disabled}
+                              className={`rounded-lg p-1.5 ${disabled ? "text-slate-300 cursor-not-allowed" : "text-rose-600 hover:bg-rose-50"}`}
+                              title={title}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          );
+                        })()}
                       </div>
                     </td>
                   </tr>

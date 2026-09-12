@@ -69,14 +69,15 @@ export function Login() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
-        Welcome back
+      <div className="mb-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-slate-600 dark:bg-white/10 dark:text-white/60">Welcome back</div>
+      <h1 className="font-display text-[26px] font-black tracking-tight text-[#0a0a0f] dark:text-white">
+        Log in to IELTS Master
       </h1>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-        Log in to continue your IELTS journey.
+      <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+        Continue your IELTS journey — your study plan is waiting.
       </p>
 
-      <div className="mt-5 flex items-start gap-2 rounded-xl bg-brand-50 px-3.5 py-3 text-xs text-brand-800 ring-1 ring-brand-100 dark:bg-brand-950/60 dark:text-brand-200 dark:ring-brand-900">
+      <div className="mt-5 flex items-start gap-2.5 rounded-2xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>
           <b>Demo account:</b> alex@ieltsmaster.com / demo1234

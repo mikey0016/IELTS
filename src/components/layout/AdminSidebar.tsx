@@ -14,6 +14,7 @@ import {
   Settings,
   Shield,
   Layers,
+  Music,
   X,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -58,6 +59,7 @@ const ADMIN_NAV_SECTIONS: {
   {
     label: "System",
     items: [
+      { to: "/admin/music", label: "Music", icon: Music },
       { to: "/admin/achievements", label: "Achievements", icon: Trophy },
       { to: "/admin/settings", label: "Settings", icon: Settings },
     ],

@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AdminTopbar } from "@/components/layout/AdminTopbar";
 import { AdminSidebar } from "@/components/layout/AdminSidebar";
+import { useBackground } from "@/hooks/useBackground";
 
 export function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const bg = useBackground();
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div
+      className={`flex min-h-screen ${bg.url ? "bg-transparent" : "bg-slate-50 dark:bg-slate-950"}`}
+    >
       <AdminSidebar
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}

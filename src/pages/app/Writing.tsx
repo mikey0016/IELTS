@@ -7,9 +7,10 @@ import {
   Info,
   RefreshCw,
   Clock,
+  Database,
+  BookOpen,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/Card";
-import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -17,7 +18,8 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { useTimer } from "@/hooks/useTimer";
 import { useProgress } from "@/context/ProgressContext";
 import { useToast } from "@/context/ToastContext";
-import { WRITING_PROMPTS } from "@/data/writing";
+import { getWritingPrompts } from "@/api/writing";
+import { isRealApi } from "@/api/http";
 import type { WritingPrompt } from "@/types";
 import { countWords, formatClock, randomId } from "@/lib/format";
 import { IELTS_TIMING } from "@/lib/ieltsConfig";
@@ -57,11 +59,19 @@ export function Writing() {
   const [fullTexts, setFullTexts] = useState<string[]>(["", ""]);
   const [history, setHistory] = useState<Evaluation[]>([]);
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+  const [prompts, setPrompts] = useState<WritingPrompt[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getWritingPrompts()
+      .then((data) => setPrompts(data))
+      .catch(() => setPrompts([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   const words = useMemo(() => countWords(text), [text]);
   const fullWords = useMemo(() => fullTexts.map(countWords), [fullTexts]);
 
-  // Timer duration based on mode
   const timerSeconds = useMemo(() => {
     if (mode === "full") return IELTS_TIMING.writing.fullSec;
     if (mode === "task1") return IELTS_TIMING.writing.task1Sec;
@@ -73,7 +83,6 @@ export function Writing() {
       toast("Vaqt tugadi — essay avtomatik topshirildi!", "info");
   });
 
-  // Auto-start timer when entering writing phase
   useEffect(() => {
     if (phase === "writing") {
       timer.reset();
@@ -91,13 +100,16 @@ export function Writing() {
   };
 
   const startFull = () => {
-    // Academic Task1 + Task2 as full exam
+    if (!prompts || prompts.length === 0) {
+      toast("No writing prompts available", "error");
+      return;
+    }
     const t1 =
-      WRITING_PROMPTS.find((p) => p.type === "academic-task1") ??
-      WRITING_PROMPTS[0];
+      prompts.find((p) => p.type === "academic-task1") ??
+      prompts[0];
     const t2 =
-      WRITING_PROMPTS.find((p) => p.type === "academic-task2") ??
-      WRITING_PROMPTS[1];
+      prompts.find((p) => p.type === "academic-task2") ??
+      prompts[1] ?? prompts[0];
     setMode("full");
     setFullPrompts([t1, t2]);
     setFullTexts(["", ""]);
@@ -105,10 +117,7 @@ export function Writing() {
   };
 
   const startTask1Only = () => {
-    const t1 = WRITING_PROMPTS.filter((p) => p.type.includes("task1"));
-    // show select filtered to task1
     setMode("task1");
-    // scroll to list - we will filter in select view
     toast("Task 1 ni tanlang — 20 minut, 150 so'z", "info");
   };
 
@@ -131,7 +140,7 @@ export function Writing() {
       const w1 = fullWords[0] ?? 0;
       const w2 = fullWords[1] ?? 0;
       if (w1 < 120 || w2 < 200) {
-        toast(`Task 1: ${w1}/150, Task 2: ${w2}/250 — to\'ldiring!`, "info");
+        toast(`Task 1: ${w1}/150, Task 2: ${w2}/250 — to'ldiring!`, "info");
       }
     }
     timer.pause();
@@ -178,64 +187,73 @@ export function Writing() {
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        eyebrow="Writing Practice — Haqiqiy IELTS timing"
-        title="IELTS Writing"
-        description="Task 1 — 20 minut / 150 so'z · Task 2 — 40 minut / 250 so'z · Full — 60 minut. Vaqt tugagach avtomatik topshiriladi."
-      />
+    <div className="space-y-6 animate-fade-in">
+      {/* Premium header */}
+      <div className="relative overflow-hidden rounded-[24px] bg-slate-900 p-7 text-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-600 via-violet-600 to-indigo-600 opacity-90" />
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute -left-10 -bottom-10 h-24 w-24 rounded-full bg-white/10 blur-xl" />
+        <div className="relative">
+          <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wide backdrop-blur">
+            <PenLine className="h-3.5 w-3.5" /> Writing — DB live
+          </p>
+          <h1 className="mt-3 font-display text-2xl font-black">IELTS Writing</h1>
+          <p className="mt-1.5 max-w-2xl text-sm text-white/80">
+            Task 1 — 20 minut / 150 so'z · Task 2 — 40 minut / 250 so'z · Full — 60 minut. Vaqt tugagach avtomatik topshiriladi. DB dan jonli via <code className="rounded bg-white/20 px-1">GET /api/writing</code>.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Badge tone="white" className="shadow">
+              <Database className="h-3 w-3" /> {isRealApi() ? "DB live" : "Mock"} · {prompts ? `${prompts.length} prompts` : "loading"}
+            </Badge>
+            <Badge tone="white"><Clock className="h-3 w-3" /> 60 min full</Badge>
+          </div>
+        </div>
+      </div>
 
-      {/* Mode selector — always visible in select phase */}
       {phase === "select" && (
         <div className="flex flex-wrap gap-3">
-          <button
+          <Button
+            variant={mode === "full" ? "primary" : "outline"}
+            className="rounded-full"
+            size="sm"
             onClick={startFull}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold transition",
-              mode === "full"
-                ? "border-brand-600 bg-brand-600 text-white shadow"
-                : "border-slate-200 bg-white text-slate-700 hover:border-brand-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300",
-            )}
           >
             <Clock className="h-4 w-4" /> Full Writing — 60 min (20+40)
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={mode === "task1" ? "primary" : "outline"}
+            className="rounded-full"
+            size="sm"
             onClick={startTask1Only}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold transition",
-              mode === "task1"
-                ? "border-brand-600 bg-brand-600 text-white shadow"
-                : "border-slate-200 bg-white text-slate-700 hover:border-brand-300 dark:border-slate-700 dark:bg-slate-900",
-            )}
           >
             Task 1 — 20 min / 150w
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={mode === "task2" ? "primary" : "outline"}
+            className="rounded-full bg-violet-600 text-white hover:bg-violet-700 data-[outline]:bg-white"
+            style={mode === "task2" ? {} : undefined}
+            size="sm"
             onClick={startTask2Only}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold transition",
-              mode === "task2"
-                ? "border-violet-600 bg-violet-600 text-white shadow"
-                : "border-slate-200 bg-white text-slate-700 hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900",
-            )}
           >
             Task 2 — 40 min / 250w
-          </button>
+          </Button>
         </div>
       )}
 
       {phase === "select" && (
-        <Card>
+        <Card glass>
           <CardContent>
             <div className="flex items-center justify-between">
               <h2 className="font-display text-base font-bold text-slate-900 dark:text-white">
-                {mode === "full"
-                  ? "Full Exam — ikkala task"
-                  : mode === "task1"
-                    ? "Task 1 ni tanlang (20 min)"
-                    : mode === "task2"
-                      ? "Task 2 ni tanlang (40 min)"
-                      : "Choose a task"}
+                {loading
+                  ? "Loading..."
+                  : mode === "full"
+                    ? "Full Exam — ikkala task"
+                    : mode === "task1"
+                      ? "Task 1 ni tanlang (20 min)"
+                      : mode === "task2"
+                        ? "Task 2 ni tanlang (40 min)"
+                        : "Choose a task"}
               </h2>
               <Badge
                 tone={
@@ -254,46 +272,68 @@ export function Writing() {
               </Badge>
             </div>
 
-            {mode === "full" ? (
+            {loading ? (
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {[0, 1].map((i) => (
+                  <div key={i} className="rounded-2xl border border-slate-100 p-5 dark:border-white/10">
+                    <Skeleton className="h-5 w-24 rounded-full" />
+                    <Skeleton className="mt-3 h-4 w-full" />
+                    <Skeleton className="mt-2 h-4 w-3/4" />
+                    <Skeleton className="mt-4 h-9 w-32 rounded-2xl" />
+                  </div>
+                ))}
+              </div>
+            ) : mode === "full" ? (
               <div className="mt-4 space-y-3">
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Haqiqiy imtihonda 60 minut ichida ikkala taskni bajarasiz.
-                  Task 1 ga 20 min, Task 2 ga 40 min ajrating.
+                  Haqiqiy imtihonda 60 minut ichida ikkala taskni bajarasiz. Task 1 ga 20 min, Task 2 ga 40 min ajrating.
                 </p>
-                <Button size="lg" onClick={startFull}>
+                <Button size="lg" className="rounded-2xl" onClick={startFull}>
                   Start Full Writing (60 min) <PenLine className="h-4 w-4" />
                 </Button>
               </div>
             ) : (
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                {WRITING_PROMPTS.filter((p) =>
+                {(prompts ?? [])
+                  .filter((p) =>
+                    mode === "task1"
+                      ? p.type.includes("task1")
+                      : mode === "task2"
+                        ? p.type.includes("task2")
+                        : true,
+                  )
+                  .map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => chooseTask(p)}
+                      className="group rounded-2xl border border-slate-200 bg-white p-5 text-left transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-card-hover dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-700"
+                    >
+                      <div className="flex items-center justify-between">
+                        <Badge tone={TASK_META[p.type]}>{p.task}</Badge>
+                        <span className="text-xs font-semibold text-slate-400">
+                          <Timer className="mr-1 inline h-3.5 w-3.5" />{" "}
+                          {p.timeLimitMin} min · {p.minWords} words
+                        </span>
+                      </div>
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                        {p.prompt}
+                      </p>
+                      <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-brand-600 dark:text-brand-400">
+                        Start writing{" "}
+                        <PenLine className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    </button>
+                  ))}
+                {(prompts ?? []).filter((p) =>
                   mode === "task1"
                     ? p.type.includes("task1")
-                    : mode === "task2"
-                      ? p.type.includes("task2")
-                      : true,
-                ).map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => chooseTask(p)}
-                    className="group rounded-2xl border border-slate-200 bg-white p-5 text-left transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-card-hover dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-700"
-                  >
-                    <div className="flex items-center justify-between">
-                      <Badge tone={TASK_META[p.type]}>{p.task}</Badge>
-                      <span className="text-xs font-semibold text-slate-400">
-                        <Timer className="mr-1 inline h-3.5 w-3.5" />{" "}
-                        {p.timeLimitMin} min · {p.minWords} words
-                      </span>
-                    </div>
-                    <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                      {p.prompt}
-                    </p>
-                    <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-brand-600 dark:text-brand-400">
-                      Start writing{" "}
-                      <PenLine className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                    </span>
-                  </button>
-                ))}
+                    : p.type.includes("task2"),
+                ).length === 0 && (
+                  <div className="col-span-2 flex flex-col items-center justify-center rounded-2xl border border-dashed py-12 dark:border-white/10">
+                    <BookOpen className="h-8 w-8 text-slate-300" />
+                    <p className="mt-2 text-sm text-slate-500">No prompts for this filter.</p>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>
@@ -301,7 +341,7 @@ export function Writing() {
       )}
 
       {phase === "writing" && mode !== "full" && prompt && (
-        <Card>
+        <Card glass>
           <CardContent className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <Badge tone={TASK_META[prompt.type]}>
@@ -325,6 +365,7 @@ export function Writing() {
                 <Button
                   variant="ghost"
                   size="sm"
+                  className="rounded-2xl"
                   onClick={() =>
                     timer.isRunning ? timer.pause() : timer.start()
                   }
@@ -377,6 +418,7 @@ export function Writing() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Button
                 variant="outline"
+                className="rounded-2xl"
                 onClick={() => {
                   timer.pause();
                   setPhase("select");
@@ -385,7 +427,7 @@ export function Writing() {
               >
                 <RefreshCw className="h-4 w-4" /> Change task
               </Button>
-              <Button variant="accent" size="lg" onClick={submit}>
+              <Button variant="accent" size="lg" className="rounded-2xl" onClick={submit}>
                 <Send className="h-4 w-4" /> Submit for evaluation
               </Button>
             </div>
@@ -394,7 +436,7 @@ export function Writing() {
       )}
 
       {phase === "writing" && mode === "full" && (
-        <Card>
+        <Card glass>
           <CardContent className="space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <Badge tone="brand">
@@ -414,6 +456,7 @@ export function Writing() {
                 <Button
                   variant="ghost"
                   size="sm"
+                  className="rounded-2xl"
                   onClick={() =>
                     timer.isRunning ? timer.pause() : timer.start()
                   }
@@ -427,8 +470,7 @@ export function Writing() {
               tone="brand"
             />
             <p className="text-xs font-semibold text-slate-400">
-              Task 1 ga 20 min, Task 2 ga 40 min ajrating. Vaqt tugagach
-              avtomatik topshiriladi.
+              Task 1 ga 20 min, Task 2 ga 40 min ajrating. Vaqt tugagach avtomatik topshiriladi.
             </p>
 
             {fullPrompts.map((wp, idx) => (
@@ -480,6 +522,7 @@ export function Writing() {
             <div className="flex justify-between">
               <Button
                 variant="outline"
+                className="rounded-2xl"
                 onClick={() => {
                   timer.pause();
                   setPhase("select");
@@ -487,7 +530,7 @@ export function Writing() {
               >
                 <RefreshCw className="h-4 w-4" /> Exit
               </Button>
-              <Button variant="accent" size="lg" onClick={submit}>
+              <Button variant="accent" size="lg" className="rounded-2xl" onClick={submit}>
                 <Send className="h-4 w-4" /> Submit both tasks
               </Button>
             </div>
@@ -496,7 +539,7 @@ export function Writing() {
       )}
 
       {phase === "evaluating" && (
-        <Card>
+        <Card glass>
           <CardContent className="space-y-4 py-10">
             <div className="mx-auto flex max-w-sm flex-col items-center text-center">
               <div className="flex h-14 w-14 animate-pulse items-center justify-center rounded-2xl bg-violet-100 text-violet-600 dark:bg-violet-900/50">
@@ -528,7 +571,7 @@ export function Writing() {
       )}
 
       {history.length > 0 && phase !== "select" && phase !== "writing" && (
-        <Card>
+        <Card glass>
           <CardContent>
             <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
               Recent evaluations
@@ -538,7 +581,7 @@ export function Writing() {
                 <Badge
                   key={h.id}
                   tone="violet"
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-full"
                   onClick={() => {
                     setEvaluation(h);
                     setPhase("results");
@@ -568,7 +611,7 @@ function EvaluationView({
 }) {
   return (
     <div className="space-y-6">
-      <Card className="overflow-hidden">
+      <Card glass className="overflow-hidden">
         <div className="bg-gradient-to-br from-violet-600 to-brand-800 p-7 text-center text-white">
           <p className="text-xs font-bold uppercase tracking-widest text-violet-200">
             AI Band Predictor v2 — Estimated band
@@ -584,8 +627,8 @@ function EvaluationView({
         </div>
       </Card>
       {typeof evaluation.diversity === "number" && (
-        <Card>
-          <CardContent className="grid gap-4 sm:grid-cols-3 pt-4">
+        <Card glass>
+          <CardContent className="grid gap-4 pt-4 sm:grid-cols-3">
             <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-800/50">
               <p className="text-xs font-bold text-slate-500">
                 Lexical Diversity
@@ -628,7 +671,7 @@ function EvaluationView({
 
       <div className="grid gap-4 sm:grid-cols-2">
         {evaluation.criteria.map((c) => (
-          <Card key={c.key}>
+          <Card key={c.key} glass>
             <CardContent>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
@@ -651,7 +694,7 @@ function EvaluationView({
         ))}
       </div>
 
-      <Card>
+      <Card glass>
         <CardContent>
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-violet-500" />
@@ -681,7 +724,7 @@ function EvaluationView({
         </CardContent>
       </Card>
 
-      <Button variant="outline" onClick={onRetry} className="w-full">
+      <Button variant="outline" onClick={onRetry} className="w-full rounded-2xl">
         <RefreshCw className="h-4 w-4" /> Write another task
       </Button>
     </div>
@@ -727,7 +770,6 @@ function buildEvaluation(
     );
   const hasComplexGrammar =
     /although|despite|whereas|while|unless|if\s+\w+\s+were/i.test(trimmed);
-  // v2 metrics: lexical diversity & sentence stats
   const tokens = trimmed.toLowerCase().match(/\b[a-z']+\b/g) || [];
   const unique = new Set(tokens);
   const diversity = tokens.length ? unique.size / tokens.length : 0;

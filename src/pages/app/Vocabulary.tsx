@@ -154,18 +154,19 @@ export function Vocabulary() {
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        eyebrow="Vocabulary — 640+ words"
-        title="Vocabulary builder"
-        description="640+ IELTS academic words (Band 6-8) — Daily flashcards + spaced repetition + to'liq browse va qidiruv."
-        actions={
-          <Badge tone="violet">
-            <Check className="h-3 w-3" /> {learnedCount} / {deck?.length ?? 640}{" "}
-            learned
-          </Badge>
-        }
-      />
+    <div className="space-y-6 animate-fade-in">
+      <div className="relative overflow-hidden rounded-[24px] bg-slate-900 p-7 text-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-indigo-600 to-brand-600 opacity-90" />
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wide backdrop-blur">📚 Vocabulary — DB live</p>
+            <h1 className="mt-3 font-display text-2xl font-black">Vocabulary builder</h1>
+            <p className="mt-1.5 text-sm text-white/80">640+ IELTS academic words (Band 6-8) — Daily flashcards + spaced repetition, barchasi PostgreSQL dan jonli.</p>
+          </div>
+          <Badge tone="white" className="shadow"><Check className="h-3 w-3" /> {learnedCount} / {deck?.length ?? 640} learned</Badge>
+        </div>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card>

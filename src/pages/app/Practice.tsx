@@ -9,12 +9,18 @@ import {
   Filter,
   ArrowRight,
   Play,
+  Sparkles,
+  Database,
+  Clock,
 } from "lucide-react";
 import { fetchQuestions, getAdminQuestionsForSkill } from "@/api/practice";
+import { isRealApi } from "@/api/http";
 import type { Question } from "@/types";
 import type { Skill } from "@/types";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { IELTS_TIMING } from "@/lib/ieltsConfig";
 
 const SKILLS: {
@@ -161,7 +167,6 @@ export function Practice() {
     params.set("skill", selectedSkill);
     if (difficulty !== "all") params.set("difficulty", difficulty);
     if (topic !== "all") params.set("topic", topic);
-    // Real IELTS exam modes
     if (!q) {
       if (selectedSkill === "reading" && examMode !== "single")
         params.set("examMode", examMode);
@@ -181,48 +186,75 @@ export function Practice() {
   );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-          Practice
-        </h1>
-        <p className="text-sm text-slate-500">
-          Choose a skill and start practicing
-        </p>
+    <div className="space-y-6 animate-fade-in">
+      {/* Premium header */}
+      <div className="relative overflow-hidden rounded-[24px] bg-slate-900 p-7 text-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-brand-600 to-indigo-600 opacity-90" />
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute -left-10 -bottom-10 h-24 w-24 rounded-full bg-white/10 blur-xl" />
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wide backdrop-blur">
+              <Sparkles className="h-3.5 w-3.5" /> Practice — DB live
+            </p>
+            <h1 className="mt-3 font-display text-2xl font-black tracking-tight">Practice</h1>
+            <p className="mt-1.5 max-w-xl text-sm text-white/80">
+              Choose a skill and start practicing — barchasi PostgreSQL dan jonli via <code className="rounded bg-white/20 px-1">GET /api/questions</code>.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Badge tone="white" className="shadow">
+                <Database className="h-3 w-3" /> {isRealApi() ? "DB live" : "Mock"} · {questions.length || "—"} total
+              </Badge>
+              {selectedSkill && <Badge tone="white">{selectedSkill}</Badge>}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-white/80">
+            <Clock className="h-4 w-4" /> {IELTS_TIMING.reading.fullMin} min full • Instant start
+          </div>
+        </div>
       </div>
 
       {!selectedSkill ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SKILLS.map((s) => (
-            <button
+            <Card
               key={s.key}
+              hover
+              glass
+              className="cursor-pointer rounded-[20px] p-0 text-left transition-all hover:-translate-y-1"
               onClick={() => setSelectedSkill(s.key)}
-              className="rounded-2xl border border-slate-200 bg-white p-5 text-left transition-all hover:border-brand-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-700"
             >
-              <span
-                className={`flex h-11 w-11 items-center justify-center rounded-xl ${SKILL_COLORS[s.key]}`}
-              >
-                <s.icon className="h-5 w-5" />
-              </span>
-              <p className="mt-3 font-display text-base font-bold text-slate-900 dark:text-white">
-                {s.label}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">{s.desc}</p>
-            </button>
+              <div className="p-5">
+                <span
+                  className={`flex h-11 w-11 items-center justify-center rounded-xl ${SKILL_COLORS[s.key]}`}
+                >
+                  <s.icon className="h-5 w-5" />
+                </span>
+                <p className="mt-3 font-display text-base font-bold text-slate-900 dark:text-white">
+                  {s.label}
+                </p>
+                <p className="mt-1 text-xs text-slate-400">{s.desc}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-brand-600">
+                  Start <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </div>
+            </Card>
           ))}
         </div>
       ) : (
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <button
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-2xl"
               onClick={() => {
                 setSelectedSkill(null);
                 setQuestions([]);
               }}
-              className="text-sm text-brand-600 hover:text-brand-700 dark:text-brand-400"
             >
               ← Back
-            </button>
+            </Button>
             <span
               className={`flex h-8 w-8 items-center justify-center rounded-lg ${SKILL_COLORS[selectedSkill]}`}
             >
@@ -238,35 +270,36 @@ export function Practice() {
               {SKILLS.find((s) => s.key === selectedSkill)?.label}
             </span>
             {adminCount > 0 && (
-              <span className="text-xs text-brand-600 dark:text-brand-400">
-                {adminCount} imported
-              </span>
+              <Badge tone="slate">{adminCount} imported</Badge>
             )}
+            <Badge tone={SKILL_BADGES[selectedSkill]}>{isRealApi() ? "DB" : "Mock"} · {filteredQuestions.length}</Badge>
           </div>
 
           {selectedSkill === "writing" || selectedSkill === "speaking" ? (
-            <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                {selectedSkill === "writing" ? (
-                  <PenLine className="h-8 w-8 text-slate-600 dark:text-slate-400" />
-                ) : (
-                  <Mic className="h-8 w-8 text-slate-600 dark:text-slate-400" />
-                )}
-              </div>
-              <h3 className="mt-4 font-display text-lg font-bold text-slate-900 dark:text-white">
-                {selectedSkill === "writing"
-                  ? "Writing Practice"
-                  : "Speaking Practice"}
-              </h3>
-              <p className="mt-2 text-sm text-slate-500">
-                {selectedSkill === "writing"
-                  ? "Write essays under exam conditions and get AI evaluation."
-                  : "Practice speaking with cue cards and recording."}
-              </p>
-              <Button size="lg" className="mt-6" onClick={() => startSession()}>
-                Start Practice <Play className="h-4 w-4 fill-current" />
-              </Button>
-            </div>
+            <Card glass className="overflow-hidden">
+              <CardContent className="p-8 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                  {selectedSkill === "writing" ? (
+                    <PenLine className="h-8 w-8 text-slate-600 dark:text-slate-400" />
+                  ) : (
+                    <Mic className="h-8 w-8 text-slate-600 dark:text-slate-400" />
+                  )}
+                </div>
+                <h3 className="mt-4 font-display text-lg font-bold text-slate-900 dark:text-white">
+                  {selectedSkill === "writing"
+                    ? "Writing Practice"
+                    : "Speaking Practice"}
+                </h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  {selectedSkill === "writing"
+                    ? "Write essays under exam conditions and get AI evaluation."
+                    : "Practice speaking with cue cards and recording."}
+                </p>
+                <Button size="lg" className="mt-6 rounded-2xl" onClick={() => startSession()}>
+                  Start Practice <Play className="h-4 w-4 fill-current" />
+                </Button>
+              </CardContent>
+            </Card>
           ) : (
             <>
               <div className="flex flex-wrap items-center gap-3">
@@ -299,79 +332,89 @@ export function Practice() {
                     ))}
                   </select>
                 </div>
-                <span className="text-xs text-slate-400">
-                  {filteredQuestions.length} questions
-                </span>
+                <Badge tone="slate">{filteredQuestions.length} questions</Badge>
               </div>
 
-              {/* Real IELTS mode selector */}
               {selectedSkill === "reading" && (
                 <div className="flex flex-wrap gap-2">
-                  <button
+                  <Button
+                    size="sm"
+                    variant={examMode === "passage" ? "primary" : "outline"}
+                    className="rounded-full"
                     onClick={() => setExamMode("passage")}
-                    className={`rounded-full border px-4 py-2 text-sm font-bold transition ${examMode === "passage" ? "border-cyan-600 bg-cyan-600 text-white shadow" : "border-slate-200 bg-white text-slate-600 hover:border-cyan-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"}`}
                   >
                     1 Passage — 20 min
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={examMode === "full" ? "primary" : "outline"}
+                    className="rounded-full"
                     onClick={() => setExamMode("full")}
-                    className={`rounded-full border px-4 py-2 text-sm font-bold transition ${examMode === "full" ? "border-cyan-600 bg-cyan-600 text-white shadow" : "border-slate-200 bg-white text-slate-600 hover:border-cyan-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"}`}
                   >
                     Full Reading — 60 min / 40 savol
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={examMode === "single" ? "secondary" : "outline"}
+                    className="rounded-full"
                     onClick={() => setExamMode("single")}
-                    className={`rounded-full border px-4 py-2 text-sm font-bold transition ${examMode === "single" ? "border-slate-600 bg-slate-600 text-white shadow" : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"}`}
                   >
                     Single Q — mashq
-                  </button>
+                  </Button>
                 </div>
               )}
               {selectedSkill === "listening" && (
                 <div className="flex flex-wrap gap-2">
-                  <button
+                  <Button
+                    size="sm"
+                    variant={examMode === "single" ? "primary" : "outline"}
+                    className="rounded-full"
                     onClick={() => setExamMode("single")}
-                    className={`rounded-full border px-4 py-2 text-sm font-bold transition ${examMode === "single" ? "border-violet-600 bg-violet-600 text-white shadow" : "border-slate-200 bg-white text-slate-600 hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"}`}
                   >
                     Mashq — har bir savol alohida
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={examMode === "full" ? "primary" : "outline"}
+                    className="rounded-full"
                     onClick={() => setExamMode("full")}
-                    className={`rounded-full border px-4 py-2 text-sm font-bold transition ${examMode === "full" ? "border-violet-600 bg-violet-600 text-white shadow" : "border-slate-200 bg-white text-slate-600 hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"}`}
                   >
-                    Full Listening — {IELTS_TIMING.listening.fullMin} min / 40
-                    savol
-                  </button>
+                    Full Listening — {IELTS_TIMING.listening.fullMin} min / 40 savol
+                  </Button>
                 </div>
               )}
 
               {loading ? (
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="h-32 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800"
-                    />
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <Card key={i} glass className="p-4">
+                      <Skeleton className="h-6 w-32 rounded-full" />
+                      <Skeleton className="mt-3 h-4 w-full" />
+                      <Skeleton className="mt-2 h-4 w-3/4" />
+                      <Skeleton className="mt-4 h-9 w-28 rounded-2xl" />
+                    </Card>
                   ))}
                 </div>
               ) : filteredQuestions.length === 0 ? (
-                <div className="py-16 text-center">
-                  <BookOpen className="mx-auto h-12 w-12 text-slate-300" />
-                  <p className="mt-3 text-sm text-slate-500">
-                    No practice tasks found.
-                  </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-3"
-                    onClick={() => {
-                      setDifficulty("all");
-                      setTopic("all");
-                    }}
-                  >
-                    Reset filters
-                  </Button>
-                </div>
+                <Card glass>
+                  <CardContent className="py-16 text-center">
+                    <BookOpen className="mx-auto h-12 w-12 text-slate-300" />
+                    <p className="mt-3 text-sm text-slate-500">
+                      No practice tasks found.
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3 rounded-2xl"
+                      onClick={() => {
+                        setDifficulty("all");
+                        setTopic("all");
+                      }}
+                    >
+                      Reset filters
+                    </Button>
+                  </CardContent>
+                </Card>
               ) : useGroupedView ? (
                 <div className="grid gap-4 sm:grid-cols-1">
                   {groupedByPassage.map((group) => {
@@ -383,9 +426,11 @@ export function Practice() {
                       .join(" ")
                       .slice(0, 200);
                     return (
-                      <div
+                      <Card
                         key={group.key}
-                        className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:border-brand-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-900"
+                        hover
+                        glass
+                        className="overflow-hidden"
                       >
                         <div className="grid gap-0 lg:grid-cols-[1.15fr_1fr]">
                           <div className="bg-slate-50 p-5 dark:bg-slate-800/40">
@@ -412,7 +457,7 @@ export function Practice() {
                                 {group.questions.length} savol
                               </Badge>
                             </div>
-                            <h4 className="mt-3 font-display text-base font-bold text-slate-900 dark:text-white line-clamp-2">
+                            <h4 className="mt-3 line-clamp-2 font-display text-base font-bold text-slate-900 dark:text-white">
                               {group.topic}
                             </h4>
                             {group.passage && (
@@ -422,8 +467,7 @@ export function Practice() {
                               </p>
                             )}
                             <p className="mt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-                              {paragraphs.length} paragraph · chapda matn,
-                              o'ngda savollar
+                              {paragraphs.length} paragraph · chapda matn, o'ngda savollar
                             </p>
                           </div>
                           <div className="flex flex-col p-5">
@@ -451,7 +495,7 @@ export function Practice() {
                               )}
                             </div>
                             <Button
-                              className="mt-4"
+                              className="mt-4 rounded-2xl"
                               onClick={() => {
                                 const params = new URLSearchParams();
                                 params.set("skill", selectedSkill!);
@@ -479,16 +523,18 @@ export function Practice() {
                             </Button>
                           </div>
                         </div>
-                      </div>
+                      </Card>
                     );
                   })}
                 </div>
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredQuestions.map((q, index) => (
-                    <div
+                    <Card
                       key={q.id}
-                      className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-brand-300 hover:shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-700"
+                      hover
+                      glass
+                      className="flex flex-col p-4"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2">
@@ -502,31 +548,29 @@ export function Practice() {
                             {SKILLS.find((s) => s.key === selectedSkill)?.label}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <Badge
-                            tone={
-                              q.difficulty === "easy"
-                                ? "emerald"
-                                : q.difficulty === "hard"
-                                  ? "rose"
-                                  : "amber"
-                            }
-                            className="text-[10px]"
-                          >
-                            {q.difficulty}
-                          </Badge>
-                        </div>
+                        <Badge
+                          tone={
+                            q.difficulty === "easy"
+                              ? "emerald"
+                              : q.difficulty === "hard"
+                                ? "rose"
+                                : "amber"
+                          }
+                          className="text-[10px]"
+                        >
+                          {q.difficulty}
+                        </Badge>
                       </div>
 
                       {q.passageLabel && (
-                        <p className="text-xs font-medium text-brand-600 dark:text-brand-400">
+                        <p className="mt-3 text-xs font-medium text-brand-600 dark:text-brand-400">
                           {q.passageLabel}
                         </p>
                       )}
 
                       {q.passage && (
-                        <div className="rounded-lg bg-slate-50 p-2.5 dark:bg-slate-800/60">
-                          <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+                        <div className="mt-2 rounded-xl bg-slate-50 p-2.5 dark:bg-slate-800/60">
+                          <p className="line-clamp-2 text-xs text-slate-600 dark:text-slate-400">
                             {q.passage.startsWith("data:image") ? (
                               <img
                                 src={q.passage}
@@ -542,26 +586,26 @@ export function Practice() {
                         </div>
                       )}
 
-                      <p className="text-sm font-medium text-slate-800 dark:text-slate-200 line-clamp-2">
+                      <p className="mt-3 line-clamp-2 text-sm font-medium text-slate-800 dark:text-slate-200">
                         {q.prompt}
                       </p>
 
-                      <div className="mt-auto flex items-center justify-between pt-2">
-                        <span className="text-[10px] text-slate-400 capitalize">
+                      <div className="mt-auto flex items-center justify-between pt-3">
+                        <span className="text-[10px] capitalize text-slate-400">
                           {q.type}
                         </span>
-                        <Button size="sm" onClick={() => startSession(q)}>
+                        <Button size="sm" className="rounded-2xl" onClick={() => startSession(q)}>
                           <Play className="h-3 w-3 fill-current" /> Practice
                         </Button>
                       </div>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               )}
 
               {filteredQuestions.length > 1 && !useGroupedView && (
                 <div className="flex justify-center pt-2">
-                  <Button size="lg" onClick={() => startSession()}>
+                  <Button size="lg" className="rounded-2xl" onClick={() => startSession()}>
                     {selectedSkill === "reading" && examMode === "full"
                       ? `Full Reading ${IELTS_TIMING.reading.fullMin} min`
                       : selectedSkill === "reading" && examMode === "passage"

@@ -14,6 +14,7 @@ import {
   googleLogin,
   forgotPasswordRequest,
 } from "@/api/auth";
+import { setToken } from "@/api/http";
 
 const SESSION_KEY = "session";
 
@@ -87,6 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     storage.remove(SESSION_KEY);
+    setToken(null);
     setUser(null);
   }, []);
 

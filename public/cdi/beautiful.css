@@ -1,0 +1,15 @@
+/* IELTS Master - Beautiful Frontend - Safe, no backend touch - restored */
+header{backdrop-filter:blur(16px) !important; background:rgba(255,255,255,.96) !important; box-shadow:0 4px 24px rgba(15,23,42,.06) !important; border-bottom:1px solid #e2e8f0 !important}
+#panel-p, #panel-q{border-radius:20px !important; box-shadow:0 12px 40px rgba(15,23,42,.08) !important; border:1px solid #e2e8f0 !important; overflow-y:auto !important; overflow-x:hidden !important}
+#instruction-bar{border-radius:16px !important; margin:12px !important; box-shadow:0 4px 16px rgba(0,0,0,.04) !important; background:linear-gradient(135deg,#f8fafc,#f1f5f9) !important; border:1px solid #e2e8f0 !important}
+.answer-input{border-radius:10px !important; transition:all .2s cubic-bezier(.4,0,.2,1) !important}
+.answer-input:focus{transform:scale(1.01); box-shadow:0 0 0 3px rgba(124,58,237,.15) !important; border-color:#7c3aed !important}
+.q-num-badge{border-radius:8px !important; box-shadow:0 2px 8px rgba(0,0,0,.06) !important}
+.option-row{border-radius:12px !important; transition:all .2s !important}
+.option-row:hover{background:#f8fafc !important; transform:translateX(2px)}
+button{transition:all .2s cubic-bezier(.4,0,.2,1) !important}
+button:active{transform:scale(0.98)}
+#testdl-menu{border-radius:16px !important; box-shadow:0 20px 60px rgba(0,0,0,.15) !important; backdrop-filter:blur(16px) !important}
+/* overlay removed - ensure hidden even if HTML returns */
+#test-loading-overlay, #test-loading-overlay .tlo-inner, .tlo-ring, .tlo-title, .tlo-sub{display:none !important; opacity:0 !important; pointer-events:none !important; visibility:hidden !important; width:0 !important; height:0 !important; overflow:hidden !important}
+#test-loading-overlay.hide{opacity:0 !important; pointer-events:none !important}

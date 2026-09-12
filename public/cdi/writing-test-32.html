@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, interactive-widget=resizes-content, viewport-fit=cover" name="viewport"/>
-<title>Writing Test 32 — IELTS's Platform</title>
+<title>Writing Test 32 — IELTS with Doniyor's Platform</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Docx library for Word generation -->
 <script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.min.js"></script>
@@ -375,6 +375,7 @@ document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat 
     console.log('Offline writing analysis v2 installed (online first, offline fallback)');
 })();
 </script>
+  <link rel="stylesheet" href="/cdi/beautiful.css">
 </head>
 <body class="theme-white" oncontextmenu="return false">
 <!-- API status bar (shown during fallback) -->
@@ -382,7 +383,7 @@ document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat 
 <!-- HEADER -->
 <header class="border-b border-gray-300 px-4 grid grid-cols-[1fr_auto_1fr] items-center shrink-0 z-[100] shadow-sm bg-white" style="height:56px;">
 <div class="flex items-center gap-5 justify-start">
-<img alt="IELTS" id="ielts-logo" onerror="this.style.display='none'" src="../../../images/ielts.svg" style="height:27px;width:auto;"/>
+<div id="ielts-logo" style="display:flex; align-items:baseline; gap:5px; font-family:'Sora','Outfit',sans-serif; font-weight:900; font-size:22px; letter-spacing:-0.03em; line-height:1; color:#DC2626; white-space:nowrap; user-select:none;">IELTS<span style="font-weight:700; font-size:13px; color:#0a0a0f; letter-spacing:-0.02em; opacity:.95;">with Doniyor</span></div>
 <div class="flex flex-col justify-center">
 <span style="font-size:14px;font-weight:700;line-height:1.2;">Test taker ID</span>
 <span style="font-size:14px;font-weight:500;">0</span>
@@ -1401,5 +1402,6 @@ function closeZoom() {
 </div>
 </div>
 </div>
+  <script src="/cdi/beautiful.js"></script>
 </body>
 </html>

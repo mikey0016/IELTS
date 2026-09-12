@@ -1,0 +1,66 @@
+[
+  {
+    "id": "g1",
+    "title": "Articles: a, an, the, zero",
+    "level": "Intermediate (Band 5–6)",
+    "summary": "Master when to use articles with countable and uncountable nouns — one of the most common band-limiters.",
+    "example": "✓ An increase was recorded.",
+    "minutes": 25
+  },
+  {
+    "id": "g2",
+    "title": "Present Perfect for IELTS",
+    "level": "Intermediate (Band 5–6)",
+    "summary": "Use present perfect for recent changes and life experience — essential for Writing Task 1 trends and Speaking.",
+    "example": "The population has grown by 10% since 2010.",
+    "minutes": 20
+  },
+  {
+    "id": "g3",
+    "title": "Conditionals: types 0–3",
+    "level": "Upper-Intermediate (Band 6.5-7)",
+    "summary": "First, second and third conditionals for hypothetical discussion — the backbone of Speaking Part 3.",
+    "example": "If governments invested more, cities would become cleaner.",
+    "minutes": 30
+  },
+  {
+    "id": "g4",
+    "title": "Passive voice in reports",
+    "level": "Upper-Intermediate (Band 6.5-7)",
+    "summary": "Report data objectively with the passive — a key feature of Academic Task 1.",
+    "example": "The figures were collected over a ten-year period.",
+    "minutes": 22
+  },
+  {
+    "id": "g5",
+    "title": "Relative clauses for detail",
+    "level": "Upper-Intermediate (Band 6.5-7)",
+    "summary": "Adding precise detail with who/which/where clauses lifts both writing and speaking quality.",
+    "example": "Students who practise daily improve faster.",
+    "minutes": 24
+  },
+  {
+    "id": "g6",
+    "title": "Complex sentences & subordination",
+    "level": "Advanced (Band 7.5+)",
+    "summary": "Although, despite, while, whereas — combine ideas like a fluent writer.",
+    "example": "Although online learning is flexible, it cannot fully replace classrooms.",
+    "minutes": 28
+  },
+  {
+    "id": "g7",
+    "title": "Nominalisation",
+    "level": "Advanced (Band 7.5+)",
+    "summary": "Turn verbs into nouns for a formal, academic tone.",
+    "example": "The achievement of targets requires planning.",
+    "minutes": 26
+  },
+  {
+    "id": "g8",
+    "title": "Inversion for emphasis",
+    "level": "Advanced (Band 7.5+)",
+    "summary": "Rarely have candidates mastered this — use inversion to stand out.",
+    "example": "Not only is it cheap, but it is also effective.",
+    "minutes": 24
+  }
+]

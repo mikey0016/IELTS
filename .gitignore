@@ -31,3 +31,10 @@ instance/
 # OS
 .DS_Store
 Thumbs.db
+
+# Large media - use Git LFS if needed
+public/music/
+*.mp3
+*.flac
+*.m4a
+*.wav

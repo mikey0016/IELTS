@@ -34,14 +34,18 @@ import { AdminMocks } from "@/pages/admin/AdminMocks";
 import { AdminAchievements } from "@/pages/admin/AdminAchievements";
 import { AdminSettings } from "@/pages/admin/AdminSettings";
 import { AdminIeltsBuilder } from "@/pages/admin/AdminIeltsBuilder";
+import { AdminMusic } from "@/pages/admin/AdminMusic";
 import { Arena } from "@/pages/app/Arena";
 import { CDIPractice } from "@/pages/app/CDIPractice";
+import { SkillPage } from "@/pages/app/SkillPage";
 import { XpToastListener } from "@/components/XpToastListener";
+import { SiteBackground } from "@/components/SiteBackground";
 import type { Skill } from "@/types";
 
 export default function App() {
   return (
-    <>
+    <div className="relative isolate">
+      <SiteBackground />
       <XpToastListener />
       <Routes>
         <Route element={<PublicLayout />}>
@@ -71,6 +75,10 @@ export default function App() {
               element={<MockTestResults />}
             />
             <Route path="/app/cdi-practice" element={<CDIPractice />} />
+            <Route path="/app/listening" element={<SkillPage skill="listening" />} />
+            <Route path="/app/reading" element={<SkillPage skill="reading" />} />
+            <Route path="/app/writing" element={<SkillPage skill="writing" />} />
+            <Route path="/app/speaking" element={<SkillPage skill="speaking" />} />
             <Route path="/app/study-plan" element={<StudyPlan />} />
             <Route path="/app/progress" element={<Progress />} />
             <Route path="/app/achievements" element={<Achievements />} />
@@ -96,6 +104,7 @@ export default function App() {
             <Route path="/admin/speaking" element={<AdminSpeaking />} />
             <Route path="/admin/grammar" element={<AdminGrammar />} />
             <Route path="/admin/mock-tests" element={<AdminMocks />} />
+            <Route path="/admin/music" element={<AdminMusic />} />
             <Route path="/admin/achievements" element={<AdminAchievements />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
           </Route>
@@ -103,7 +112,7 @@ export default function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
+    </div>
   );
 }
 

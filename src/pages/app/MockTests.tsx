@@ -10,6 +10,8 @@ import {
   ArrowRight,
   Award,
   History,
+  Sparkles,
+  Database,
 } from "lucide-react";
 import {
   Card,
@@ -18,28 +20,28 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/Card";
-import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useProgress } from "@/context/ProgressContext";
 import { listMockTests } from "@/api/mockTests";
+import { isRealApi } from "@/api/http";
 import type { MockTestMeta } from "@/types";
 
 function MockTestCardSkeleton() {
   return (
-    <Card>
+    <Card glass>
       <CardContent className="space-y-4">
-        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-6 w-48 rounded-full" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-3/4" />
         <div className="flex gap-2">
-          <Skeleton className="h-6 w-16" />
-          <Skeleton className="h-6 w-16" />
-          <Skeleton className="h-6 w-16" />
+          <Skeleton className="h-6 w-16 rounded-full" />
+          <Skeleton className="h-6 w-16 rounded-full" />
+          <Skeleton className="h-6 w-16 rounded-full" />
         </div>
-        <Skeleton className="h-10 w-32" />
+        <Skeleton className="h-10 w-32 rounded-2xl" />
       </CardContent>
     </Card>
   );
@@ -55,26 +57,46 @@ export function MockTests() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    listMockTests().then((data) => {
-      setTests(data);
-      setLoading(false);
-    });
+    listMockTests()
+      .then((data) => setTests(data))
+      .catch(() => setTests([]))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        eyebrow="Mock Tests"
-        title="Full IELTS mock exams"
-        description="Mirror the real test — timed conditions across Listening, Reading, Writing and Speaking. Finish one to get an estimated band and tailored next steps."
-        actions={
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-            <Trophy className="h-4 w-4 text-amber-500" />
-            {progress.mockHistory.length} mock
-            {progress.mockHistory.length !== 1 ? "s" : ""} completed
+    <div className="space-y-6 animate-fade-in">
+      {/* Premium header */}
+      <div className="relative overflow-hidden rounded-[24px] bg-slate-900 p-7 text-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-600 via-orange-600 to-brand-600 opacity-90" />
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute -left-10 -bottom-10 h-24 w-24 rounded-full bg-white/10 blur-xl" />
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wide backdrop-blur">
+              <Trophy className="h-3.5 w-3.5" /> Mock Tests — DB live
+            </p>
+            <h1 className="mt-3 font-display text-2xl font-black tracking-tight">Full IELTS mock exams</h1>
+            <p className="mt-1.5 max-w-xl text-sm text-white/80">
+              Mirror the real test — timed conditions across Listening, Reading, Writing and Speaking. DB dan jonli via <code className="rounded bg-white/20 px-1">GET /api/mocks</code>.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Badge tone="white" className="shadow">
+                <Database className="h-3 w-3" /> {isRealApi() ? "DB live" : "Mock"} · {tests ? `${tests.length} tests` : "loading"}
+              </Badge>
+              <Badge tone="white">
+                <Sparkles className="h-3 w-3" /> Band 0-9
+              </Badge>
+            </div>
           </div>
-        }
-      />
+          <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
+            <Trophy className="h-5 w-5 text-amber-300" />
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-white/70">Completed</p>
+              <p className="font-display text-lg font-black">{progress.mockHistory.length} mocks</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Mock tests list */}
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -83,7 +105,8 @@ export function MockTests() {
               <MockTestCardSkeleton key={i} />
             ))
           : tests?.map((test) => (
-              <Card key={test.id} hover className="flex flex-col">
+              <Card key={test.id} hover glass className="flex flex-col overflow-hidden">
+                <div className="h-1 w-full bg-gradient-to-r from-amber-500 to-orange-500" />
                 <CardHeader>
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2">
@@ -121,7 +144,7 @@ export function MockTests() {
                       <Timer className="h-3.5 w-3.5" /> Timed exam
                     </span>
                     <Link to={`/app/mock-test/start/${test.id}`}>
-                      <Button size="sm">
+                      <Button size="sm" className="rounded-2xl">
                         <Play className="h-4 w-4 fill-current" /> Start
                       </Button>
                     </Link>
@@ -131,8 +154,19 @@ export function MockTests() {
             ))}
       </div>
 
+      {!loading && tests?.length === 0 && (
+        <Card glass>
+          <CardContent className="py-12 text-center">
+            <EmptyState
+              title="No mock tests yet"
+              description="DB da hech qanday mock topilmadi. Admin paneldan qo'shing."
+            />
+          </CardContent>
+        </Card>
+      )}
+
       {/* Mock history table */}
-      <Card>
+      <Card glass>
         <CardHeader>
           <div>
             <CardTitle className="flex items-center gap-2">
@@ -160,7 +194,7 @@ export function MockTests() {
               action={
                 tests && tests[0] ? (
                   <Link to={`/app/mock-test/start/${tests[0].id}`}>
-                    <Button size="sm">
+                    <Button size="sm" className="rounded-2xl">
                       Take first mock test <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -168,7 +202,7 @@ export function MockTests() {
               }
             />
           ) : (
-            <div className="overflow-x-auto -mx-5">
+            <div className="-mx-5 overflow-x-auto">
               <table className="w-full min-w-[640px] text-sm">
                 <thead>
                   <tr className="border-b border-slate-100 text-left text-xs font-bold uppercase tracking-wide text-slate-400 dark:border-slate-800">
@@ -237,7 +271,7 @@ export function MockTests() {
                           <Link
                             to={`/app/mock-test/results/${entry.testId}?resultId=${entry.id}`}
                           >
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" className="rounded-2xl">
                               View <ArrowRight className="h-3.5 w-3.5" />
                             </Button>
                           </Link>

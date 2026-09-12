@@ -1,0 +1,1284 @@
+[
+  {
+    "id": "mock_academic_1",
+    "title": "Academic Full Test — Real Exam",
+    "type": "Academic",
+    "durationMin": 175,
+    "questions": 16,
+    "description": "Haqiqiy IELTS formati: Listening 40 min (40 savol), Reading 60 min (3 passage × 20 min, 40 savol), Writing 60 min (Task 1 = 20m, Task 2 = 40m), Speaking 11-15 min.",
+    "sections": [
+      {
+        "key": "listening",
+        "title": "Listening",
+        "durationMin": 40,
+        "instructions": "Haqiqiy imtihon: har bir yozuv faqat 1 marta eshitiladi. 30 min tinglash + 10 min javoblarni ko'chirish. 40 savol.",
+        "questions": [
+          {
+            "id": "l1",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 1 — Booking a hotel",
+            "difficulty": "easy",
+            "timeLimitSec": 90,
+            "prompt": "The woman wants a room with…",
+            "options": [
+              "a sea view",
+              "a garden view",
+              "a city view"
+            ],
+            "correctIndex": 0,
+            "transcript": "Woman: \"I would really love to wake up and see the ocean, please.\" Man: \"Of course, a sea view room it is.\"",
+            "audioDurationSec": 18,
+            "explanation": "The woman says \"I would really love to wake up and see the ocean\" — that is a room with a sea view.",
+            "recommendLesson": "Listening — Section 1 essentials"
+          },
+          {
+            "id": "l2",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Joining a gym",
+            "difficulty": "easy",
+            "timeLimitSec": 75,
+            "prompt": "The membership fee is £____ per month.",
+            "correctAnswer": "35",
+            "transcript": "Receptionist: \"The monthly membership is thirty-five pounds.\"",
+            "audioDurationSec": 14,
+            "explanation": "The receptionist clearly states \"thirty-five pounds\". Listen for numbers carefully — they are often repeated.",
+            "recommendLesson": "Listening — Numbers and prices"
+          },
+          {
+            "id": "l3",
+            "skill": "listening",
+            "type": "true-false",
+            "topic": "Section 2 — Museum tour",
+            "difficulty": "medium",
+            "timeLimitSec": 100,
+            "prompt": "The museum opens at 10 a.m. on Sundays.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 1,
+            "transcript": "Guide: \"We open at ten during the week, and at noon on weekends, including Sundays.\"",
+            "audioDurationSec": 22,
+            "explanation": "The guide says the museum opens at noon (12:00) on Sundays, so \"10 a.m.\" is False.",
+            "recommendLesson": "Listening — True / False questions"
+          },
+          {
+            "id": "l4",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 3 — University project",
+            "difficulty": "medium",
+            "timeLimitSec": 110,
+            "prompt": "Why does the student want to change her project topic?",
+            "options": [
+              "It is too difficult",
+              "She cannot find enough sources",
+              "It does not interest her anymore"
+            ],
+            "correctIndex": 2,
+            "transcript": "Student: \"To be honest, Professor, I have lost interest in urban planning. I would like to research renewable energy instead.\"",
+            "audioDurationSec": 26,
+            "explanation": "The student states she \"lost interest\" in the current topic. The answer is C.",
+            "recommendLesson": "Listening — Section 3 discussion skills"
+          },
+          {
+            "id": "l5",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 4 — Marine biology lecture",
+            "difficulty": "hard",
+            "timeLimitSec": 120,
+            "prompt": "What does the speaker say about coral bleaching?",
+            "options": [
+              "It is caused mainly by pollution",
+              "It can sometimes be reversed",
+              "It only happens in the tropics"
+            ],
+            "correctIndex": 1,
+            "transcript": "Lecturer: \"While bleaching is often fatal, some coral colonies can recover if temperatures return to normal within a few weeks.\"",
+            "audioDurationSec": 30,
+            "explanation": "The lecturer says recovery is possible when temperatures normalise quickly — response B matches.",
+            "recommendLesson": "Listening — Academic lecture sections"
+          },
+          {
+            "id": "l6",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Car rental",
+            "difficulty": "easy",
+            "timeLimitSec": 80,
+            "prompt": "The customer will pick up the car at ____ a.m.",
+            "correctAnswer": "9:30",
+            "transcript": "Agent: \"We can have the car ready for nine thirty tomorrow morning.\"",
+            "audioDurationSec": 16,
+            "explanation": "The time \"nine thirty\" (9:30) is the pickup time. Pay attention to half-hours.",
+            "recommendLesson": "Listening — Times and dates"
+          },
+          {
+            "id": "l7",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 2 — Sports centre facilities",
+            "difficulty": "medium",
+            "timeLimitSec": 95,
+            "prompt": "Members can use the swimming pool for free…",
+            "options": [
+              "only before 8 a.m.",
+              "at any time",
+              "on weekdays only"
+            ],
+            "correctIndex": 1,
+            "transcript": "Announcer: \"Pool access is included in your membership, twenty-four hours a day, seven days a week.\"",
+            "audioDurationSec": 20,
+            "explanation": "\"Included… twenty-four hours a day, seven days a week\" means at any time — answer B.",
+            "recommendLesson": "Listening — Facility descriptions"
+          },
+          {
+            "id": "l8",
+            "skill": "listening",
+            "type": "true-false",
+            "topic": "Section 4 — History of coffee",
+            "difficulty": "hard",
+            "timeLimitSec": 115,
+            "prompt": "Coffee was first cultivated commercially in Brazil.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 1,
+            "transcript": "Lecturer: \"Long before Brazil, commercial cultivation began in the Arabian Peninsula, from where it spread across the Ottoman Empire.\"",
+            "audioDurationSec": 28,
+            "explanation": "The lecture says commercial cultivation began in the Arabian Peninsula — Brazil came much later, so the statement is False.",
+            "recommendLesson": "Listening — Distractors and negations"
+          }
+        ],
+        "audio": true
+      },
+      {
+        "key": "reading",
+        "title": "Reading",
+        "durationMin": 60,
+        "instructions": "3 ta passage, har biri 20 minutdan. Jami 40 savol. Vaqt tugagach avtomatik topshiriladi.",
+        "questions": [
+          {
+            "id": "r1",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "easy",
+            "timeLimitSec": 150,
+            "passage": "Researchers estimate that eight million tonnes of plastic enter the ocean each year. Most of it comes from rivers, with ten rivers responsible for almost 90% of the total.",
+            "prompt": "According to the passage, most ocean plastic comes from…",
+            "options": [
+              "fishing boats",
+              "rivers",
+              "tourism"
+            ],
+            "correctIndex": 1,
+            "explanation": "The passage states most plastic \"comes from rivers\" — ten rivers account for most of it.",
+            "recommendLesson": "Reading — Skimming for main ideas"
+          },
+          {
+            "id": "r2",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "medium",
+            "timeLimitSec": 170,
+            "passage": "Once in the ocean, plastic fragments into microplastics. These particles are small enough to be ingested by plankton, the base of the marine food chain.",
+            "prompt": "Microplastics are small enough to enter the marine food chain.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "The passage says plankton — the base of the food chain — ingest the particles, making the statement True.",
+            "recommendLesson": "Reading — True / False / Not Given"
+          },
+          {
+            "id": "r3",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Metacognition in education",
+            "difficulty": "medium",
+            "timeLimitSec": 180,
+            "passage": "Metacognition — thinking about one's own thinking — has been linked to better learning outcomes. Students who assess their understanding before, during and after a task tend to retain information more effectively.",
+            "prompt": "Students benefit from metacognition mainly because they…",
+            "options": [
+              "memorise facts faster",
+              "evaluate their own learning process",
+              "study in groups more often"
+            ],
+            "correctIndex": 1,
+            "explanation": "The key idea is monitoring understanding throughout a task, i.e. evaluating their own learning process.",
+            "recommendLesson": "Reading — Identifying the main argument"
+          },
+          {
+            "id": "r4",
+            "skill": "reading",
+            "type": "fill-blank",
+            "topic": "General Training — Job advertisement",
+            "difficulty": "easy",
+            "timeLimitSec": 140,
+            "passage": "The Riverside Café requires a weekend team member. Applicants must be over 18 and available on Saturday and Sunday mornings. Experience is preferred but not essential.",
+            "prompt": "Applicants must be available on weekend ____.",
+            "correctAnswer": "mornings",
+            "explanation": "The advert says applicants must be available \"on Saturday and Sunday mornings\".",
+            "recommendLesson": "Reading — Scanning for information"
+          },
+          {
+            "id": "r5",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "Academic — Sleep and memory",
+            "difficulty": "medium",
+            "timeLimitSec": 175,
+            "passage": "During deep sleep, the brain replays newly learned information, transferring it from short-term to long-term storage. Sleep deprivation interrupts this process and impairs recall.",
+            "prompt": "The passage claims that sleep deprivation can make it harder to remember information.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "The passage states deprivation \"impairs recall\", so the statement is True.",
+            "recommendLesson": "Reading — Paraphrasing statements"
+          },
+          {
+            "id": "r6",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Urban farming",
+            "difficulty": "hard",
+            "timeLimitSec": 200,
+            "passage": "Sky gardens and rooftop hydroponics supply fresh produce while cooling buildings and absorbing stormwater. Yet critics note that yields per square metre remain far below traditional farms, and start-up costs are substantial.",
+            "prompt": "Which view do critics express about urban farming?",
+            "options": [
+              "It is too expensive for typical yields",
+              "It increases building temperatures",
+              "It cannot reduce stormwater"
+            ],
+            "correctIndex": 0,
+            "explanation": "Critics mention start-up costs are substantial while yields are comparatively low — \"too expensive for typical yields\".",
+            "recommendLesson": "Reading — Argument vs counterargument"
+          },
+          {
+            "id": "r7",
+            "skill": "reading",
+            "type": "fill-blank",
+            "topic": "Academic — Bee decline",
+            "difficulty": "hard",
+            "timeLimitSec": 190,
+            "passage": "The most frequently cited driver of bee decline is the widespread use of neonicotinoid pesticides, though habitat fragmentation and climate change are compounding factors.",
+            "prompt": "The main cause of bee decline mentioned is the use of ____ pesticides.",
+            "correctAnswer": "neonicotinoid",
+            "explanation": "The \"most frequently cited driver\" is neonicotinoid pesticides.",
+            "recommendLesson": "Reading — Academic vocabulary focus"
+          },
+          {
+            "id": "r8",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "General Training — Healthy diet",
+            "difficulty": "easy",
+            "timeLimitSec": 135,
+            "passage": "The NHS recommends eating at least five portions of fruit and vegetables daily. Fresh, frozen and canned varieties all count, provided canned options do not contain added sugar or salt.",
+            "prompt": "Canned vegetables only count towards the five-a-day target if they have no added sugar or salt.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "Canned options count \"provided [they] do not contain added sugar or salt\" — exactly what the statement says.",
+            "recommendLesson": "Reading — Detail matching"
+          }
+        ],
+        "audio": false
+      },
+      {
+        "key": "writing",
+        "title": "Writing",
+        "durationMin": 60,
+        "instructions": "Task 1 — 20 minut, kamida 150 so'z. Task 2 — 40 minut, kamida 250 so'z. Jami 60 minut.",
+        "writingPrompts": [
+          {
+            "id": "w1",
+            "task": "Academic Task 1",
+            "type": "academic-task1",
+            "difficulty": "medium",
+            "timeLimitMin": 20,
+            "minWords": 150,
+            "prompt": "The chart below shows the percentage of households in the UK owning a pet in 2005 and 2020. Write a report summarising the main features and making comparisons where relevant.",
+            "instructions": [
+              "Paraphrase the question in your overview",
+              "Group the data logically (highest / lowest / biggest change)",
+              "Use accurate data with comparative language",
+              "Do not give your opinion"
+            ]
+          },
+          {
+            "id": "w2",
+            "task": "Academic Task 2",
+            "type": "academic-task2",
+            "difficulty": "hard",
+            "timeLimitMin": 40,
+            "minWords": 250,
+            "prompt": "Some people believe that unpaid community service should be a compulsory part of high school programmes. To what extent do you agree or disagree?",
+            "instructions": [
+              "Take a clear position in the introduction",
+              "Develop each idea with reasons and examples",
+              "Use linking devices to connect paragraphs",
+              "Write a strong conclusion that restates your view"
+            ]
+          }
+        ],
+        "audio": false
+      },
+      {
+        "key": "speaking",
+        "title": "Speaking",
+        "durationMin": 15,
+        "instructions": "Part 1: 30 sek/jawob, Part 2: 1 min tayyorgarlik + 2 min gapirish, Part 3: 45 sek/jawob. Jami 11-15 min.",
+        "speakingPrompts": [
+          {
+            "id": "s1",
+            "part": 1,
+            "difficulty": "easy",
+            "prepTimeSec": 0,
+            "speakingTimeSec": 30,
+            "cueCardTitle": "Free time",
+            "prompt": "Let's talk about your free time. What do you usually do in your free time?",
+            "followUps": [
+              "Why do you enjoy that activity?",
+              "How has your free time changed since childhood?"
+            ]
+          },
+          {
+            "id": "s3",
+            "part": 2,
+            "difficulty": "medium",
+            "prepTimeSec": 60,
+            "speakingTimeSec": 120,
+            "cueCardTitle": "A memorable journey",
+            "prompt": "Describe a journey you remember well. You should say: where you went, how you travelled there, who you were with, and explain why you remember this journey so well.",
+            "followUps": [
+              "Is travelling easier now than in the past?",
+              "Why do some people dislike long journeys?"
+            ]
+          },
+          {
+            "id": "s6",
+            "part": 3,
+            "difficulty": "hard",
+            "prepTimeSec": 0,
+            "speakingTimeSec": 45,
+            "cueCardTitle": "Cities & living",
+            "prompt": "Let's talk about city life. What problems do large cities face today?",
+            "followUps": [
+              "How can governments solve housing problems?",
+              "Is urban life healthier than rural life?"
+            ]
+          }
+        ],
+        "audio": false
+      }
+    ]
+  },
+  {
+    "id": "mock_general_1",
+    "title": "General Training Full Test",
+    "type": "General Training",
+    "durationMin": 175,
+    "questions": 14,
+    "description": "General Training — haqiqiy timing: Listening 40m, Reading 60m (3×20m), Writing 60m (20+40), Speaking 15m.",
+    "sections": [
+      {
+        "key": "listening",
+        "title": "Listening",
+        "durationMin": 40,
+        "instructions": "Listen to each recording once and answer the questions as you go. 40 min total.",
+        "questions": [
+          {
+            "id": "l1",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 1 — Booking a hotel",
+            "difficulty": "easy",
+            "timeLimitSec": 90,
+            "prompt": "The woman wants a room with…",
+            "options": [
+              "a sea view",
+              "a garden view",
+              "a city view"
+            ],
+            "correctIndex": 0,
+            "transcript": "Woman: \"I would really love to wake up and see the ocean, please.\" Man: \"Of course, a sea view room it is.\"",
+            "audioDurationSec": 18,
+            "explanation": "The woman says \"I would really love to wake up and see the ocean\" — that is a room with a sea view.",
+            "recommendLesson": "Listening — Section 1 essentials"
+          },
+          {
+            "id": "l2",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Joining a gym",
+            "difficulty": "easy",
+            "timeLimitSec": 75,
+            "prompt": "The membership fee is £____ per month.",
+            "correctAnswer": "35",
+            "transcript": "Receptionist: \"The monthly membership is thirty-five pounds.\"",
+            "audioDurationSec": 14,
+            "explanation": "The receptionist clearly states \"thirty-five pounds\". Listen for numbers carefully — they are often repeated.",
+            "recommendLesson": "Listening — Numbers and prices"
+          },
+          {
+            "id": "l4",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 3 — University project",
+            "difficulty": "medium",
+            "timeLimitSec": 110,
+            "prompt": "Why does the student want to change her project topic?",
+            "options": [
+              "It is too difficult",
+              "She cannot find enough sources",
+              "It does not interest her anymore"
+            ],
+            "correctIndex": 2,
+            "transcript": "Student: \"To be honest, Professor, I have lost interest in urban planning. I would like to research renewable energy instead.\"",
+            "audioDurationSec": 26,
+            "explanation": "The student states she \"lost interest\" in the current topic. The answer is C.",
+            "recommendLesson": "Listening — Section 3 discussion skills"
+          },
+          {
+            "id": "l6",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Car rental",
+            "difficulty": "easy",
+            "timeLimitSec": 80,
+            "prompt": "The customer will pick up the car at ____ a.m.",
+            "correctAnswer": "9:30",
+            "transcript": "Agent: \"We can have the car ready for nine thirty tomorrow morning.\"",
+            "audioDurationSec": 16,
+            "explanation": "The time \"nine thirty\" (9:30) is the pickup time. Pay attention to half-hours.",
+            "recommendLesson": "Listening — Times and dates"
+          },
+          {
+            "id": "l7",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 2 — Sports centre facilities",
+            "difficulty": "medium",
+            "timeLimitSec": 95,
+            "prompt": "Members can use the swimming pool for free…",
+            "options": [
+              "only before 8 a.m.",
+              "at any time",
+              "on weekdays only"
+            ],
+            "correctIndex": 1,
+            "transcript": "Announcer: \"Pool access is included in your membership, twenty-four hours a day, seven days a week.\"",
+            "audioDurationSec": 20,
+            "explanation": "\"Included… twenty-four hours a day, seven days a week\" means at any time — answer B.",
+            "recommendLesson": "Listening — Facility descriptions"
+          }
+        ],
+        "audio": true
+      },
+      {
+        "key": "reading",
+        "title": "Reading",
+        "durationMin": 60,
+        "instructions": "3 passages × 20 min. Answer all questions. Jami 60 minut.",
+        "questions": [
+          {
+            "id": "r4",
+            "skill": "reading",
+            "type": "fill-blank",
+            "topic": "General Training — Job advertisement",
+            "difficulty": "easy",
+            "timeLimitSec": 140,
+            "passage": "The Riverside Café requires a weekend team member. Applicants must be over 18 and available on Saturday and Sunday mornings. Experience is preferred but not essential.",
+            "prompt": "Applicants must be available on weekend ____.",
+            "correctAnswer": "mornings",
+            "explanation": "The advert says applicants must be available \"on Saturday and Sunday mornings\".",
+            "recommendLesson": "Reading — Scanning for information"
+          },
+          {
+            "id": "r8",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "General Training — Healthy diet",
+            "difficulty": "easy",
+            "timeLimitSec": 135,
+            "passage": "The NHS recommends eating at least five portions of fruit and vegetables daily. Fresh, frozen and canned varieties all count, provided canned options do not contain added sugar or salt.",
+            "prompt": "Canned vegetables only count towards the five-a-day target if they have no added sugar or salt.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "Canned options count \"provided [they] do not contain added sugar or salt\" — exactly what the statement says.",
+            "recommendLesson": "Reading — Detail matching"
+          },
+          {
+            "id": "r1",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "easy",
+            "timeLimitSec": 150,
+            "passage": "Researchers estimate that eight million tonnes of plastic enter the ocean each year. Most of it comes from rivers, with ten rivers responsible for almost 90% of the total.",
+            "prompt": "According to the passage, most ocean plastic comes from…",
+            "options": [
+              "fishing boats",
+              "rivers",
+              "tourism"
+            ],
+            "correctIndex": 1,
+            "explanation": "The passage states most plastic \"comes from rivers\" — ten rivers account for most of it.",
+            "recommendLesson": "Reading — Skimming for main ideas"
+          }
+        ],
+        "audio": false
+      },
+      {
+        "key": "writing",
+        "title": "Writing",
+        "durationMin": 60,
+        "instructions": "Task 1 is a letter (20 min, 150w); Task 2 is an essay (40 min, 250w).",
+        "writingPrompts": [
+          {
+            "id": "w3",
+            "task": "General Training Task 1",
+            "type": "gt-task1",
+            "difficulty": "easy",
+            "timeLimitMin": 20,
+            "minWords": 150,
+            "prompt": "You have lost your library book and need to write to the librarian. In your letter, explain how you lost the book, why you are writing to the library now, and what you would like the librarian to do.",
+            "instructions": [
+              "Use a formal but friendly tone",
+              "Cover all three bullet points fully",
+              "Keep paragraphs short and logical",
+              "Use appropriate opening and closing phrases"
+            ]
+          },
+          {
+            "id": "w4",
+            "task": "General Training Task 2",
+            "type": "gt-task2",
+            "difficulty": "medium",
+            "timeLimitMin": 40,
+            "minWords": 250,
+            "prompt": "Many people nowadays communicate less with their neighbours than in the past. What are the causes of this situation, and what solutions can you suggest?",
+            "instructions": [
+              "Address both cause and solution",
+              "Use clear topic sentences",
+              "Support ideas with everyday examples",
+              "Keep the tone balanced and impersonal"
+            ]
+          }
+        ],
+        "audio": false
+      },
+      {
+        "key": "speaking",
+        "title": "Speaking",
+        "durationMin": 15,
+        "instructions": "Part 1 30s · Part 2 60s prep + 120s speak · Part 3 45s",
+        "speakingPrompts": [
+          {
+            "id": "s2",
+            "part": 1,
+            "difficulty": "easy",
+            "prepTimeSec": 0,
+            "speakingTimeSec": 30,
+            "cueCardTitle": "Home town",
+            "prompt": "Let's move on to the topic of your home town. Where is your home town and what is it famous for?",
+            "followUps": [
+              "Would you recommend visiting it? Why?"
+            ]
+          },
+          {
+            "id": "s4",
+            "part": 2,
+            "difficulty": "medium",
+            "prepTimeSec": 60,
+            "speakingTimeSec": 120,
+            "cueCardTitle": "A person who inspires you",
+            "prompt": "Describe a person who inspires you. You should say: who this person is, how you know them, what they have done, and explain why they inspire you.",
+            "followUps": [
+              "Do people need role models?",
+              "How can teachers inspire students?"
+            ]
+          },
+          {
+            "id": "s5",
+            "part": 3,
+            "difficulty": "hard",
+            "prepTimeSec": 0,
+            "speakingTimeSec": 45,
+            "cueCardTitle": "Education & technology",
+            "prompt": "Let's discuss education. How has technology changed the way people learn compared to the past?",
+            "followUps": [
+              "Do you think online learning will replace traditional classrooms?",
+              "What makes a good teacher in the digital age?",
+              "Should schools limit screen time?"
+            ]
+          }
+        ],
+        "audio": false
+      }
+    ]
+  },
+  {
+    "id": "mock_reading_full",
+    "title": "Reading — Full 60 min (40 savol)",
+    "type": "Academic",
+    "durationMin": 60,
+    "questions": 40,
+    "description": "Haqiqiy Reading: 3 ta passage, har biri 20 minut. Jami 60 minut / 40 savol.",
+    "sections": [
+      {
+        "key": "reading",
+        "title": "Reading",
+        "durationMin": 60,
+        "instructions": "3 passages, each 20 minutes. Jami 40 savol. Har bir passage 20 minut.",
+        "questions": [
+          {
+            "id": "r1",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "easy",
+            "timeLimitSec": 150,
+            "passage": "Researchers estimate that eight million tonnes of plastic enter the ocean each year. Most of it comes from rivers, with ten rivers responsible for almost 90% of the total.",
+            "prompt": "According to the passage, most ocean plastic comes from…",
+            "options": [
+              "fishing boats",
+              "rivers",
+              "tourism"
+            ],
+            "correctIndex": 1,
+            "explanation": "The passage states most plastic \"comes from rivers\" — ten rivers account for most of it.",
+            "recommendLesson": "Reading — Skimming for main ideas"
+          },
+          {
+            "id": "r2",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "medium",
+            "timeLimitSec": 170,
+            "passage": "Once in the ocean, plastic fragments into microplastics. These particles are small enough to be ingested by plankton, the base of the marine food chain.",
+            "prompt": "Microplastics are small enough to enter the marine food chain.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "The passage says plankton — the base of the food chain — ingest the particles, making the statement True.",
+            "recommendLesson": "Reading — True / False / Not Given"
+          },
+          {
+            "id": "r3",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Metacognition in education",
+            "difficulty": "medium",
+            "timeLimitSec": 180,
+            "passage": "Metacognition — thinking about one's own thinking — has been linked to better learning outcomes. Students who assess their understanding before, during and after a task tend to retain information more effectively.",
+            "prompt": "Students benefit from metacognition mainly because they…",
+            "options": [
+              "memorise facts faster",
+              "evaluate their own learning process",
+              "study in groups more often"
+            ],
+            "correctIndex": 1,
+            "explanation": "The key idea is monitoring understanding throughout a task, i.e. evaluating their own learning process.",
+            "recommendLesson": "Reading — Identifying the main argument"
+          },
+          {
+            "id": "r4",
+            "skill": "reading",
+            "type": "fill-blank",
+            "topic": "General Training — Job advertisement",
+            "difficulty": "easy",
+            "timeLimitSec": 140,
+            "passage": "The Riverside Café requires a weekend team member. Applicants must be over 18 and available on Saturday and Sunday mornings. Experience is preferred but not essential.",
+            "prompt": "Applicants must be available on weekend ____.",
+            "correctAnswer": "mornings",
+            "explanation": "The advert says applicants must be available \"on Saturday and Sunday mornings\".",
+            "recommendLesson": "Reading — Scanning for information"
+          },
+          {
+            "id": "r5",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "Academic — Sleep and memory",
+            "difficulty": "medium",
+            "timeLimitSec": 175,
+            "passage": "During deep sleep, the brain replays newly learned information, transferring it from short-term to long-term storage. Sleep deprivation interrupts this process and impairs recall.",
+            "prompt": "The passage claims that sleep deprivation can make it harder to remember information.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "The passage states deprivation \"impairs recall\", so the statement is True.",
+            "recommendLesson": "Reading — Paraphrasing statements"
+          },
+          {
+            "id": "r6",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Urban farming",
+            "difficulty": "hard",
+            "timeLimitSec": 200,
+            "passage": "Sky gardens and rooftop hydroponics supply fresh produce while cooling buildings and absorbing stormwater. Yet critics note that yields per square metre remain far below traditional farms, and start-up costs are substantial.",
+            "prompt": "Which view do critics express about urban farming?",
+            "options": [
+              "It is too expensive for typical yields",
+              "It increases building temperatures",
+              "It cannot reduce stormwater"
+            ],
+            "correctIndex": 0,
+            "explanation": "Critics mention start-up costs are substantial while yields are comparatively low — \"too expensive for typical yields\".",
+            "recommendLesson": "Reading — Argument vs counterargument"
+          },
+          {
+            "id": "r7",
+            "skill": "reading",
+            "type": "fill-blank",
+            "topic": "Academic — Bee decline",
+            "difficulty": "hard",
+            "timeLimitSec": 190,
+            "passage": "The most frequently cited driver of bee decline is the widespread use of neonicotinoid pesticides, though habitat fragmentation and climate change are compounding factors.",
+            "prompt": "The main cause of bee decline mentioned is the use of ____ pesticides.",
+            "correctAnswer": "neonicotinoid",
+            "explanation": "The \"most frequently cited driver\" is neonicotinoid pesticides.",
+            "recommendLesson": "Reading — Academic vocabulary focus"
+          },
+          {
+            "id": "r8",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "General Training — Healthy diet",
+            "difficulty": "easy",
+            "timeLimitSec": 135,
+            "passage": "The NHS recommends eating at least five portions of fruit and vegetables daily. Fresh, frozen and canned varieties all count, provided canned options do not contain added sugar or salt.",
+            "prompt": "Canned vegetables only count towards the five-a-day target if they have no added sugar or salt.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "Canned options count \"provided [they] do not contain added sugar or salt\" — exactly what the statement says.",
+            "recommendLesson": "Reading — Detail matching"
+          }
+        ],
+        "audio": false
+      }
+    ]
+  },
+  {
+    "id": "mock_reading_passage",
+    "title": "Reading — 1 Passage (20 min)",
+    "type": "Academic",
+    "durationMin": 20,
+    "questions": 13,
+    "description": "Bitta passage mashqi — 20 minut. Haqiqiy imtihondagi kabi.",
+    "sections": [
+      {
+        "key": "reading",
+        "title": "Reading — Passage 1",
+        "durationMin": 20,
+        "instructions": "Bitta passage, 20 minut. Savollarga javob bering.",
+        "questions": [
+          {
+            "id": "r1",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "easy",
+            "timeLimitSec": 150,
+            "passage": "Researchers estimate that eight million tonnes of plastic enter the ocean each year. Most of it comes from rivers, with ten rivers responsible for almost 90% of the total.",
+            "prompt": "According to the passage, most ocean plastic comes from…",
+            "options": [
+              "fishing boats",
+              "rivers",
+              "tourism"
+            ],
+            "correctIndex": 1,
+            "explanation": "The passage states most plastic \"comes from rivers\" — ten rivers account for most of it.",
+            "recommendLesson": "Reading — Skimming for main ideas"
+          },
+          {
+            "id": "r2",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "medium",
+            "timeLimitSec": 170,
+            "passage": "Once in the ocean, plastic fragments into microplastics. These particles are small enough to be ingested by plankton, the base of the marine food chain.",
+            "prompt": "Microplastics are small enough to enter the marine food chain.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "The passage says plankton — the base of the food chain — ingest the particles, making the statement True.",
+            "recommendLesson": "Reading — True / False / Not Given"
+          },
+          {
+            "id": "r3",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Metacognition in education",
+            "difficulty": "medium",
+            "timeLimitSec": 180,
+            "passage": "Metacognition — thinking about one's own thinking — has been linked to better learning outcomes. Students who assess their understanding before, during and after a task tend to retain information more effectively.",
+            "prompt": "Students benefit from metacognition mainly because they…",
+            "options": [
+              "memorise facts faster",
+              "evaluate their own learning process",
+              "study in groups more often"
+            ],
+            "correctIndex": 1,
+            "explanation": "The key idea is monitoring understanding throughout a task, i.e. evaluating their own learning process.",
+            "recommendLesson": "Reading — Identifying the main argument"
+          }
+        ],
+        "audio": false
+      }
+    ]
+  },
+  {
+    "id": "mock_listening_full",
+    "title": "Listening — Full 40 min",
+    "type": "Academic",
+    "durationMin": 40,
+    "questions": 40,
+    "description": "Haqiqiy Listening: 4 section, 40 savol, 40 minut.",
+    "sections": [
+      {
+        "key": "listening",
+        "title": "Listening",
+        "durationMin": 40,
+        "instructions": "4 sections, har biri 10 min. Jami 40 min, 40 savol.",
+        "questions": [
+          {
+            "id": "l1",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 1 — Booking a hotel",
+            "difficulty": "easy",
+            "timeLimitSec": 90,
+            "prompt": "The woman wants a room with…",
+            "options": [
+              "a sea view",
+              "a garden view",
+              "a city view"
+            ],
+            "correctIndex": 0,
+            "transcript": "Woman: \"I would really love to wake up and see the ocean, please.\" Man: \"Of course, a sea view room it is.\"",
+            "audioDurationSec": 18,
+            "explanation": "The woman says \"I would really love to wake up and see the ocean\" — that is a room with a sea view.",
+            "recommendLesson": "Listening — Section 1 essentials"
+          },
+          {
+            "id": "l2",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Joining a gym",
+            "difficulty": "easy",
+            "timeLimitSec": 75,
+            "prompt": "The membership fee is £____ per month.",
+            "correctAnswer": "35",
+            "transcript": "Receptionist: \"The monthly membership is thirty-five pounds.\"",
+            "audioDurationSec": 14,
+            "explanation": "The receptionist clearly states \"thirty-five pounds\". Listen for numbers carefully — they are often repeated.",
+            "recommendLesson": "Listening — Numbers and prices"
+          },
+          {
+            "id": "l3",
+            "skill": "listening",
+            "type": "true-false",
+            "topic": "Section 2 — Museum tour",
+            "difficulty": "medium",
+            "timeLimitSec": 100,
+            "prompt": "The museum opens at 10 a.m. on Sundays.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 1,
+            "transcript": "Guide: \"We open at ten during the week, and at noon on weekends, including Sundays.\"",
+            "audioDurationSec": 22,
+            "explanation": "The guide says the museum opens at noon (12:00) on Sundays, so \"10 a.m.\" is False.",
+            "recommendLesson": "Listening — True / False questions"
+          },
+          {
+            "id": "l4",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 3 — University project",
+            "difficulty": "medium",
+            "timeLimitSec": 110,
+            "prompt": "Why does the student want to change her project topic?",
+            "options": [
+              "It is too difficult",
+              "She cannot find enough sources",
+              "It does not interest her anymore"
+            ],
+            "correctIndex": 2,
+            "transcript": "Student: \"To be honest, Professor, I have lost interest in urban planning. I would like to research renewable energy instead.\"",
+            "audioDurationSec": 26,
+            "explanation": "The student states she \"lost interest\" in the current topic. The answer is C.",
+            "recommendLesson": "Listening — Section 3 discussion skills"
+          },
+          {
+            "id": "l5",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 4 — Marine biology lecture",
+            "difficulty": "hard",
+            "timeLimitSec": 120,
+            "prompt": "What does the speaker say about coral bleaching?",
+            "options": [
+              "It is caused mainly by pollution",
+              "It can sometimes be reversed",
+              "It only happens in the tropics"
+            ],
+            "correctIndex": 1,
+            "transcript": "Lecturer: \"While bleaching is often fatal, some coral colonies can recover if temperatures return to normal within a few weeks.\"",
+            "audioDurationSec": 30,
+            "explanation": "The lecturer says recovery is possible when temperatures normalise quickly — response B matches.",
+            "recommendLesson": "Listening — Academic lecture sections"
+          },
+          {
+            "id": "l6",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Car rental",
+            "difficulty": "easy",
+            "timeLimitSec": 80,
+            "prompt": "The customer will pick up the car at ____ a.m.",
+            "correctAnswer": "9:30",
+            "transcript": "Agent: \"We can have the car ready for nine thirty tomorrow morning.\"",
+            "audioDurationSec": 16,
+            "explanation": "The time \"nine thirty\" (9:30) is the pickup time. Pay attention to half-hours.",
+            "recommendLesson": "Listening — Times and dates"
+          },
+          {
+            "id": "l7",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 2 — Sports centre facilities",
+            "difficulty": "medium",
+            "timeLimitSec": 95,
+            "prompt": "Members can use the swimming pool for free…",
+            "options": [
+              "only before 8 a.m.",
+              "at any time",
+              "on weekdays only"
+            ],
+            "correctIndex": 1,
+            "transcript": "Announcer: \"Pool access is included in your membership, twenty-four hours a day, seven days a week.\"",
+            "audioDurationSec": 20,
+            "explanation": "\"Included… twenty-four hours a day, seven days a week\" means at any time — answer B.",
+            "recommendLesson": "Listening — Facility descriptions"
+          },
+          {
+            "id": "l8",
+            "skill": "listening",
+            "type": "true-false",
+            "topic": "Section 4 — History of coffee",
+            "difficulty": "hard",
+            "timeLimitSec": 115,
+            "prompt": "Coffee was first cultivated commercially in Brazil.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 1,
+            "transcript": "Lecturer: \"Long before Brazil, commercial cultivation began in the Arabian Peninsula, from where it spread across the Ottoman Empire.\"",
+            "audioDurationSec": 28,
+            "explanation": "The lecture says commercial cultivation began in the Arabian Peninsula — Brazil came much later, so the statement is False.",
+            "recommendLesson": "Listening — Distractors and negations"
+          }
+        ],
+        "audio": true
+      }
+    ]
+  },
+  {
+    "id": "mock_writing_full",
+    "title": "Writing — Full 60 min (20 + 40)",
+    "type": "Academic",
+    "durationMin": 60,
+    "questions": 2,
+    "description": "Task 1 — 20 min (150w), Task 2 — 40 min (250w). Jami 60 minut.",
+    "sections": [
+      {
+        "key": "writing",
+        "title": "Writing",
+        "durationMin": 60,
+        "instructions": "Task 1: 20 min / 150w, Task 2: 40 min / 250w. Vaqtni to'g'ri taqsimlang.",
+        "writingPrompts": [
+          {
+            "id": "w1",
+            "task": "Academic Task 1",
+            "type": "academic-task1",
+            "difficulty": "medium",
+            "timeLimitMin": 20,
+            "minWords": 150,
+            "prompt": "The chart below shows the percentage of households in the UK owning a pet in 2005 and 2020. Write a report summarising the main features and making comparisons where relevant.",
+            "instructions": [
+              "Paraphrase the question in your overview",
+              "Group the data logically (highest / lowest / biggest change)",
+              "Use accurate data with comparative language",
+              "Do not give your opinion"
+            ]
+          },
+          {
+            "id": "w2",
+            "task": "Academic Task 2",
+            "type": "academic-task2",
+            "difficulty": "hard",
+            "timeLimitMin": 40,
+            "minWords": 250,
+            "prompt": "Some people believe that unpaid community service should be a compulsory part of high school programmes. To what extent do you agree or disagree?",
+            "instructions": [
+              "Take a clear position in the introduction",
+              "Develop each idea with reasons and examples",
+              "Use linking devices to connect paragraphs",
+              "Write a strong conclusion that restates your view"
+            ]
+          }
+        ],
+        "audio": false
+      }
+    ]
+  },
+  {
+    "id": "mock_quick_1",
+    "title": "Quick Listening Mini Test",
+    "type": "Academic",
+    "durationMin": 15,
+    "questions": 8,
+    "description": "A focused 15-minute Listening warm-up to check your current level fast.",
+    "sections": [
+      {
+        "key": "listening",
+        "title": "Listening",
+        "durationMin": 15,
+        "instructions": "Answer all questions based on the short recordings.",
+        "questions": [
+          {
+            "id": "l1",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 1 — Booking a hotel",
+            "difficulty": "easy",
+            "timeLimitSec": 90,
+            "prompt": "The woman wants a room with…",
+            "options": [
+              "a sea view",
+              "a garden view",
+              "a city view"
+            ],
+            "correctIndex": 0,
+            "transcript": "Woman: \"I would really love to wake up and see the ocean, please.\" Man: \"Of course, a sea view room it is.\"",
+            "audioDurationSec": 18,
+            "explanation": "The woman says \"I would really love to wake up and see the ocean\" — that is a room with a sea view.",
+            "recommendLesson": "Listening — Section 1 essentials"
+          },
+          {
+            "id": "l2",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Joining a gym",
+            "difficulty": "easy",
+            "timeLimitSec": 75,
+            "prompt": "The membership fee is £____ per month.",
+            "correctAnswer": "35",
+            "transcript": "Receptionist: \"The monthly membership is thirty-five pounds.\"",
+            "audioDurationSec": 14,
+            "explanation": "The receptionist clearly states \"thirty-five pounds\". Listen for numbers carefully — they are often repeated.",
+            "recommendLesson": "Listening — Numbers and prices"
+          },
+          {
+            "id": "l3",
+            "skill": "listening",
+            "type": "true-false",
+            "topic": "Section 2 — Museum tour",
+            "difficulty": "medium",
+            "timeLimitSec": 100,
+            "prompt": "The museum opens at 10 a.m. on Sundays.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 1,
+            "transcript": "Guide: \"We open at ten during the week, and at noon on weekends, including Sundays.\"",
+            "audioDurationSec": 22,
+            "explanation": "The guide says the museum opens at noon (12:00) on Sundays, so \"10 a.m.\" is False.",
+            "recommendLesson": "Listening — True / False questions"
+          },
+          {
+            "id": "l4",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 3 — University project",
+            "difficulty": "medium",
+            "timeLimitSec": 110,
+            "prompt": "Why does the student want to change her project topic?",
+            "options": [
+              "It is too difficult",
+              "She cannot find enough sources",
+              "It does not interest her anymore"
+            ],
+            "correctIndex": 2,
+            "transcript": "Student: \"To be honest, Professor, I have lost interest in urban planning. I would like to research renewable energy instead.\"",
+            "audioDurationSec": 26,
+            "explanation": "The student states she \"lost interest\" in the current topic. The answer is C.",
+            "recommendLesson": "Listening — Section 3 discussion skills"
+          },
+          {
+            "id": "l5",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 4 — Marine biology lecture",
+            "difficulty": "hard",
+            "timeLimitSec": 120,
+            "prompt": "What does the speaker say about coral bleaching?",
+            "options": [
+              "It is caused mainly by pollution",
+              "It can sometimes be reversed",
+              "It only happens in the tropics"
+            ],
+            "correctIndex": 1,
+            "transcript": "Lecturer: \"While bleaching is often fatal, some coral colonies can recover if temperatures return to normal within a few weeks.\"",
+            "audioDurationSec": 30,
+            "explanation": "The lecturer says recovery is possible when temperatures normalise quickly — response B matches.",
+            "recommendLesson": "Listening — Academic lecture sections"
+          },
+          {
+            "id": "l6",
+            "skill": "listening",
+            "type": "fill-blank",
+            "topic": "Section 1 — Car rental",
+            "difficulty": "easy",
+            "timeLimitSec": 80,
+            "prompt": "The customer will pick up the car at ____ a.m.",
+            "correctAnswer": "9:30",
+            "transcript": "Agent: \"We can have the car ready for nine thirty tomorrow morning.\"",
+            "audioDurationSec": 16,
+            "explanation": "The time \"nine thirty\" (9:30) is the pickup time. Pay attention to half-hours.",
+            "recommendLesson": "Listening — Times and dates"
+          },
+          {
+            "id": "l7",
+            "skill": "listening",
+            "type": "multiple-choice",
+            "topic": "Section 2 — Sports centre facilities",
+            "difficulty": "medium",
+            "timeLimitSec": 95,
+            "prompt": "Members can use the swimming pool for free…",
+            "options": [
+              "only before 8 a.m.",
+              "at any time",
+              "on weekdays only"
+            ],
+            "correctIndex": 1,
+            "transcript": "Announcer: \"Pool access is included in your membership, twenty-four hours a day, seven days a week.\"",
+            "audioDurationSec": 20,
+            "explanation": "\"Included… twenty-four hours a day, seven days a week\" means at any time — answer B.",
+            "recommendLesson": "Listening — Facility descriptions"
+          },
+          {
+            "id": "l8",
+            "skill": "listening",
+            "type": "true-false",
+            "topic": "Section 4 — History of coffee",
+            "difficulty": "hard",
+            "timeLimitSec": 115,
+            "prompt": "Coffee was first cultivated commercially in Brazil.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 1,
+            "transcript": "Lecturer: \"Long before Brazil, commercial cultivation began in the Arabian Peninsula, from where it spread across the Ottoman Empire.\"",
+            "audioDurationSec": 28,
+            "explanation": "The lecture says commercial cultivation began in the Arabian Peninsula — Brazil came much later, so the statement is False.",
+            "recommendLesson": "Listening — Distractors and negations"
+          }
+        ],
+        "audio": true
+      },
+      {
+        "key": "reading",
+        "title": "Reading",
+        "durationMin": 20,
+        "instructions": "A short reading passage — 20 min per passage in real exam.",
+        "questions": [
+          {
+            "id": "r1",
+            "skill": "reading",
+            "type": "multiple-choice",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "easy",
+            "timeLimitSec": 150,
+            "passage": "Researchers estimate that eight million tonnes of plastic enter the ocean each year. Most of it comes from rivers, with ten rivers responsible for almost 90% of the total.",
+            "prompt": "According to the passage, most ocean plastic comes from…",
+            "options": [
+              "fishing boats",
+              "rivers",
+              "tourism"
+            ],
+            "correctIndex": 1,
+            "explanation": "The passage states most plastic \"comes from rivers\" — ten rivers account for most of it.",
+            "recommendLesson": "Reading — Skimming for main ideas"
+          },
+          {
+            "id": "r2",
+            "skill": "reading",
+            "type": "true-false",
+            "topic": "Academic — Ocean plastic",
+            "difficulty": "medium",
+            "timeLimitSec": 170,
+            "passage": "Once in the ocean, plastic fragments into microplastics. These particles are small enough to be ingested by plankton, the base of the marine food chain.",
+            "prompt": "Microplastics are small enough to enter the marine food chain.",
+            "options": [
+              "True",
+              "False",
+              "Not Given"
+            ],
+            "correctIndex": 0,
+            "explanation": "The passage says plankton — the base of the food chain — ingest the particles, making the statement True.",
+            "recommendLesson": "Reading — True / False / Not Given"
+          }
+        ],
+        "audio": false
+      }
+    ]
+  }
+]

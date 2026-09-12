@@ -16,7 +16,15 @@ export default defineConfig({
     allowedHosts: true as any,
     cors: true,
     headers: {
-      'ngrok-skip-browser-warning': 'true'
+      'ngrok-skip-browser-warning': 'true',
+      'Access-Control-Allow-Origin': '*'
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false
+      }
     }
   }
 })

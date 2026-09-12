@@ -44,10 +44,11 @@ export function Signup() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
+      <div className="mb-1 inline-flex items-center gap-2 rounded-full bg-violet-50 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">New account</div>
+      <h1 className="font-display text-[26px] font-black tracking-tight text-[#0a0a0f] dark:text-white">
         Create your account
       </h1>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+      <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
         Start free — no credit card required. Cancel anytime.
       </p>
 

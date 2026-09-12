@@ -1,39 +1,29 @@
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
-type Tone =
-  | "brand"
-  | "violet"
-  | "cyan"
-  | "emerald"
-  | "amber"
-  | "rose"
-  | "slate"
-  | "white";
+type Tone = "brand" | "violet" | "cyan" | "emerald" | "amber" | "rose" | "slate" | "white" | "neutral";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   tone?: Tone;
 }
 
 const TONES: Record<Tone, string> = {
-  brand: "bg-brand-100 text-brand-800 dark:bg-brand-900/60 dark:text-brand-200",
-  violet:
-    "bg-violet-100 text-violet-800 dark:bg-violet-900/60 dark:text-violet-200",
-  cyan: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/60 dark:text-cyan-200",
-  emerald:
-    "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200",
-  amber: "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-200",
-  rose: "bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-200",
-  slate: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
-  white:
-    "bg-white text-slate-800 shadow-sm dark:bg-slate-200 dark:text-slate-900",
+  brand: "bg-brand-600 text-white shadow-[0_2px_8px_rgb(79_70_229/0.25)] border border-white/10",
+  violet: "bg-violet-600 text-white shadow-[0_2px_8px_rgb(124_58_237/0.25)] border border-white/10",
+  cyan: "bg-cyan-600 text-white shadow-[0_2px_8px_rgb(6_182_214/0.25)] border border-white/10",
+  emerald: "bg-emerald-600 text-white shadow-[0_2px_8px_rgb(16_185_129/0.25)] border border-white/10",
+  amber: "bg-amber-500 text-white shadow-[0_2px_8px_rgb(245_158_11/0.25)] border border-white/10",
+  rose: "bg-rose-600 text-white shadow-[0_2px_8px_rgb(244_63_94/0.25)] border border-white/10",
+  slate: "bg-[#0a0a0f] text-white dark:bg-white dark:text-[#0a0a0f] border border-transparent",
+  white: "bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-white/10 dark:text-white dark:border-white/10 backdrop-blur",
+  neutral: "bg-slate-100 text-slate-700 border border-slate-200 dark:bg-white/10 dark:text-slate-300 dark:border-white/10",
 };
 
 export function Badge({ className, tone = "brand", ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold",
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.06em] leading-none",
         TONES[tone],
         className,
       )}

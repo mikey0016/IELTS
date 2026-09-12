@@ -12,12 +12,27 @@ import {
   overallBand,
 } from "@/lib/bands";
 import { randomId } from "@/lib/format";
+import { apiFetch, isRealApi } from "./http";
 
-export function listMockTests(): Promise<MockTestMeta[]> {
+export async function listMockTests(): Promise<MockTestMeta[]> {
+  if (isRealApi()) {
+    try {
+      const data = await apiFetch("/api/mocks");
+      const mocks = data as MockTestMeta[];
+      if (mocks && mocks.length > 0) return mocks;
+    } catch {}
+  }
   return mockRequest(() => MOCK_TESTS, 500);
 }
 
-export function getMockTest(id: string): Promise<MockTestMeta | undefined> {
+export async function getMockTest(id: string): Promise<MockTestMeta | undefined> {
+  if (isRealApi()) {
+    try {
+      const mocks = (await apiFetch("/api/mocks")) as MockTestMeta[];
+      const found = mocks.find((t) => t.id === id);
+      if (found) return found;
+    } catch {}
+  }
   return mockRequest(() => MOCK_TESTS.find((t) => t.id === id), 400);
 }
 

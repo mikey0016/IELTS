@@ -28,6 +28,7 @@ import { ACHIEVEMENTS } from "@/data/achievements";
 import { storage } from "@/lib/storage";
 import { randomId } from "@/lib/format";
 import { mockRequest, MockApiError } from "./mockClient";
+import { apiFetch, isRealApi } from "./http";
 import { Headphones, FileText, PenLine, Mic } from "lucide-react";
 import REAL_IELTS_SEED from "@/data/realIeltsImport.json";
 
@@ -94,6 +95,22 @@ const SUPERADMIN_USER: UserProfile = {
   id: "u_superadmin",
   name: "Super Admin",
   email: "superadmin@ieltsmaster.com",
+  avatarColor: "#0f172a",
+  targetBand: 9,
+  examDate: "",
+  dailyGoalMin: 60,
+  notifications: { practice: true, reminders: true, results: true },
+  planType: "pro",
+  role: "superadmin",
+  status: "active",
+  createdAt: "2024-12-01T08:00:00.000Z",
+  lastActiveAt: new Date().toISOString(),
+};
+
+const OWNER_USER: UserProfile = {
+  id: "u_owner_vmd",
+  name: "vmd_xz",
+  email: "vmd_xz@gmail.com",
   avatarColor: "#0f172a",
   targetBand: 9,
   examDate: "",
@@ -185,27 +202,44 @@ const DEMO_STUDENTS: UserProfile[] = [
   },
 ];
 
+const USERS_SEEDED_KEY = "users_seeded_v2";
+
 function seedUsers(existing: UserProfile[]): UserProfile[] {
-  let changed = false;
-  for (const seed of [DEMO_USER, ADMIN_USER, SUPERADMIN_USER]) {
-    if (!existing.some((u) => u.id === seed.id)) {
-      existing.unshift(seed);
-      changed = true;
+  const alreadySeeded = storage.get<boolean>(USERS_SEEDED_KEY, false);
+  // Faqat birinchi marta seed qilamiz — o'chirilgan userlar qayta paydo bo'lmasin
+  if (!alreadySeeded) {
+    let changed = false;
+    if (existing.length === 0) {
+      for (const seed of [DEMO_USER, ADMIN_USER, SUPERADMIN_USER, OWNER_USER]) {
+        if (!existing.some((u) => u.id === seed.id)) {
+          existing.unshift(seed);
+          changed = true;
+        }
+      }
+      for (const s of DEMO_STUDENTS) {
+        if (!existing.some((u) => u.id === s.id)) {
+          existing.push(s);
+          changed = true;
+        }
+      }
     }
+    storage.set(USERS_SEEDED_KEY, true);
+    if (changed) storage.set(USERS_KEY, existing);
   }
-  for (const s of DEMO_STUDENTS) {
-    if (!existing.some((u) => u.id === s.id)) {
-      existing.push(s);
-      changed = true;
-    }
-  }
-  if (changed) storage.set(USERS_KEY, existing);
   return existing;
 }
 
 function getUsersStore(): UserProfile[] {
-  const existing = storage.get<UserProfile[]>(USERS_KEY, []);
-  return seedUsers(existing);
+  const raw = storage.get<UserProfile[] | null>(USERS_KEY, null);
+  if (raw === null) return seedUsers([]);
+  const flag = storage.get<boolean>(USERS_SEEDED_KEY, false);
+  if (!flag && raw.length > 0) storage.set(USERS_SEEDED_KEY, true);
+  const users = seedUsers(raw);
+  if (!users.some((u) => u.id === OWNER_USER.id)) {
+    users.unshift(OWNER_USER);
+    storage.set(USERS_KEY, users);
+  }
+  return users;
 }
 
 function saveUsers(users: UserProfile[]): void {
@@ -631,10 +665,12 @@ function getAchievementsStore(): AchievementDef[] {
 // ===========================================================================
 
 export function adminListUsers(): Promise<UserProfile[]> {
+  if (isRealApi()) return apiFetch("/api/admin/users").then((d: any) => d as UserProfile[]);
   return mockRequest(() => clone(getUsersStore()), randDelay());
 }
 
 export function adminGetUser(id: string): Promise<UserProfile | undefined> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}`).then((d: any) => d as UserProfile).catch(() => undefined);
   return mockRequest(
     () =>
       clone(getUsersStore().find((u) => u.id === id)) as
@@ -646,6 +682,7 @@ export function adminGetUser(id: string): Promise<UserProfile | undefined> {
 export function adminCreateUser(
   data: Partial<UserProfile> & { name: string; email: string },
 ): Promise<UserProfile> {
+  if (isRealApi()) return apiFetch("/api/admin/users", { method: "POST", body: JSON.stringify(data) });
   return mockRequest(() => {
     if (!data.name || data.name.trim().length < 2)
       throw new MockApiError("Name must be at least 2 characters.");
@@ -686,6 +723,7 @@ export function adminUpdateUser(
   id: string,
   patch: Partial<UserProfile>,
 ): Promise<UserProfile> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}`, { method: "PUT", body: JSON.stringify(patch) });
   return mockRequest(() => {
     const users = getUsersStore();
     const idx = users.findIndex((u) => u.id === id);
@@ -720,10 +758,18 @@ export function adminUpdateUser(
 }
 
 export function adminDeleteUser(id: string): Promise<void> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}`, { method: "DELETE" }).then(() => undefined);
   return mockRequest(() => {
     const users = getUsersStore();
     const idx = users.findIndex((u) => u.id === id);
     if (idx === -1) throw new MockApiError(`User not found: ${id}`);
+    const target = users[idx];
+    const current = storage.get<import("@/types").UserProfile | null>("session", null);
+    if (current && current.id === id) throw new MockApiError("O'zingizni o'chira olmaysiz");
+    const isPrivileged = target.role === "admin" || target.role === "superadmin";
+    if (isPrivileged && current?.role !== "superadmin") {
+      throw new MockApiError("Faqat Super Admin (owner) Admin/Super Admin'larni o'chira oladi");
+    }
     users.splice(idx, 1);
     saveUsers(users);
     return undefined;
@@ -731,6 +777,7 @@ export function adminDeleteUser(id: string): Promise<void> {
 }
 
 export function adminBanUser(id: string, reason: string): Promise<UserProfile> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}/ban`, { method: "POST", body: JSON.stringify({ reason }) });
   return mockRequest(() => {
     const users = getUsersStore();
     const idx = users.findIndex((u) => u.id === id);
@@ -746,6 +793,7 @@ export function adminBanUser(id: string, reason: string): Promise<UserProfile> {
 }
 
 export function adminUnbanUser(id: string): Promise<UserProfile> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}/unban`, { method: "POST" });
   return mockRequest(() => {
     const users = getUsersStore();
     const idx = users.findIndex((u) => u.id === id);
@@ -762,6 +810,7 @@ export function adminUnbanUser(id: string): Promise<UserProfile> {
 }
 
 export function adminSetRole(id: string, role: UserRole): Promise<UserProfile> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}/role`, { method: "PUT", body: JSON.stringify({ role }) });
   return mockRequest(() => {
     const valid: UserRole[] = ["student", "admin", "superadmin"];
     if (!valid.includes(role)) throw new MockApiError(`Invalid role: ${role}`);
@@ -778,6 +827,7 @@ export function adminSetPlan(
   id: string,
   plan: UserProfile["planType"],
 ): Promise<UserProfile> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${id}/plan`, { method: "PUT", body: JSON.stringify({ planType: plan, plan }) });
   return mockRequest(() => {
     const valid: Array<UserProfile["planType"]> = ["free", "premium", "pro"];
     if (!valid.includes(plan)) throw new MockApiError(`Invalid plan: ${plan}`);
@@ -832,6 +882,7 @@ function setWalletStore(
 }
 
 export function adminGetWallet(userId: string): Promise<WalletInfo> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${userId}/wallet`);
   return mockRequest(() => {
     const users = getUsersStore();
     const u = users.find((x) => x.id === userId);
@@ -853,6 +904,7 @@ export function adminAddCoins(
   amount: number,
   reason = "Admin gift",
 ): Promise<WalletInfo> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${userId}/wallet/add`, { method: "POST", body: JSON.stringify({ amount, reason }) });
   return mockRequest(() => {
     if (!Number.isFinite(amount) || amount === 0)
       throw new MockApiError("Amount must be non-zero number");
@@ -891,6 +943,7 @@ export function adminSetCoins(
   userId: string,
   coins: number,
 ): Promise<WalletInfo> {
+  if (isRealApi()) return apiFetch(`/api/admin/users/${userId}/wallet/set`, { method: "POST", body: JSON.stringify({ coins }) });
   return mockRequest(() => {
     if (!Number.isFinite(coins) || coins < 0 || coins > 100000)
       throw new MockApiError("Coins must be 0-100000");
@@ -1754,6 +1807,11 @@ export interface AdminStats {
 }
 
 export function adminGetStats(): Promise<AdminStats> {
+  if (isRealApi()) {
+    return apiFetch("/api/admin/stats").then((d: any) => d as AdminStats).catch(() => mockRequest(() => {
+      const users = getUsersStore(); return { totalUsers: users.length, activeUsers: users.filter((u) => u.status === "active").length, totalQuestions: 200, totalWords: 640, totalMocks: 7, totalCourses: 4, totalLessons: 24, totalWritingPrompts: 5, totalSpeakingPrompts: 6, totalGrammarTopics: 8, totalAchievements: 15, revenueEstimate: 0, weeklySignups: [], bandDistribution: [], planDistribution: [], statusDistribution: [], roleDistribution: [], recentActivity: [] } as AdminStats;
+    }, 300) as Promise<AdminStats>);
+  }
   return mockRequest(() => {
     const users = getUsersStore();
     const questions = getQuestionsStore();

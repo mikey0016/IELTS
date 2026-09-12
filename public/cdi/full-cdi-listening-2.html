@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title>CD IELTS Listening Test 2</title>
+<title>CD IELTS with Doniyor Listening Test 2</title>
 <link href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237c3aed'/%3E%3Cpath d='M8 18v-2a8 8 0 0116 0v2' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3Crect x='6' y='17.5' width='5' height='8' rx='2.5' fill='%23fff'/%3E%3Crect x='21' y='17.5' width='5' height='8' rx='2.5' fill='%23fff'/%3E%3C/svg%3E" rel="icon" type="image/svg+xml"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -2289,6 +2289,7 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat kod ko'rishni bloklaymiz */ });
 </script>
+  <link rel="stylesheet" href="/cdi/beautiful.css">
 </head>
 <body class="h-full overflow-hidden flex flex-col bg-white theme-white" oncontextmenu="return false">
 <!-- PRE-TEST LOADING SCREEN -->
@@ -2302,7 +2303,7 @@ document.addEventListener('selectstart', function(e) { /* ruxsat beramiz, faqat 
 <!-- HEADER -->
 <header class="border-b border-gray-300 px-4 md:px-4 grid grid-cols-[1fr_auto_1fr] items-center shrink-0 z-[100] shadow-sm relative transition-all bg-white">
 <div class="flex items-center gap-6 justify-start">
-<img alt="IELTS" class="h-[27.22px] w-auto object-contain shrink-0 mt-[1px]" id="ielts-logo" src="../../../images/ielts.svg"/>
+<div id="ielts-logo" style="display:flex; align-items:baseline; gap:5px; font-family:'Sora','Outfit',sans-serif; font-weight:900; font-size:22px; letter-spacing:-0.03em; line-height:1; color:#DC2626; white-space:nowrap; user-select:none;">IELTS<span style="font-weight:700; font-size:13px; color:#0a0a0f; letter-spacing:-0.02em; opacity:.95;">with Doniyor</span></div>
 <div class="flex flex-col justify-center pl-2 h-full" id="test-taker-id">
 <span class="text-sm md:text-base font-bold leading-none mt-1">Test taker ID</span>
 <span class="text-sm md:text-base font-medium" id="candidate-number">123456</span>
@@ -5921,7 +5922,7 @@ function buildResultsHTML(forWord) {
     ].join('');
 
     return '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-      '<title>CD IELTS Listening Test 2 \u2014 Result for ' + rsEscape(name) + '</title>' +
+      '<title>CD IELTS with Doniyor Listening Test 2 \u2014 Result for ' + rsEscape(name) + '</title>' +
       '<style>' + css + '</style></head><body><div class="page">' +
       '<div class="hero"><h1>IELTS Listening \u2014 Test 2</h1>' +
         '<p class="sub">' + rsEscape(name) + ' &nbsp;&bull;&nbsp; ' + when + ' &nbsp;&bull;&nbsp; </p>' +
@@ -6594,5 +6595,6 @@ function __toggleVocabModal() {
 <p class="ai-langnote">Ask in any language — the answer comes back in the same language.</p>
 </div>
 </aside>
+  <script src="/cdi/beautiful.js"></script>
 </body>
 </html>

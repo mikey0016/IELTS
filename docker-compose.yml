@@ -1,0 +1,51 @@
+# NOTE: Sizda allaqachon PostgreSQL 18 (postgresql-x64-18) 5432 da ishlayapti
+# Shuning uchun docker'dagi postgres 5432 bilan conflict beradi.
+# 2 ta variant bor:
+# A) Tavsiya etiladi — Docker'siz, to'g'ridan-to'g'ri local postgres bilan ishlang (docker shart emas)
+#    -> .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 0.0.0.0 --port 4000 --reload
+# B) Agar baribir docker bilan ishlatmoqchi bo'lsangiz, postgres portini 5433 ga o'zgartiring yoki local service ni to'xtating
+#    -> net stop postgresql-x64-18  (so'ng docker compose up)
+
+services:
+  # Local postgres borligi uchun bu service ixtiyoriy — faqat docker isolated muhit kerak bo'lsa yoqing
+  postgres:
+    image: postgres:16-alpine
+    container_name: ielts_postgres
+    restart: unless-stopped
+    profiles: ["docker-db"]  # faqat `docker compose --profile docker-db up` bilan ishga tushadi
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Faxa2000
+      POSTGRES_DB: ielts_master
+    ports:
+      - "5433:5432"  # local 5432 band bo'lgani uchun 5433 ga map qilindi
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ielts_fastapi
+    restart: unless-stopped
+    # Local DB ishlatilsa depends_on shart emas — olib tashlandi
+    environment:
+      DATABASE_URL: "postgresql://postgres:Faxa2000@host.docker.internal:5432/ielts_master?schema=public"
+      JWT_SECRET: "ielts-master-super-secret-2026"
+      PORT: 4000
+      FRONTEND_URL: "http://localhost:5173"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 4000 --reload
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  pgdata:
