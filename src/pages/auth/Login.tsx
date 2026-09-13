@@ -50,28 +50,72 @@ export function Login() {
   const onGoogle = async () => {
     setGoogleLoading(true);
     try {
+      const clientId = (import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined)?.trim();
+      // Real Google OAuth if client ID configured and GIS available
+      if (clientId && clientId.length > 10) {
+        const idToken = await triggerGoogleOneTap(clientId);
+        const profile = await loginWithGoogle(idToken);
+        toast("Signed in with Google", "success");
+        const target = profile.role === "admin" || profile.role === "superadmin" ? "/admin" : from || "/app";
+        navigate(target, { replace: true });
+        return;
+      }
+      // Fallback demo (old behavior) if no client ID
       const profile = await loginWithGoogle();
-      toast("Signed in with Google", "success");
-      const target =
-        profile.role === "admin" || profile.role === "superadmin"
-          ? "/admin"
-          : from || "/app";
+      toast("Signed in with Google (demo)", "success");
+      const target = profile.role === "admin" || profile.role === "superadmin" ? "/admin" : from || "/app";
       navigate(target, { replace: true });
     } catch (err) {
-      toast(
-        err instanceof Error ? err.message : "Google login failed",
-        "error",
-      );
+      toast(err instanceof Error ? err.message : "Google login failed", "error");
     } finally {
       setGoogleLoading(false);
     }
   };
 
+  function triggerGoogleOneTap(clientId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const g = (window as unknown as { google?: { accounts: { id: { initialize: (o: unknown)=>void; prompt: (cb?:(n:{isNotDisplayed:()=>boolean})=>void)=>void } } } }).google;
+      const doPrompt = () => {
+        try {
+          const google = (window as unknown as { google: { accounts: { id: { initialize: (o: {client_id:string; callback:(r:{credential:string})=>void; auto_select?:boolean; cancel_on_tap_outside?:boolean})=>void; prompt:(cb?:(n:{isNotDisplayed:()=>boolean; isSkippedMoment:()=>boolean})=>void)=>void } } } }).google;
+          google.accounts.id.initialize({
+            client_id: clientId,
+            callback: (resp: { credential: string }) => {
+              if (resp?.credential) resolve(resp.credential);
+              else reject(new Error("No credential returned"));
+            },
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+          google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+              reject(new Error("Google prompt not displayed - check client ID and origin"));
+            }
+          });
+        } catch (e) {
+          reject(e as Error);
+        }
+      };
+      if (g?.accounts?.id) {
+        doPrompt();
+        return;
+      }
+      // Load GIS script dynamically
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => doPrompt();
+      script.onerror = () => reject(new Error("Failed to load Google Identity Services"));
+      document.head.appendChild(script);
+    });
+  }
+
   return (
     <div>
       <div className="mb-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-slate-600 dark:bg-white/10 dark:text-white/60">Welcome back</div>
       <h1 className="font-display text-[26px] font-black tracking-tight text-[#0a0a0f] dark:text-white">
-        Log in to IELTS Master
+        Log in to IELTS with Doniyor
       </h1>
       <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
         Continue your IELTS journey — your study plan is waiting.

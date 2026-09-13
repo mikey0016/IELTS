@@ -29,7 +29,7 @@ interface AuthContextValue {
     email: string,
     password: string,
   ) => Promise<UserProfile>;
-  loginWithGoogle: () => Promise<UserProfile>;
+  loginWithGoogle: (idToken?: string) => Promise<UserProfile>;
   forgotPassword: (email: string) => Promise<void>;
   logout: () => void;
   updateUser: (patch: Partial<UserProfile>) => void;
@@ -70,10 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const loginWithGoogle = useCallback(async () => {
+  const loginWithGoogle = useCallback(async (idToken?: string) => {
     setLoading(true);
     try {
-      const profile = await googleLogin();
+      const profile = await googleLogin(idToken);
       storage.set(SESSION_KEY, profile);
       setUser(profile);
       return profile;

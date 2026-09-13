@@ -374,9 +374,13 @@ export async function signupUser(
   return profile;
 }
 
-export async function googleLogin(): Promise<UserProfile> {
+export async function googleLogin(idToken?: string): Promise<UserProfile> {
   if (isRealApi()) {
-    const data = await apiFetch("/api/auth/google", { method: "POST" });
+    const body = idToken ? { id_token: idToken } : {};
+    const data = await apiFetch("/api/auth/google", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
     setToken(data.token);
     storage.set("session", data.user);
     return data.user as UserProfile;
